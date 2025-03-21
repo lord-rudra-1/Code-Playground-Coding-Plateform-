@@ -1,0 +1,55 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pm2.log
+pm2-error.log
+
+# Build files
+dist/
+build/
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+docker/data/
+
+# MongoDB/PostgreSQL data
+data/
+dump/
+*.sqlite
+*.sqlite3
+
+# React frontend
+frontend/node_modules/
+frontend/build/
+
+# Temporary files
+temp/
+*.tmp
+*.swp
+*.swo
+*.swn
+
+# Debugging files
+coverage/
+.cache/
