@@ -1,0 +1,101 @@
+/* General Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background: #5b9bd5;
+  height: 4rem;
+}
+
+.logo img {
+  height: 4rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #dbeafe;
+}
+
+/* Contest Section */
+.contest-section {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Contest Table */
+.contest-table {
+  width: 90%;
+  margin: auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 1rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #5b9bd5;
+  color: white;
+}
+
+/* Buttons */
+.register-btn,
+.btn {
+  background: #ffd166;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover,
+.btn:hover {
+  background: #ffcc80;
+  transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #5b9bd5;
+  color: white;
+  margin-top: auto;
+  width: 100%;
+}

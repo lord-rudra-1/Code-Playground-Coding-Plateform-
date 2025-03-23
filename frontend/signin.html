@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Playground</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Main Box -->
+    <form class="CP_form" id="signin-form">
+
+        <!-- Code Playground Logo -->
+        <div class="CP_logo">
+            <a href="#" id="logo-link" title="Logo">
+                <img src="code playground logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+
+        <!-- Sign in with Google & Apple -->
+        <div class="Socials">
+            <a href="#" id="google-signin" title="Use Google">
+                <img src="Google_logo.png" alt="Google">
+                Sign in with Google
+            </a>
+
+            <a href="#" id="apple-signin" title="Use Apple">
+                <img src="Apple_logo.png" alt="Apple">
+                Sign in with Apple
+            </a>
+        </div>
+
+        <!-- OR Divider -->
+        <div class="lines">
+            <div class="line"></div>
+            OR
+            <div class="line"></div>
+        </div>
+
+        <!-- Email & Password Fields -->
+        <div class="text-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="off" placeholder="you@example.com" required>
+            <div class="error-message">Email in incorrect format</div>
+        </div>
+
+        <div class="text-field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="off" placeholder="Enter your password"
+                required>
+            <div class="error-message">Password must be at least 8 characters</div>
+        </div>
+
+        <!-- Sign In Button -->
+        <button type="submit" class="CP_button">Login</button>
+
+        <!-- Create Account Option -->
+        <div class="CP_actions">
+            <div class="CP_row">
+                <span>Don't have an account?</span>
+                <a href="signup.html" id="signup-link" title="Create Account">Sign Up</a>
+            </div>
+        </div>
+
+    </form>
+
+    <script src="js/signin.js"></script> <!-- JavaScript File for Functionality -->
+
+</body>
+
+</html>

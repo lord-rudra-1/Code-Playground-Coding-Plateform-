@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problems - Code Playground</title>
+    <link rel="stylesheet" href="css/problems.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="home.html">
+                <img src="lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="problems.html">Problems</a></li>
+            <li><a href="contests.html">Contests</a></li>
+            <li><a href="discuss.html">Discuss</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Problem Filters -->
+    <div class="filter-container">
+        <input type="text" id="search-bar" placeholder="Search problems...">
+        <select id="difficulty">
+            <option value="all">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <select id="topic">
+            <option value="all">All Topics</option>
+            <option value="arrays">Arrays</option>
+            <option value="strings">Strings</option>
+            <option value="graphs">Graphs</option>
+            <option value="dp">Dynamic Programming</option>
+        </select>
+        <select id="sort">
+            <option value="newest">Newest</option>
+            <option value="most-solved">Most Solved</option>
+            <option value="difficulty">Difficulty</option>
+        </select>
+    </div>
+
+    <!-- Problems Table -->
+    <div class="problems-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Difficulty</th>
+                    <th>Topic</th>
+                    <th>Acceptance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="openProblem('problem1.html')">
+                    <td>Two Sum</td>
+                    <td class="easy">Easy</td>
+                    <td>Arrays</td>
+                    <td>50%</td>
+                </tr>
+                <tr onclick="openProblem('problem2.html')">
+                    <td>Longest Palindromic Substring</td>
+                    <td class="medium">Medium</td>
+                    <td>Strings</td>
+                    <td>32%</td>
+                </tr>
+                <tr onclick="openProblem('problem3.html')">
+                    <td>Graph Traversal</td>
+                    <td class="hard">Hard</td>
+                    <td>Graphs</td>
+                    <td>22%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function openProblem(url) {
+            window.location.href = url;
+        }
+    </script>
+
+</body>
+
+</html>

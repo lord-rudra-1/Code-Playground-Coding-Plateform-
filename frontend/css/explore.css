@@ -1,0 +1,148 @@
+/* General Styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background: #5b9bd5;
+  height: 4rem;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.logo a img {
+  height: 4rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 15%;
+}
+
+/* Navigation Links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #dbeafe;
+}
+
+/* Explore Section */
+.explore {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.explore h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Scrollable Container */
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 1rem;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #5b9bd5;
+  border-radius: 10px;
+}
+
+/* Scrollable Cards */
+.explore-card {
+    flex: 0 0 auto;
+    width: 280px; /* Adjusted width to fit content */
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    scroll-snap-align: start;
+    text-align: left;
+    overflow: hidden; /* Prevents overflow */
+    text-overflow: ellipsis; /* Adds "..." if text is too long */
+    white-space: normal; /* Allows wrapping */
+  }
+
+.explore-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.explore-card h2 {
+    font-size: 1.3rem;
+    color: #5b9bd5;
+    margin-bottom: 0.5rem;
+    white-space: nowrap; /* Prevents breaking to new lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .explore-card p {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    height: 50px; /* Fixes text height */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
+/* Clickable Cards */
+.explore-card a {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 10px 15px;
+  background: #ffd166;
+  color: #333;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.explore-card a:hover {
+  background: #ffcc80;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #5b9bd5;
+  color: white;
+  margin-top: 3rem;
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Code Playground</title>
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="home.html" title="Logo">
+                <img src="lo.png" alt="Logo" class="logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="#problems">Problems</a></li>
+            <li><a href="#contests">Contests</a></li>
+            <li><a href="#discuss">Discuss</a></li>
+            <li><a href="contact.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <h2>Contact Us</h2>
+        <p>Have any questions or feedback? Feel free to reach out to us!</p>
+
+        <div class="contact-container">
+            <!-- Contact Form -->
+            <form class="contact-form">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Your Name" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Subject" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p><strong>Email:</strong> support@codeplayground.com</p>
+                <p><strong>Phone:</strong> +1 234 567 890</p>
+                <p><strong>Address:</strong> 123 Coding Lane, Tech City, TX 78901</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- // new added -->
+    <!-- FAQ Section -->
+    <section class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question">What is Code Playground? <span class="arrow">&#9660;</span></button>
+                <div class="faq-answer">Code Playground is an online coding platform where users can practice coding,
+                    compete in contests, and prepare for interviews.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Is Code Playground free to use? <span class="arrow">&#9660;</span></button>
+                <div class="faq-answer">Yes! You can solve problems and participate in contests for free. Some premium
+                    features may require a subscription.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">How do I participate in a contest? <span
+                        class="arrow">&#9660;</span></button>
+                <div class="faq-answer">Simply navigate to the 'Contests' section, register for an ongoing contest, and
+                    start solving problems.</div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">How can I contact support? <span class="arrow">&#9660;</span></button>
+                <div class="faq-answer">You can reach us at support@codeplayground.com or use the contact form above.
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <!-- new added -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const faqItems = document.querySelectorAll(".faq-item");
+
+            faqItems.forEach(item => {
+                item.querySelector(".faq-question").addEventListener("click", function () {
+                    item.classList.toggle("active");
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

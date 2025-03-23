@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discuss - Code Playground</title>
+    <link rel="stylesheet" href="css/discuss.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="home.html">
+                <img src="lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="problems.html">Problems</a></li>
+            <li><a href="contests.html">Contests</a></li>
+            <li><a href="discuss.html">Discuss</a></li>
+            <li><a href="contact.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Discussion Section -->
+    <div class="discussion-container">
+        <div class="discussion-header">
+            <h1>Discussion Forum</h1>
+            <div class="discussion-actions">
+                <select class="category">
+                    <option>All Categories</option>
+                    <option>General Coding</option>
+                    <option>Interview Preparation</option>
+                    <option>Competitive Programming</option>
+                    <option>Project Showcase</option>
+                    <option>Bug Fixing & Debugging</option>
+                </select>
+                <button class="btn">Start Discussion</button>
+            </div>
+        </div>
+
+        <!-- Discussion Threads -->
+        <div class="discussion-thread">
+            <h3><a href="#">Best resources for learning Data Structures?</a></h3>
+            <p>Posted by <strong>CodeMaster</strong> • Category: <strong>General Coding</strong> • 15 Replies • 1.2K
+                Views</p>
+            <div class="thread-stats">
+                <span>🔼 45</span>
+                <span class="toggle-comments">💬 15</span>
+                <span>👁️ 1.2K</span>
+            </div>
+            <div class="comments-section">
+                <p><strong>User1:</strong> Try LeetCode and GeeksforGeeks!</p>
+                <p><strong>User2:</strong> Any good books for DS&A?</p>
+                <input type="text" class="comment-input" placeholder="Write a comment...">
+                <button class="comment-submit">Submit</button>
+            </div>
+        </div>
+
+        <div class="discussion-thread">
+            <h3><a href="#">How to approach a system design interview?</a></h3>
+            <p>Posted by <strong>JohnDoe</strong> • Category: <strong>Interview Preparation</strong> • 22 Replies • 3.5K
+                Views</p>
+            <div class="thread-stats">
+                <span>🔼 78</span>
+                <span class="toggle-comments">💬 22</span>
+                <span>👁️ 3.5K</span>
+            </div>
+            <div class="comments-section">
+                <p><strong>User3:</strong> Study "System Design Interview" by Alex Xu.</p>
+                <p><strong>User4:</strong> Practice designing scalable systems!</p>
+                <input type="text" class="comment-input" placeholder="Write a comment...">
+                <button class="comment-submit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Toggle comments section when clicking the 💬 button
+        document.querySelectorAll('.toggle-comments').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevents closing when clicking on the button itself
+                const comments = button.parentElement.nextElementSibling;
+                comments.style.display = (comments.style.display === "block") ? "none" : "block";
+            });
+        });
+
+        // Submit button for comments (adds comment and resets input but does NOT close comments)
+        document.querySelectorAll('.comment-submit').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevents discussion card from closing
+                const inputField = button.previousElementSibling;
+                if (inputField.value.trim() !== "") {
+                    // Create a new paragraph for the comment
+                    const newComment = document.createElement("p");
+                    newComment.innerHTML = `<strong>You:</strong> ${inputField.value}`;
+
+                    // Insert comment before input field
+                    const commentSection = button.parentElement;
+                    commentSection.insertBefore(newComment, inputField);
+
+                    // Clear input field (reset)
+                    inputField.value = "";
+                }
+            });
+        });
+
+        // Clicking on the discussion card closes the comments section (but not when clicking inside the comment box)
+        document.querySelectorAll('.discussion-thread').forEach(thread => {
+            thread.addEventListener('click', (event) => {
+                const isClickInsideCommentBox = event.target.closest('.comments-section');
+                if (!isClickInsideCommentBox) {
+                    const comments = thread.querySelector('.comments-section');
+                    if (comments) comments.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
