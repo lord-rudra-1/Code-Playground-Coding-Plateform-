@@ -31,6 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Redirect to Sign Up Page
   signupLink.addEventListener("click", function (event) {
     event.preventDefault();
-    window.location.href = "signup.html"; // Redirect to Sign Up
+    window.location.href = "/signup"; // Redirect to Sign Up
   });
 });
