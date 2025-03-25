@@ -5,6 +5,7 @@ const ejs = require("ejs");
 const path = require("path");
 const app = express();
 const connectDB = require("./config/db");
+const USER = require("./models/User");
 
 // Import Routes
 const authRoutes = require("./routes/authRoutes");
@@ -33,7 +34,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/execute", require("./routes/executeRoutes"));
-
+app.use(express.urlencoded({ extended: false }));
 
 
 
@@ -77,9 +78,56 @@ app.get("/about", (req, res) => {
     res.render("about");
 });
 
+app.post("/signup", async (req, res) => {
+    try {
+        const { name, email, password, confirm_password } = req.body;
 
+        // Check if user already exists
+        const user_exist = await USER.findOne({ email });
+        if (user_exist) {
+            res.render("signup",{ message: "User already exists" });
+        }
 
+        // Validate password match
+        if (password !== confirm_password) {
+            res.render("signup",{ message: "Passwords do not match" });
+        }
 
+        // Create new user
+        const user = await USER.create({
+            username: name,
+            email:email,
+            password: password,
+        });
+        res.redirect("/signin");
+    } catch (error) {
+        console.error("Signup error:", error);
+        res.render("signup",{message:"Error creating user"})
+        //res.status(500).json({ message: "Error creating user" });
+    }
+});
+
+app.post("/signin", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Find user
+        const user = await USER.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Check password
+        if (password !== user.password) {
+            return res.status(400).json({ message: "Incorrect password" });
+        }
+
+        res.redirect("/explore");
+    } catch (error) {
+        console.error("Signin error:", error);
+        res.status(500).json({ message: "Error signing in" });
+    }
+});
 
 
 const PORT = process.env.PORT || 4000;

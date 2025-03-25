@@ -10,19 +10,17 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Stops redirection
   });
 
-  // Redirect to Home Page on Sign In
+  // Redirect to Home Page ons Sign In
   signinForm.addEventListener("submit", function (event) {
     event.preventDefault(); // Prevents actual form submission
-    window.location.href = "home.html"; // Redirect to home page
+    window.location.href = "home.html";
   });
 
-  // Redirect to Google Sign-in
   googleSignin.addEventListener("click", function (event) {
     event.preventDefault();
     window.location.href = "https://accounts.google.com/signin"; // Google Sign-in Page
   });
 
-  // Redirect to Apple Sign-in
   appleSignin.addEventListener("click", function (event) {
     event.preventDefault();
     window.location.href = "https://appleid.apple.com/sign-in"; // Apple Sign-in Page
@@ -31,6 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Redirect to Sign Up Page
   signupLink.addEventListener("click", function (event) {
     event.preventDefault();
-    window.location.href = "/signup"; // Redirect to Sign Up
+    window.location.href = "/signup"; 
   });
 });
