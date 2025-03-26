@@ -8,10 +8,9 @@ const connectDB = require("./config/db");
 const USER = require("./models/User");
 
 // Import Routes
-const authRoutes = require("./routes/authRoutes");
-const problemRoutes = require("./routes/problemRoutes");
-const executeRoutes = require("./routes/executeRoutes");
-const { redirect } = require("react-router-dom");
+// const authRoutes = require("./routes/authRoutes");
+// const problemRoutes = require("./routes/problemRoutes");
+// const executeRoutes = require("./routes/executeRoutes");
 
 
 app.set("view engine","ejs");
@@ -31,10 +30,10 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/problems", problemRoutes);
-app.use("/api/execute", require("./routes/executeRoutes"));
+// // Routes
+// app.use("/api/auth", authRoutes);
+// app.use("/api/problems", problemRoutes);
+// app.use("/api/execute", require("./routes/executeRoutes"));
 app.use(express.urlencoded({ extended: false }));
 
 
