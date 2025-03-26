@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lord-rudra-1/Code-Playground-Coding-Plateform-#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",

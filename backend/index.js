@@ -6,6 +6,9 @@ const path = require("path");
 const app = express();
 const connectDB = require("./config/db");
 const USER = require("./models/User");
+const bcrypt = require("bcrypt");
+
+const SALT_ROUNDS = 10;
 
 
 app.set("view engine", "ejs");
@@ -80,11 +83,13 @@ app.post("/signup", async (req, res) => {
             res.render("signup", { message: "Passwords do not match" });
         }
 
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
         // Create new user
         const user = await USER.create({
             username: name,
             email: email,
-            password: password,
+            password: hashedPassword,
         });
         res.redirect("/signin");
     } catch (error) {
@@ -103,7 +108,8 @@ app.post("/signin", async (req, res) => {
         }
 
         // Check password
-        if (password !== user.password) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
