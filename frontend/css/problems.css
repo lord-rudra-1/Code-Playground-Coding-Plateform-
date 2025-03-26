@@ -1,11 +1,16 @@
-html,
+html {
+  overflow-y: scroll;
+}
 body {
-  height: 100%;
-  overflow-x: hidden; /* Prevents horizontal scrollbar */
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 /* Navbar */
@@ -119,3 +124,5 @@ tr:hover {
   width: 100%;
   flex-shrink: 0; /* Prevents footer from shrinking */
 }
+
+/* Buttons */

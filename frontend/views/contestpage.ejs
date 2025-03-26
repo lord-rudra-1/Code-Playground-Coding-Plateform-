@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,55 +9,58 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-  font-family: "Arial", sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f0f4f8;
-  color: #333;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f4f8;
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-  background: #5b9bd5;
-  height: 4rem;
-}
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            background: #5b9bd5;
+            height: 4rem;
+        }
 
-.logo img {
-  height: 4rem;
-  width: auto;
-  object-fit: contain;
-}
+        .logo img {
+            height: 4rem;
+            width: auto;
+            object-fit: contain;
+        }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-}
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
 
-.nav-links a {
-  text-decoration: none;
-  color: white;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
 
-.nav-links a:hover {
-  color: #dbeafe;
-}
+        .nav-links a:hover {
+            color: #dbeafe;
+        }
+
         .container {
             display: flex;
             gap: 20px;
             padding: 20px;
-            margin-top: 20px; /* Additional margin for spacing */
+            margin-top: 20px;
+            /* Additional margin for spacing */
         }
+
         .left-panel {
             flex: 3;
             background-color: rgb(249, 245, 245);
@@ -64,6 +68,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .right-panel {
             flex: 1;
             background-color: white;
@@ -71,31 +76,39 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table th, table td {
+
+        table th,
+        table td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #020000;
         }
+
         table th {
             background-color: #000205;
         }
+
         canvas {
             width: 100% !important;
             height: auto !important;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             margin-top: 0;
         }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
-    
+
     <nav class="navbar">
         <div class="logo">
             <a href="/home">
@@ -124,14 +137,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% problems.forEach(problem => { %>
+                    <% problems.forEach(problem=> { %>
                         <tr>
-                            <td><a href="/editcode/<%= problem.code %>"><%= problem.name %></a></td>
-                            <td><%= problem.code %></td>
-                            <td><%= problem.submissions %></td>
-                            <td><%= problem.accuracy %>%</td>
+                            <td><a href="/editcode/<%= problem.code %>">
+                                    <%= problem.name %>
+                                </a></td>
+                            <td>
+                                <%= problem.code %>
+                            </td>
+                            <td>
+                                <%= problem.submissions %>
+                            </td>
+                            <td>
+                                <%= problem.accuracy %>%
+                            </td>
                         </tr>
-                    <% }); %>
+                        <% }); %>
                 </tbody>
             </table>
         </div>
@@ -178,4 +199,5 @@
         });
     </script>
 </body>
+
 </html>
