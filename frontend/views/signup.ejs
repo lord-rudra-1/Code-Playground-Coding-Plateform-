@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form class="CP_form">
+    <form class="CP_form" action="/signup" method="post">
         <div class="CP_logo">
             <a href="/home" title="Logo">
                 <img src="code playground logo.png" alt="Logo" class="logo">
@@ -49,6 +49,11 @@
             </div>
         </div>
     </form>
+    <%if(locals.message){%>
+        <script>
+            alert('<%=message%>')
+        </script>
+    <%}%>
 </body>
 
 </html>

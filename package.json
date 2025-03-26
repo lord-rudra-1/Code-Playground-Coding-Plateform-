@@ -5,35 +5,25 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "react-scripts start",
-    "dev": "vite"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lord-rudra-1/Code-Playground-Coding-Plateform-.git"
   },
-  "author": "rudra and group",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lord-rudra-1/Code-Playground-Coding-Plateform-/issues"
   },
   "homepage": "https://github.com/lord-rudra-1/Code-Playground-Coding-Plateform-#readme",
   "dependencies": {
-    "@monaco-editor/react": "^4.7.0",
-    "axios": "^1.8.4",
-    "bcryptjs": "^3.0.2",
-    "body-parser": "^1.20.3",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.12.1",
-    "nodemon": "^3.1.9",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.0",
-    "react-scripts": "^5.0.1"
+    "mongoose": "^8.13.0",
+    "nodemon": "^3.1.9"
   }
 }
