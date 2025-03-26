@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contest Page</title>
+    <link rel="stylesheet" href="/css/contests.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background: #5b9bd5;
+  height: 4rem;
+}
+
+.logo img {
+  height: 4rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #dbeafe;
+}
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            margin-top: 20px; /* Additional margin for spacing */
+        }
+        .left-panel {
+            flex: 3;
+            background-color: rgb(249, 245, 245);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .right-panel {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #020000;
+        }
+        table th {
+            background-color: #000205;
+        }
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home">
+                <img src="D:\code playground\Code-Playground-Coding-Plateform-\frontend\imgg\lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/about">About Us</a></li>
+        </ul>
+    </nav>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="left-panel">
+            <h1>Contest Problems</h1>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Successful Submissions</th>
+                        <th>Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% problems.forEach(problem => { %>
+                        <tr>
+                            <td><a href="/editcode/<%= problem.code %>"><%= problem.name %></a></td>
+                            <td><%= problem.code %></td>
+                            <td><%= problem.submissions %></td>
+                            <td><%= problem.accuracy %>%</td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="right-panel">
+            <h2>Ratings Graph</h2>
+            <canvas id="ratingsChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Dummy data for the rating graph
+        const ctx = document.getElementById('ratingsChart').getContext('2d');
+        const ratingsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['15', '30', '45', '75'], // Minutes
+                datasets: [{
+                    label: 'Rating',
+                    data: [1000, 1500, 2000, 2500], // Ratings
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Rating'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Minutes'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
