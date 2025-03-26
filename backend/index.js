@@ -11,6 +11,7 @@ const USER = require("./models/User");
 const authRoutes = require("./routes/authRoutes");
 const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
+const { redirect } = require("react-router-dom");
 
 
 app.set("view engine","ejs");
@@ -110,7 +111,6 @@ app.post("/signup", async (req, res) => {
 app.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
-        
         // Find user
         const user = await USER.findOne({ email });
         if (!user) {
@@ -128,7 +128,6 @@ app.post("/signin", async (req, res) => {
         res.status(500).json({ message: "Error signing in" });
     }
 });
-
 
 const PORT = process.env.PORT || 4000;
 
