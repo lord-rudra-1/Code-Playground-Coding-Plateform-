@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Code</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f4f8;
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            background: #5b9bd5;
+            height: 4rem;
+        }
+
+        .logo img {
+            height: 4rem;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #dbeafe;
+        }
+
+        .content {
+            display: flex;
+            padding: 2rem;
+        }
+
+        .tabs-and-content {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            margin-right: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .tabs button {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5b9bd5;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .tabs button.active {
+            background-color: #5b9bd5;
+            color: white;
+        }
+
+        .tab-content {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        .code-editor {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .code-editor textarea {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            counter-reset: line-number;
+        }
+
+        .code-editor textarea::before {
+            counter-increment: line-number;
+            content: counter(line-number);
+            display: inline-block;
+            width: 2rem;
+            margin-right: 1rem;
+            text-align: right;
+            color: #ccc;
+        }
+
+        .code-editor button {
+            background-color: hsl(209, 59%, 60%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .code-editor button:hover {
+            background-color: #4a90e2;
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .language-selector select {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f4f8;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home">
+                <img src="D:\code playground\Code-Playground-Coding-Plateform-\frontend\imgg\lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/about">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <div class="tabs-and-content">
+            <div class="tabs">
+                <button class="active" data-tab="statement">Statement</button>
+                <button data-tab="submissions">Submissions</button>
+                <button data-tab="solution">Solution</button>
+            </div>
+
+            <div class="tab-content">
+                <div class="statement-content">
+                    <h2>Problem Code: FOODBAL</h2>
+                    <p><strong>Problem Description:</strong> Chef is preparing to cook his dinner.</p>
+                    <p>There are two dishes Chef can make. The first one contains F1 grams of fat and P1 grams of protein, while the second contains F2 grams of fat and P2 grams of protein.</p>
+                    <p>Chef would like the quantity of fats and proteins he consumes to be as close to each other as possible, i.e., the absolute difference between the amount of fats and proteins should be as small as possible.</p>
+                    <p>Help Chef by telling him which dish he'll choose; or if both dishes have the same difference.</p>
+                    <h3>Input Format</h3>
+                    <p>The first and only line of input contains four space-separated integers F1, P1, F2, and P2 - the quantities of fat and protein in the first dish and second dish, respectively.</p>
+                    <h3>Output Format</h3>
+                    <p>Output a single string:</p>
+                    <ul>
+                        <li>"First" (without quotes) if Chef will choose the first dish.</li>
+                        <li>"Second" (without quotes) if Chef will choose the second dish.</li>
+                        <li>"Both" (without quotes) if both dishes are equivalent.</li>
+                    </ul>
+                    <p>Each character of the output may be in either uppercase or lowercase, i.e. if the answer is Both, then any of the strings BOTH, both, Both, bOTh, and so on will be accepted.</p>
+                </div>
+
+                <div class="submissions-content" style="display: none;">
+                    <h2>Submissions</h2>
+                    <!-- Add your submissions section here -->
+                </div>
+
+                <div class="solution-content" style="display: none;">
+                    <h2>Solution</h2>
+                    <!-- Add your solution section here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="code-editor">
+            <div class="language-selector">
+                <select id="language-select">
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="python">Python</option>
+                    <option value="C">C</option>
+                    <!-- Add more language options as needed -->
+                </select>
+            </div>
+            <textarea rows="20" cols="100" id="code-editor"> 
+            </textarea>
+            <button>Submit</button>
+        </div>
+    </div>
+
+    <script>
+        const tabButtons = document.querySelectorAll('.tabs button');
+        const tabContents = document.querySelectorAll('.tab-content > div');
+
+        tabButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.style.display = 'none');
+
+                // Add active class to the clicked button and show the corresponding content
+                button.classList.add('active');
+                tabContents[index].style.display = 'block';
+            });
+        });
+
+        const languageSelect = document.getElementById('language-select');
+        const codeEditor = document.getElementById('code-editor');
+
+        // Auto-select the first language option and display its content
+        languageSelect.value = 'java';
+        codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass code\n{\npublic static void main (String[] args) throws java.lang.Exception\n{\n// your code goes here\n}\n}';
+
+        languageSelect.addEventListener('change', () => {
+            const selectedLanguage = languageSelect.value;
+            switch (selectedLanguage) {
+                case 'java':
+                    codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass code\n{\npublic static void main (String[] args) throws java.lang.Exception\n{\n// your code goes here\n}\n}';
+                    break;
+                case 'cpp':
+                    codeEditor.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n// your code goes here\n\n} ';
+                    break;
+                case 'python':
+                    codeEditor.value = '#Let Him Cook';
+                    break;
+                case 'C':
+                    codeEditor.value = '#include<stdio.h>\n\nint main(){\n // your code goes here \n\n }'
+                    break;
+                // Add more language templates as needed
+            }
+        });
+    </script>
+</body>
+</html>

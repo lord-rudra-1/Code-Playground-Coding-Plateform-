@@ -23,6 +23,7 @@
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
             <li><a href="/about">About Us</a></li>
+            <li><a href="/profile">👤</a></li>
         </ul>
     </nav>
 
@@ -49,7 +50,7 @@
                     <td>Medium</td>
                     <td>500+</td>
                     <td class="countdown"></td>
-                    <td><button class="register-btn">Register Now</button></td>
+                    <td><button class="register-btn" data-contest-id="1">Register Now</button></td>
                 </tr>
                 <tr>
                     <td>Algorithm Coding Challenge</td>
@@ -58,7 +59,7 @@
                     <td>Hard</td>
                     <td>800+</td>
                     <td class="countdown"></td>
-                    <td><button class="register-btn">Register Now</button></td>
+                    <td><button class="register-btn" data-contest-id="2">Register Now</button></td>
                 </tr>
             </tbody>
         </table>
@@ -96,6 +97,16 @@
     </footer>
 
     <script src="js/contests.js"></script>
+    <script>
+        // Add event listener to the "Register Now" buttons
+        const registerButtons = document.querySelectorAll('.register-btn');
+        registerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const contestId = button.dataset.contestId;
+                window.location.href = `/contestpage/${contestId}`;
+            });
+        });
+    </script>
 
 </body>
 

@@ -215,6 +215,7 @@ body {
   padding: 1rem 2rem;
   background: var(--primary);
   color: var(--white);
+  padding-right: 40px;
 }
 
 .nav-links {

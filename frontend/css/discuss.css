@@ -1,158 +1,172 @@
 /* General Styles */
+html {
+  overflow-y: scroll;
+}
+
 body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f0f4f8;
-    color: #333;
-    overflow-x: hidden;
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden;
 }
 
 /* Navbar */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2rem;
-    background: #5b9bd5;
-    height: 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  background: #5b9bd5;
+  height: 4rem;
 }
 
 .logo img {
-    height: 4rem;
-    width: auto;
-    object-fit: contain;
+  height: 4rem;
+  width: auto;
+  object-fit: contain;
 }
 
 .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
 }
 
 .nav-links a {
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-    transition: color 0.3s ease;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    color: #dbeafe;
+  color: #dbeafe;
 }
 
 /* Ensure full height */
-html, body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Discussion Container */
 .discussion-container {
-    flex: 1;
-    max-width: 900px;
-    margin: auto;
-    padding: 2rem;
-    width: 100%;
-    box-sizing: border-box;
+  flex: 1;
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Discussion Header */
 .discussion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 .discussion-header h1 {
-    font-size: 1.8rem;
+  font-size: 1.8rem;
 }
 
 /* Category & Button */
 .discussion-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .category {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 /* Start Discussion Button */
 .btn {
-    background: #ffd166;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  background: #ffd166;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-    background: #ffcc80;
-    transform: scale(1.05);
+  background: #ffcc80;
+  transform: scale(1.05);
 }
 
 /* Discussion Thread */
 .discussion-thread {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .discussion-thread:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Comments Section */
 .comments-section {
-    display: none;
-    background: #f9f9f9;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
+  display: none;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
 }
 
 .comment-input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .comment-submit {
-    margin-top: 8px;
-    background: #5b9bd5;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+  margin-top: 8px;
+  background: #5b9bd5;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .comment-submit:hover {
-    background: #4a90e2;
+  background: #4a90e2;
 }
 
 /* Footer */
 .footer {
-    text-align: center;
-    padding: 1rem;
-    background: #5b9bd5;
-    color: white;
-    margin-top: auto;
-    width: 100%;
+  text-align: center;
+  padding: 1rem;
+  background: #5b9bd5;
+  color: white;
+  margin-top: auto;
+  width: 100%;
 }

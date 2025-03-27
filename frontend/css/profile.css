@@ -1,0 +1,273 @@
+/* General Styles */
+html {
+  overflow-y: scroll;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  color: #333;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  width: 100%;
+  height: 100%;
+  color: #333;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  overflow-y: auto; /* Allows normal vertical scrolling */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar - Fully Matched with Other Pages */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem; /* Keeps spacing without increasing height */
+  background: #5b9bd5;
+  height: 4rem; /* Fixed navbar height */
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%; /* Ensures logo is within navbar height */
+}
+
+/* Logo Image */
+.logo a img {
+  height: 4rem; /* Fits within navbar height */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  background: transparent; /* Ensures no extra background */
+  border-radius: 15%;
+}
+
+/* Navbar Links */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #dbeafe;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 2rem;
+  margin-top: 4rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.profile-right {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-box {
+  text-align: center;
+  background: #f8f9fd;
+  padding: 10px;
+  border-radius: 8px;
+  min-width: 100px;
+}
+
+/* Profile Layout */
+.profile-container {
+  display: flex;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1100px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  transition: background 0.3s ease;
+}
+
+.sidebar li.active,
+.sidebar li:hover {
+  background: #5b9bd5;
+  color: white;
+}
+
+/* Hide inactive sections */
+/* .hidden {
+  display: none;
+} */
+
+/* Content Area */
+.content {
+  flex-grow: 1;
+  background: white;
+  padding: 2rem;
+  margin-left: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Stats */
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.info-box {
+  text-align: center;
+  background: #f8f9fd;
+  padding: 15px;
+  border-radius: 8px;
+  width: 30%;
+}
+
+/* Badges */
+.badges span {
+  display: inline-block;
+  background: #5b9bd5;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+/* Hide content initially */
+.hidden {
+  display: none;
+}
+
+/* Badges Grid Layout */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.badge {
+  background: #5b9bd5;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.badge:hover {
+  background: #407bbd;
+  transform: scale(1.1);
+}
+
+/* Maximized Badge */
+.badge-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000;
+  display: none;
+}
+
+.badge-popup h2 {
+  color: #5b9bd5;
+}
+
+.badge-popup button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #ff5252;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.badge-popup button:hover {
+  background: #e04848;
+}
+
+/* Settings Form */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+}
+
+.settings-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.settings-form button {
+  background: #ffd166;
+  border: none;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.settings-form button:hover {
+  background: #ffcc80;
+}

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Code Playground</title>
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home">
+                <img src="lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/contact">About Us</a></li>
+            <li><a href="/profile">👤</a></li>
+        </ul>
+    </nav>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-left">
+            <img src="profile.png" alt="Profile Picture" class="profile-pic">
+            <div class="user-info">
+                <h2 class="username">John Doe</h2>
+                <p class="user-role">Competitive Programmer | Web Developer</p>
+            </div>
+        </div>
+        <div class="profile-right">
+            <div class="stat-box">
+                <h3>Rank</h3>
+                <p>#1245</p>
+            </div>
+            <div class="stat-box">
+                <h3>Rating</h3>
+                <p>2100</p>
+            </div>
+            <div class="stat-box">
+                <h3>Badges</h3>
+                <p>🏆 🎖️</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-container">
+        <div class="sidebar">
+            <ul>
+                <li class="active" onclick="switchTab('overview')">Overview</li>
+                <li onclick="switchTab('submissions')">Submissions</li>
+                <li onclick="switchTab('badges')">Badges</li>
+                <li onclick="switchTab('settings')">Settings</li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <!-- Overview Section -->
+            <div class="tab-content" id="overview">
+                <h3>Profile Overview</h3>
+                <div class="profile-stats">
+                    <div class="info-box">
+                        <h4>Problems Solved</h4>
+                        <p>150</p>
+                    </div>
+                    <div class="info-box">
+                        <h4>Contests Participated</h4>
+                        <p>10</p>
+                    </div>
+                    <div class="info-box">
+                        <h4>Discussion Likes</h4>
+                        <p>340</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submissions Section -->
+            <div class="tab-content hidden" id="submissions">
+                <h3>Recent Submissions</h3>
+                <ul class="submission-list">
+                    <li>Two Sum - <span class="accepted">Accepted ✅</span></li>
+                    <li>Binary Search - <span class="wrong">Wrong Answer ❌</span></li>
+                    <li>Longest Subsequence - <span class="accepted">Accepted ✅</span></li>
+                    <li>Palindrome Check - <span class="accepted">Accepted ✅</span></li>
+                    <li>Graph Traversal - <span class="wrong">Time Limit Exceeded ⏳</span></li>
+                </ul>
+            </div>
+
+            <!-- Badges Section -->
+            <div class="tab-content hidden" id="badges">
+                <h3>Achievements</h3>
+                <div class="badges">
+                    <span class="badge">🏆 Problem Solver</span>
+                    <span class="badge">🎖️ Contest Champion</span>
+                    <span class="badge">💡 Code Enthusiast</span>
+                    <span class="badge">⚡ Speed Coder</span>
+                    <span class="badge">🛡️ Security Expert</span>
+                </div>
+            </div>
+
+
+            <!-- Badge Popup -->
+            <div class="badge-popup" id="badge-popup">
+                <h2 id="badge-title"></h2>
+                <p>You have earned this badge for outstanding achievements!</p>
+                <button id="close-popup">Close</button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="tab-content hidden" id="settings">
+                <h3>Account Settings</h3>
+                <div class="settings-form">
+                    <input type="text" placeholder="Change Username">
+                    <input type="password" placeholder="Change Password">
+                    <button id="save-changes">Save Changes</button>
+                    <button id="delete-account">Delete Account</button>
+                    <button class="logout-btn">Logout</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tabs = document.querySelectorAll(".sidebar li");
+            const contents = document.querySelectorAll(".tab-content");
+            const badgePopup = document.getElementById("badge-popup");
+            const badgeTitle = document.getElementById("badge-title");
+            const closePopupBtn = document.getElementById("close-popup");
+
+            function switchTab(tabId) {
+                contents.forEach((content) => content.classList.add("hidden"));
+                document.getElementById(tabId).classList.remove("hidden");
+
+                tabs.forEach((tab) => tab.classList.remove("active"));
+                document
+                    .querySelector(`[onclick="switchTab('${tabId}')"]`)
+                    .classList.add("active");
+            }
+
+            tabs.forEach((tab) => {
+                tab.addEventListener("click", function () {
+                    switchTab(this.getAttribute("onclick").split("'")[1]);
+                });
+            });
+
+            switchTab("overview");
+
+            // Badge Click to Maximize
+            document.querySelectorAll(".badge").forEach((badge) => {
+                badge.addEventListener("click", function () {
+                    badgeTitle.textContent = this.textContent;
+                    badgePopup.style.display = "block";
+                });
+            });
+
+            closePopupBtn.addEventListener("click", function () {
+                badgePopup.style.display = "none";
+            });
+
+            // Form Submissions
+            document
+                .getElementById("save-changes")
+                .addEventListener("click", function () {
+                    alert("Changes saved!");
+                });
+
+            document
+                .getElementById("delete-account")
+                .addEventListener("click", function () {
+                    if (
+                        confirm(
+                            "Are you sure you want to delete your account? This cannot be undone!"
+                        )
+                    ) {
+                        alert("Account deleted.");
+                    }
+                });
+        });
+
+    </script>
+
+</body>
+
+</html>
