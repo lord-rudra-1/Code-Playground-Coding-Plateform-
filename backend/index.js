@@ -7,6 +7,8 @@ const app = express();
 const connectDB = require("./config/db");
 const USER = require("./models/User");
 const bcrypt = require("bcrypt");
+const fs = require('fs');
+const { exec } = require("child_process");
 
 const SALT_ROUNDS = 10;
 
@@ -16,7 +18,9 @@ const SALT_ROUNDS = 10;
 const authRoutes = require("./routes/authRoutes");
 const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
+const bodyParser = require("body-parser");
 
+const TEMP_DIR = path.join(__dirname, 'temp');
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, '../frontend/views'));
@@ -33,8 +37,8 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
@@ -46,7 +50,7 @@ app.use("/api/execute", require("./routes/executeRoutes"));
 
 app.get("/contestpage/:id", (req, res) => {
     const contestId = req.params.id;
-    
+
     const problems = [ // Dummy Data
         { name: "Food Balance", code: "FOODBAL", submissions: 35726, accuracy: 68.05 },
         { name: "Placing 01 And 10", code: "PLACE0110", submissions: 14825, accuracy: 47.89 },
@@ -84,6 +88,78 @@ app.get("/editcode/:problemCode", (req, res) => {
     const problemCode = req.params.problemCode;
     res.render("editcode", { problemCode }); // Render the editcode page with problem code
 });
+
+
+// Ensure the temp directory exists
+if (!fs.existsSync(TEMP_DIR)) {
+    fs.mkdirSync(TEMP_DIR, { recursive: true });
+}
+
+app.post('/run', (req, res) => {
+    // console.log("ok\n");
+    const { code, language } = req.body;
+    console.log(code, language);
+
+    // Validate input
+    if (!code || !language) {
+        return res.status(400).json({ error: 'Missing required fields: code or language' });
+    }
+
+    // Determine the filename based on the language
+    const filename = `temp.${language === 'cpp' ? 'cpp' : language === 'java' ? 'java' : language === 'python' ? 'py' : 'c'}`;
+    const filePath = path.join(TEMP_DIR, filename);
+    console.log(filePath);
+
+    // Write the code to a temporary file
+    fs.writeFileSync(filePath, code);
+
+    // Command to execute the code based on the selected language
+    let command = '';
+    switch (language.toLowerCase()) {
+        case 'python':
+            command = `python ${filePath}`;
+            break;
+        case 'java':
+            command = `javac ${filePath} && java -cp ${TEMP_DIR} Main`;
+            break;
+        case 'cpp':
+            command = `g++ ${filePath} -o ${path.join(TEMP_DIR, 'temp')} && ${path.join(TEMP_DIR, 'temp')}`;
+            break;
+        case 'c':
+            command = `gcc ${filePath} -o ${path.join(TEMP_DIR, 'temp')} && ${path.join(TEMP_DIR, 'temp')}`;
+            break;
+        default:
+            return res.status(400).json({ error: 'Unsupported language' });
+    }
+
+    // Execute the command
+    exec(command, (error, stdout, stderr) => {
+        // Cleanup temporary files
+        // if (fs.existsSync(filePath)) {
+        //     fs.unlinkSync(filePath);
+        // }
+        if (language === 'java') {
+            const classFilePath = path.join(TEMP_DIR, 'Main.class');
+            if (fs.existsSync(classFilePath)) {
+                fs.unlinkSync(classFilePath);
+            }
+        } else if (language === 'cpp' || language === 'c') {
+            const tempFilePath = path.join(TEMP_DIR, 'temp');
+            if (fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
+            }
+        }
+
+        // Handle errors and return the output
+        if (error) {
+            return res.status(500).json({ error: stderr || 'Error executing code' });
+        }
+        res.json({ output: stdout });
+    });
+});
+
+
+
 
 
 // Root Route
