@@ -5,7 +5,296 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discuss - Code Playground</title>
-    <link rel="stylesheet" href="/css/discuss.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            background: #5b9bd5;
+            height: 4rem;
+            color: white;
+        }
+
+        .logo img {
+            height: 4rem;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #dbeafe;
+        }
+
+        /* Discussion container */
+        .discussion-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .discussion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 1rem;
+        }
+
+        .discussion-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: #5b9bd5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: #4a8bc0;
+        }
+
+        /* Discussion threads */
+        .discussion-thread {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #5b9bd5;
+        }
+
+        .discussion-thread h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .discussion-thread h3 a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .discussion-thread h3 a:hover {
+            color: #5b9bd5;
+        }
+
+        .thread-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            color: #777;
+        }
+
+        .thread-stats span {
+            cursor: pointer;
+        }
+
+        /* Comments section */
+        .comments-section {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .comment {
+            padding: 0.75rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 1rem;
+            resize: vertical;
+        }
+
+        .comment-submit {
+            background-color: #5b9bd5;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        /* Modal for creating discussions */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 60%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #555;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            background-color: #e0e7ff;
+            color: #3b82f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .tag span {
+            cursor: pointer;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 0.5rem;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.active {
+            background-color: #5b9bd5;
+            color: white;
+            border-color: #5b9bd5;
+        }
+
+        /* Search bar */
+        .search-bar {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f0f4f8;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #5b9bd5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
 <body>
@@ -13,7 +302,7 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/home">
-                <img src="lo.png" alt="Logo">
+                <img src="/lo.png" alt="Logo">
             </a>
         </div>
         <ul class="nav-links">
@@ -21,8 +310,8 @@
             <li><a href="/problems">Problems</a></li>
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
-            <li><a href="/contact">About Us</a></li>
-            <li><a href="/profile">👤</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
 
@@ -31,50 +320,63 @@
         <div class="discussion-header">
             <h1>Discussion Forum</h1>
             <div class="discussion-actions">
-                <select class="category">
-                    <option>All Categories</option>
-                    <option>General Coding</option>
-                    <option>Interview Preparation</option>
-                    <option>Competitive Programming</option>
-                    <option>Project Showcase</option>
-                    <option>Bug Fixing & Debugging</option>
+                <select id="tag-filter" class="form-control">
+                    <option value="">All Tags</option>
+                    <!-- Popular tags will be loaded here -->
                 </select>
-                <button class="btn">Start Discussion</button>
+                <button id="create-discussion-btn" class="btn">Start Discussion</button>
             </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search discussions...">
+            <button id="search-btn" class="btn">Search</button>
         </div>
 
         <!-- Discussion Threads -->
-        <div class="discussion-thread">
-            <h3><a href="#">Best resources for learning Data Structures?</a></h3>
-            <p>Posted by <strong>CodeMaster</strong> • Category: <strong>General Coding</strong> • 15 Replies • 1.2K
-                Views</p>
-            <div class="thread-stats">
-                <span>🔼 45</span>
-                <span class="toggle-comments">💬 15</span>
-                <span>👁️ 1.2K</span>
-            </div>
-            <div class="comments-section">
-                <p><strong>User1:</strong> Try LeetCode and GeeksforGeeks!</p>
-                <p><strong>User2:</strong> Any good books for DS&A?</p>
-                <input type="text" class="comment-input" placeholder="Write a comment...">
-                <button class="comment-submit">Submit</button>
-            </div>
+        <div id="discussions-list">
+            <div class="loader"></div>
         </div>
 
-        <div class="discussion-thread">
-            <h3><a href="#">How to approach a system design interview?</a></h3>
-            <p>Posted by <strong>JohnDoe</strong> • Category: <strong>Interview Preparation</strong> • 22 Replies • 3.5K
-                Views</p>
-            <div class="thread-stats">
-                <span>🔼 78</span>
-                <span class="toggle-comments">💬 22</span>
-                <span>👁️ 3.5K</span>
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Create Discussion Modal -->
+    <div id="create-discussion-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create New Discussion</h2>
+            <form id="discussion-form">
+                <div class="form-group">
+                    <label for="discussion-title">Title</label>
+                    <input type="text" id="discussion-title" class="form-control" placeholder="Enter a title for your discussion" required>
+                </div>
+                <div class="form-group">
+                    <label for="discussion-content">Content</label>
+                    <textarea id="discussion-content" class="form-control" rows="6" placeholder="Describe your question or topic" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="discussion-tags">Tags (press Enter to add)</label>
+                    <input type="text" id="discussion-tags" class="form-control" placeholder="Add tags related to your discussion">
+                    <div id="tags-container" class="tag-input"></div>
+                </div>
+                <button type="submit" class="btn">Post Discussion</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Discussion Modal -->
+    <div id="view-discussion-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="discussion-details">
+                <div class="loader"></div>
             </div>
-            <div class="comments-section">
-                <p><strong>User3:</strong> Study "System Design Interview" by Alex Xu.</p>
-                <p><strong>User4:</strong> Practice designing scalable systems!</p>
-                <input type="text" class="comment-input" placeholder="Write a comment...">
-                <button class="comment-submit">Submit</button>
+            <div id="comments-container"></div>
+            <div class="form-group">
+                <textarea id="comment-input" class="form-control" rows="3" placeholder="Add a comment..."></textarea>
+                <button id="submit-comment" class="btn">Add Comment</button>
             </div>
         </div>
     </div>
@@ -85,47 +387,410 @@
     </footer>
 
     <script>
-        // Toggle comments section when clicking the 💬 button
-        document.querySelectorAll('.toggle-comments').forEach(button => {
-            button.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevents closing when clicking on the button itself
-                const comments = button.parentElement.nextElementSibling;
-                comments.style.display = (comments.style.display === "block") ? "none" : "block";
+        // Global variables
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentDiscussionId = null;
+        let currentTags = [];
+        const userId = localStorage.getItem('userId');
+        
+        // Update profile link based on login status
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileLink = document.getElementById('profile-link');
+            
+            if (userId) {
+                // User is logged in, keep the profile link as is
+                profileLink.title = "View Profile";
+            } else {
+                // User is not logged in, change the icon to indicate this
+                profileLink.innerHTML = "👤 (Sign In)";
+                profileLink.title = "Please Sign In";
+            }
+            
+            // Load discussions and popular tags
+            loadDiscussions();
+            loadPopularTags();
+        });
+        
+        // Function to load discussions
+        async function loadDiscussions(page = 1, tag = '', search = '') {
+            try {
+                const discussionsList = document.getElementById('discussions-list');
+                discussionsList.innerHTML = '<div class="loader"></div>';
+                
+                // Build query string
+                let queryParams = new URLSearchParams();
+                queryParams.append('page', page);
+                if (tag) queryParams.append('tag', tag);
+                if (search) queryParams.append('search', search);
+                
+                // Fetch discussions
+                const response = await fetch(`/api/discuss?${queryParams.toString()}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Update global variables
+                    currentPage = data.currentPage;
+                    totalPages = data.totalPages;
+                    
+                    // Render discussions
+                    renderDiscussions(data.discussions);
+                    
+                    // Render pagination
+                    renderPagination();
+                } else {
+                    discussionsList.innerHTML = `<p>Error loading discussions: ${data.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error loading discussions:', error);
+                document.getElementById('discussions-list').innerHTML = `<p>Error loading discussions: ${error.message}</p>`;
+            }
+        }
+        
+        // Function to render discussions
+        function renderDiscussions(discussions) {
+            const discussionsList = document.getElementById('discussions-list');
+            
+            if (!discussions || discussions.length === 0) {
+                discussionsList.innerHTML = '<p>No discussions found.</p>';
+                return;
+            }
+            
+            let html = '';
+            discussions.forEach(discussion => {
+                const date = new Date(discussion.createdAt).toLocaleDateString();
+                const tags = discussion.tags && discussion.tags.length > 0 
+                    ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')
+                    : '<span class="tag">General</span>';
+                
+                html += `
+                    <div class="discussion-thread" data-id="${discussion._id}">
+                        <h3><a href="#" onclick="viewDiscussion('${discussion._id}'); return false;">${discussion.title}</a></h3>
+                        <p>Posted by <strong>${discussion.authorName}</strong> • ${date} • Tags: ${tags}</p>
+                        <div class="thread-stats">
+                            <span onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
+                            <span onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
+                            <span onclick="viewDiscussion('${discussion._id}')">💬 ${discussion.comments ? discussion.comments.length : 0}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            discussionsList.innerHTML = html;
+        }
+        
+        // Function to render pagination
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+            
+            if (totalPages > 1) {
+                // Previous button
+                html += `<button onclick="loadDiscussions(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<button onclick="loadDiscussions(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+                }
+                
+                // Next button
+                html += `<button onclick="loadDiscussions(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+            }
+            
+            pagination.innerHTML = html;
+        }
+        
+        // Function to load popular tags
+        async function loadPopularTags() {
+            try {
+                const response = await fetch('/api/discuss/tags/popular');
+                const tags = await response.json();
+                
+                if (response.ok) {
+                    const tagFilter = document.getElementById('tag-filter');
+                    let html = '<option value="">All Tags</option>';
+                    
+                    tags.forEach(tag => {
+                        html += `<option value="${tag._id}">${tag._id} (${tag.count})</option>`;
+                    });
+                    
+                    tagFilter.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error loading popular tags:', error);
+            }
+        }
+        
+        // Function to view a discussion
+        async function viewDiscussion(discussionId) {
+            if (!discussionId) return;
+            
+            try {
+                currentDiscussionId = discussionId;
+                const modal = document.getElementById('view-discussion-modal');
+                const discussionDetails = document.getElementById('discussion-details');
+                const commentsContainer = document.getElementById('comments-container');
+                
+                // Show modal and loading indicator
+                modal.style.display = 'block';
+                discussionDetails.innerHTML = '<div class="loader"></div>';
+                commentsContainer.innerHTML = '';
+                
+                // Fetch discussion data
+                const response = await fetch(`/api/discuss/${discussionId}`);
+                const discussion = await response.json();
+                
+                if (response.ok) {
+                    // Render discussion details
+                    const date = new Date(discussion.createdAt).toLocaleDateString();
+                    const tags = discussion.tags && discussion.tags.length > 0 
+                        ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')
+                        : '<span class="tag">General</span>';
+                    
+                    let html = `
+                        <h2>${discussion.title}</h2>
+                        <p class="meta">Posted by <strong>${discussion.authorName}</strong> • ${date}</p>
+                        <p class="tags">Tags: ${tags}</p>
+                        <div class="content">${discussion.content}</div>
+                        <div class="thread-stats">
+                            <span onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
+                            <span onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
+                        </div>
+                        <h3>Comments (${discussion.comments.length})</h3>
+                    `;
+                    
+                    discussionDetails.innerHTML = html;
+                    
+                    // Render comments
+                    if (discussion.comments.length > 0) {
+                        html = '';
+                        discussion.comments.forEach(comment => {
+                            const commentDate = new Date(comment.createdAt).toLocaleDateString();
+                            html += `
+                                <div class="comment">
+                                    <p><strong>${comment.authorName}</strong> • ${commentDate}</p>
+                                    <p>${comment.content}</p>
+                                </div>
+                            `;
+                        });
+                        commentsContainer.innerHTML = html;
+                    } else {
+                        commentsContainer.innerHTML = '<p>No comments yet.</p>';
+                    }
+                } else {
+                    discussionDetails.innerHTML = `<p>Error loading discussion: ${discussion.message}</p>`;
+                }
+            } catch (error) {
+                console.error('Error viewing discussion:', error);
+                document.getElementById('discussion-details').innerHTML = `<p>Error loading discussion: ${error.message}</p>`;
+            }
+        }
+        
+        // Function to add a comment
+        async function addComment() {
+            if (!currentDiscussionId) return;
+            
+            const commentInput = document.getElementById('comment-input');
+            const content = commentInput.value.trim();
+            
+            if (!content) {
+                alert('Please enter a comment.');
+                return;
+            }
+            
+            if (!userId) {
+                alert('Please sign in to add a comment.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/discuss/${currentDiscussionId}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content, userId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Clear input and refresh discussion
+                    commentInput.value = '';
+                    viewDiscussion(currentDiscussionId);
+                } else {
+                    alert(`Error adding comment: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                alert(`Error adding comment: ${error.message}`);
+            }
+        }
+        
+        // Function to vote on a discussion
+        async function voteDiscussion(discussionId, vote) {
+            if (!userId) {
+                alert('Please sign in to vote.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/discuss/${discussionId}/vote`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ vote })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Refresh discussions or discussion view
+                    if (currentDiscussionId === discussionId) {
+                        viewDiscussion(discussionId);
+                    } else {
+                        loadDiscussions(currentPage);
+                    }
+                } else {
+                    alert(`Error voting: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error voting:', error);
+                alert(`Error voting: ${error.message}`);
+            }
+        }
+        
+        // Function to create a new discussion
+        async function createDiscussion(event) {
+            event.preventDefault();
+            
+            if (!userId) {
+                alert('Please sign in to create a discussion.');
+                return;
+            }
+            
+            const title = document.getElementById('discussion-title').value.trim();
+            const content = document.getElementById('discussion-content').value.trim();
+            
+            if (!title || !content) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/discuss', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        tags: currentTags,
+                        userId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Close modal and refresh discussions
+                    document.getElementById('create-discussion-modal').style.display = 'none';
+                    document.getElementById('discussion-form').reset();
+                    currentTags = [];
+                    document.getElementById('tags-container').innerHTML = '';
+                    loadDiscussions();
+                    loadPopularTags();
+                } else {
+                    alert(`Error creating discussion: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error creating discussion:', error);
+                alert(`Error creating discussion: ${error.message}`);
+            }
+        }
+        
+        // Event listener for search button
+        document.getElementById('search-btn').addEventListener('click', () => {
+            const searchInput = document.getElementById('search-input').value.trim();
+            loadDiscussions(1, document.getElementById('tag-filter').value, searchInput);
+        });
+        
+        // Event listener for tag filter
+        document.getElementById('tag-filter').addEventListener('change', function() {
+            loadDiscussions(1, this.value, document.getElementById('search-input').value.trim());
+        });
+        
+        // Event listener for submit comment button
+        document.getElementById('submit-comment').addEventListener('click', addComment);
+        
+        // Event listener for create discussion button
+        document.getElementById('create-discussion-btn').addEventListener('click', () => {
+            if (!userId) {
+                alert('Please sign in to create a discussion.');
+                return;
+            }
+            document.getElementById('create-discussion-modal').style.display = 'block';
+        });
+        
+        // Event listener for discussion form
+        document.getElementById('discussion-form').addEventListener('submit', createDiscussion);
+        
+        // Event listener for adding tags
+        document.getElementById('discussion-tags').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const tag = this.value.trim();
+                
+                if (tag && !currentTags.includes(tag)) {
+                    currentTags.push(tag);
+                    const tagsContainer = document.getElementById('tags-container');
+                    const tagElement = document.createElement('div');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `
+                        ${tag}
+                        <span onclick="removeTag('${tag}')">&times;</span>
+                    `;
+                    tagsContainer.appendChild(tagElement);
+                }
+                
+                this.value = '';
+            }
+        });
+        
+        // Function to remove a tag
+        window.removeTag = function(tag) {
+            currentTags = currentTags.filter(t => t !== tag);
+            const tagsContainer = document.getElementById('tags-container');
+            tagsContainer.innerHTML = '';
+            
+            currentTags.forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span onclick="removeTag('${tag}')">&times;</span>
+                `;
+                tagsContainer.appendChild(tagElement);
+            });
+        };
+        
+        // Close modals when clicking the X
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
             });
         });
-
-        // Submit button for comments (adds comment and resets input but does NOT close comments)
-        document.querySelectorAll('.comment-submit').forEach(button => {
-            button.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevents discussion card from closing
-                const inputField = button.previousElementSibling;
-                if (inputField.value.trim() !== "") {
-                    // Create a new paragraph for the comment
-                    const newComment = document.createElement("p");
-                    newComment.innerHTML = `<strong>You:</strong> ${inputField.value}`;
-
-                    // Insert comment before input field
-                    const commentSection = button.parentElement;
-                    commentSection.insertBefore(newComment, inputField);
-
-                    // Clear input field (reset)
-                    inputField.value = "";
-                }
-            });
-        });
-
-        // Clicking on the discussion card closes the comments section (but not when clicking inside the comment box)
-        document.querySelectorAll('.discussion-thread').forEach(thread => {
-            thread.addEventListener('click', (event) => {
-                const isClickInsideCommentBox = event.target.closest('.comments-section');
-                if (!isClickInsideCommentBox) {
-                    const comments = thread.querySelector('.comments-section');
-                    if (comments) comments.style.display = "none";
-                }
-            });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
         });
     </script>
-
 </body>
 
+</html>
 </html>

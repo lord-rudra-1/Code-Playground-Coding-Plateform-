@@ -17,6 +17,7 @@ const SALT_ROUNDS = 10;
 const authRoutes = require("./routes/authRoutes");
 const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
+const discussRoutes = require("./routes/discussRoutes");
 
 
 app.set("view engine", "ejs");
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/execute", executeRoutes);
+app.use("/api/discuss", discussRoutes);
 
 
 
