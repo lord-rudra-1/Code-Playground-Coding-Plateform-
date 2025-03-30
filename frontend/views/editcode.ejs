@@ -306,6 +306,13 @@
         const problemId = '<%= problem._id %>';
         let userId = localStorage.getItem('userId');
         
+        // Check if problem data was passed correctly
+        if (typeof problemId === 'undefined' || !problemId) {
+            console.error('Problem ID is missing');
+            alert('Error: Problem not found. Redirecting to problems page.');
+            window.location.href = '/problems';
+        }
+        
         // Update profile link based on login status
         document.addEventListener('DOMContentLoaded', () => {
             const profileLink = document.getElementById('profile-link');
@@ -504,6 +511,10 @@
             }
             
             try {
+                // Show a loading indicator
+                document.getElementById('result-container').style.display = 'block';
+                document.getElementById('result-output').innerHTML = 'Submitting solution...';
+                
                 const response = await fetch(`/api/problems/${problemId}/submit`, {
                     method: 'POST',
                     headers: {
@@ -515,7 +526,7 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    alert(`Submission result: ${result.message}`);
+                    document.getElementById('result-output').innerHTML = `<span class="success">Submission result: ${result.message}</span>`;
                     
                     // Switch to submissions tab and refresh
                     tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -526,11 +537,12 @@
                     
                     loadUserSubmissions();
                 } else {
-                    alert(`Error: ${result.message || 'Failed to submit solution'}`);
+                    document.getElementById('result-output').innerHTML = `<span class="error">Error: ${result.message || 'Failed to submit solution'}</span>`;
                 }
             } catch (error) {
                 console.error('Error submitting solution:', error);
-                alert(`Error submitting solution: ${error.message}`);
+                document.getElementById('result-container').style.display = 'block';
+                document.getElementById('result-output').innerHTML = `<span class="error">Error submitting solution: ${error.message}</span>`;
             }
         });
 

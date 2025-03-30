@@ -75,6 +75,18 @@
     </footer>
 
     <script>
+        // Function to open a problem - defined in global scope
+        function openProblem(problemId) {
+            window.location.href = `/editcode/${problemId}`;
+        }
+        
+        // Helper function to calculate acceptance rate (global scope)
+        function calculateAcceptance(problem) {
+            // In a real implementation, this would be calculated based on submissions
+            // For now, we'll just return a random percentage
+            return Math.floor(Math.random() * 100) + '%';
+        }
+        
         // Check if user is logged in and update UI accordingly
         document.addEventListener('DOMContentLoaded', () => {
             const userId = localStorage.getItem('userId');
@@ -162,18 +174,6 @@
                         <td>${calculateAcceptance(problem)}</td>
                     </tr>
                 `).join('');
-            }
-            
-            // Helper function to calculate acceptance rate (dummy for now)
-            function calculateAcceptance(problem) {
-                // In a real implementation, this would be calculated based on submissions
-                // For now, we'll just return a random percentage
-                return Math.floor(Math.random() * 100) + '%';
-            }
-            
-            // Function to open a problem
-            function openProblem(problemId) {
-                window.location.href = `/editcode/${problemId}`;
             }
             
             // Event listeners for filters

@@ -181,6 +181,11 @@ app.post("/signup", async (req, res) => {
 app.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+        
         // Find user
         const user = await USER.findOne({ email });
         if (!user) {
@@ -193,9 +198,11 @@ app.post("/signin", async (req, res) => {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
+        // Successful login
         res.json({
             email: user.email,
             userId: user._id,
+            username: user.username,
             message: "Signin successful"
         });
 
