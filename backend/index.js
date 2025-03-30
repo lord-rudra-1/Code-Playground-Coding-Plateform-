@@ -7,6 +7,7 @@ const app = express();
 const connectDB = require("./config/db");
 const USER = require("./models/User");
 const bcrypt = require("bcrypt");
+const Problem = require("./models/Problem");
 
 const SALT_ROUNDS = 10;
 
@@ -38,7 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
-app.use("/api/execute", require("./routes/executeRoutes"));
+app.use("/api/execute", executeRoutes);
 
 
 
@@ -80,9 +81,20 @@ app.get("/contestpage", async (req, res) => {
 */
 
 // Route for Edit Code Page
-app.get("/editcode/:problemCode", (req, res) => {
-    const problemCode = req.params.problemCode;
-    res.render("editcode", { problemCode }); // Render the editcode page with problem code
+app.get("/editcode/:problemId", async (req, res) => {
+    try {
+        const problemId = req.params.problemId;
+        const problem = await Problem.findById(problemId);
+        
+        if (!problem) {
+            return res.status(404).send("Problem not found");
+        }
+        
+        res.render("editcode", { problem });
+    } catch (error) {
+        console.error("Error fetching problem for edit:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 
@@ -107,8 +119,14 @@ app.get("/explore", (req, res) => {
     res.render("explore");
 });
 
-app.get("/problems", (req, res) => {
-    res.render("problems");
+app.get("/problems", async (req, res) => {
+    try {
+        // We'll fetch problems in the template itself via client-side API call
+        res.render("problems");
+    } catch (error) {
+        console.error("Error fetching problems:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get("/contests", (req, res) => {

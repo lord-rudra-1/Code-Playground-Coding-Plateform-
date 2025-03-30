@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Code</title>
+    <title><%= problem.title %> - Code Playground</title>
     <style>
         /* Add your custom CSS styles here */
         body {
@@ -108,6 +108,7 @@
             border-radius: 4px;
             resize: vertical;
             counter-reset: line-number;
+            font-family: monospace;
         }
 
         .code-editor textarea::before {
@@ -130,6 +131,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-top: 1rem;
+            margin-right: 0.5rem;
         }
 
         .code-editor button:hover {
@@ -149,13 +151,79 @@
             border-radius: 4px;
             background-color: #f0f4f8;
         }
+
+        .result-container {
+            margin-top: 1rem;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+
+        .result-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-content {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #f5f5f5;
+            padding: 0.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .submissions-table th, .submissions-table td {
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .submissions-table th {
+            background-color: #f0f4f8;
+        }
+
+        .test-case {
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        .test-case.pass {
+            border-left: 4px solid #28a745;
+        }
+
+        .test-case.fail {
+            border-left: 4px solid #dc3545;
+        }
+
+        .actions-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">
             <a href="/home">
-                <img src="D:\code playground\Code-Playground-Coding-Plateform-\frontend\imgg\lo.png" alt="Logo">
+                <img src="/lo.png" alt="Logo">
             </a>
         </div>
         <ul class="nav-links">
@@ -177,31 +245,27 @@
 
             <div class="tab-content">
                 <div class="statement-content">
-                    <h2>Problem Code: FOODBAL</h2>
-                    <p><strong>Problem Description:</strong> Chef is preparing to cook his dinner.</p>
-                    <p>There are two dishes Chef can make. The first one contains F1 grams of fat and P1 grams of protein, while the second contains F2 grams of fat and P2 grams of protein.</p>
-                    <p>Chef would like the quantity of fats and proteins he consumes to be as close to each other as possible, i.e., the absolute difference between the amount of fats and proteins should be as small as possible.</p>
-                    <p>Help Chef by telling him which dish he'll choose; or if both dishes have the same difference.</p>
-                    <h3>Input Format</h3>
-                    <p>The first and only line of input contains four space-separated integers F1, P1, F2, and P2 - the quantities of fat and protein in the first dish and second dish, respectively.</p>
-                    <h3>Output Format</h3>
-                    <p>Output a single string:</p>
-                    <ul>
-                        <li>"First" (without quotes) if Chef will choose the first dish.</li>
-                        <li>"Second" (without quotes) if Chef will choose the second dish.</li>
-                        <li>"Both" (without quotes) if both dishes are equivalent.</li>
-                    </ul>
-                    <p>Each character of the output may be in either uppercase or lowercase, i.e. if the answer is Both, then any of the strings BOTH, both, Both, bOTh, and so on will be accepted.</p>
+                    <h2>Problem: <%= problem.title %></h2>
+                    <p><strong>Difficulty:</strong> <span class="<%= problem.difficulty.toLowerCase() %>"><%= problem.difficulty %></span></p>
+                    <div class="problem-description">
+                        <%- problem.description %>
+                    </div>
                 </div>
 
                 <div class="submissions-content" style="display: none;">
                     <h2>Submissions</h2>
-                    <!-- Add your submissions section here -->
+                    <div id="user-submissions">
+                        <!-- User submissions will be loaded here -->
+                        <p>Loading submissions...</p>
+                    </div>
                 </div>
 
                 <div class="solution-content" style="display: none;">
-                    <h2>Solution</h2>
-                    <!-- Add your solution section here -->
+                    <h2>Test Results</h2>
+                    <div id="test-results">
+                        <!-- Test results will be shown here -->
+                        <p>Run your code against test cases to see results</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -212,17 +276,35 @@
                     <option value="java">Java</option>
                     <option value="cpp">C++</option>
                     <option value="python">Python</option>
-                    <option value="C">C</option>
+                    <option value="c">C</option>
                     <!-- Add more language options as needed -->
                 </select>
             </div>
             <textarea rows="20" cols="100" id="code-editor"> 
             </textarea>
-            <button>Submit</button>
+            <div class="actions-container">
+                <div>
+                    <button id="run-btn">Run</button>
+                    <button id="test-btn">Test</button>
+                    <button id="submit-btn">Submit</button>
+                </div>
+                <div>
+                    <input type="text" id="custom-input" placeholder="Custom input (optional)">
+                </div>
+            </div>
+            <div class="result-container" id="result-container" style="display: none;">
+                <div class="result-title">Output:</div>
+                <div class="result-content" id="result-output"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Global variables
+        const problemId = '<%= problem._id %>';
+        let userId = localStorage.getItem('userId');
+        
+        // Tab switching functionality
         const tabButtons = document.querySelectorAll('.tabs button');
         const tabContents = document.querySelectorAll('.tab-content > div');
 
@@ -235,17 +317,25 @@
                 // Add active class to the clicked button and show the corresponding content
                 button.classList.add('active');
                 tabContents[index].style.display = 'block';
+                
+                // If switching to submissions tab, load submissions
+                if (button.dataset.tab === 'submissions' && userId) {
+                    loadUserSubmissions();
+                }
             });
         });
 
+        // Language selection functionality
         const languageSelect = document.getElementById('language-select');
         const codeEditor = document.getElementById('code-editor');
 
         // Auto-select the first language option and display its content
         languageSelect.value = 'java';
-        codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass code\n{\npublic static void main (String[] args) throws java.lang.Exception\n{\n// your code goes here\n}\n}';
+        updateCodeTemplate();
 
-        languageSelect.addEventListener('change', () => {
+        languageSelect.addEventListener('change', updateCodeTemplate);
+
+        function updateCodeTemplate() {
             const selectedLanguage = languageSelect.value;
             switch (selectedLanguage) {
                 case 'java':
@@ -255,12 +345,265 @@
                     codeEditor.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n// your code goes here\n\n} ';
                     break;
                 case 'python':
-                    codeEditor.value = '#Let Him Cook';
+                    codeEditor.value = '# Your Python code here\n';
                     break;
-                case 'C':
-                    codeEditor.value = '#include<stdio.h>\n\nint main(){\n // your code goes here \n\n }'
+                case 'c':
+                    codeEditor.value = '#include<stdio.h>\n\nint main(){\n // your code goes here \n\n}';
                     break;
                 // Add more language templates as needed
+            }
+        }
+
+        // Run code functionality
+        document.getElementById('run-btn').addEventListener('click', async () => {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+            const input = document.getElementById('custom-input').value;
+            
+            if (!code) {
+                alert('Please enter some code first');
+                return;
+            }
+            
+            try {
+                const resultContainer = document.getElementById('result-container');
+                const resultOutput = document.getElementById('result-output');
+                
+                resultContainer.style.display = 'block';
+                resultOutput.innerHTML = 'Running...';
+                
+                const response = await fetch('/api/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code, language, input })
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'error') {
+                    resultOutput.innerHTML = `<span class="error">${result.error || 'An error occurred'}</span>`;
+                } else {
+                    resultOutput.innerHTML = result.output || 'No output';
+                    if (result.error) {
+                        resultOutput.innerHTML += `\n<span class="error">${result.error}</span>`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error running code:', error);
+                const resultContainer = document.getElementById('result-container');
+                const resultOutput = document.getElementById('result-output');
+                
+                resultContainer.style.display = 'block';
+                resultOutput.innerHTML = `<span class="error">Failed to run code: ${error.message}</span>`;
+            }
+        });
+
+        // Test code against test cases functionality
+        document.getElementById('test-btn').addEventListener('click', async () => {
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+            
+            if (!code) {
+                alert('Please enter some code first');
+                return;
+            }
+            
+            try {
+                // Show testing message
+                document.getElementById('test-results').innerHTML = 'Testing your code against test cases...';
+                
+                // Switch to the solution tab
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.style.display = 'none');
+                
+                tabButtons[2].classList.add('active');
+                tabContents[2].style.display = 'block';
+                
+                // Fetch problem's test cases
+                const problemResponse = await fetch(`/api/problems/${problemId}`);
+                const problem = await problemResponse.json();
+                
+                if (!problem.testCases || problem.testCases.length === 0) {
+                    document.getElementById('test-results').innerHTML = 'No test cases available for this problem.';
+                    return;
+                }
+                
+                // Test against each test case
+                const response = await fetch('/api/execute/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code, language, testCases: problem.testCases })
+                });
+                
+                const result = await response.json();
+                
+                // Display test results
+                let resultsHtml = `
+                    <div class="test-summary">
+                        <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
+                    </div>
+                    <h4>Test Cases:</h4>
+                `;
+                
+                result.results.forEach((testResult, index) => {
+                    resultsHtml += `
+                        <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
+                            <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
+                            <div>
+                                <strong>Input:</strong> 
+                                <pre>${testResult.input}</pre>
+                            </div>
+                            <div>
+                                <strong>Expected Output:</strong> 
+                                <pre>${testResult.expectedOutput}</pre>
+                            </div>
+                            <div>
+                                <strong>Your Output:</strong> 
+                                <pre>${testResult.actualOutput}</pre>
+                            </div>
+                            ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('test-results').innerHTML = resultsHtml;
+            } catch (error) {
+                console.error('Error testing code:', error);
+                document.getElementById('test-results').innerHTML = `<div class="error">Failed to test code: ${error.message}</div>`;
+            }
+        });
+
+        // Submit solution functionality
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            if (!userId) {
+                alert('Please sign in to submit your solution');
+                return;
+            }
+            
+            const code = codeEditor.value;
+            const language = languageSelect.value;
+            
+            if (!code) {
+                alert('Please enter some code first');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/problems/${problemId}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId, code, language })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`Submission result: ${result.message}`);
+                    
+                    // Switch to submissions tab and refresh
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.style.display = 'none');
+                    
+                    tabButtons[1].classList.add('active');
+                    tabContents[1].style.display = 'block';
+                    
+                    loadUserSubmissions();
+                } else {
+                    alert(`Error: ${result.message || 'Failed to submit solution'}`);
+                }
+            } catch (error) {
+                console.error('Error submitting solution:', error);
+                alert(`Error submitting solution: ${error.message}`);
+            }
+        });
+
+        // Function to load user submissions
+        async function loadUserSubmissions() {
+            if (!userId) {
+                document.getElementById('user-submissions').innerHTML = '<p>Please sign in to view your submissions</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/auth/user/${userId}/submissions`);
+                const submissions = await response.json();
+                
+                // Filter submissions for this problem
+                const problemSubmissions = submissions.filter(sub => sub.problem === problemId);
+                
+                if (problemSubmissions.length === 0) {
+                    document.getElementById('user-submissions').innerHTML = '<p>No submissions yet for this problem</p>';
+                    return;
+                }
+                
+                let submissionsHtml = `
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Language</th>
+                                <th>Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                problemSubmissions.forEach(submission => {
+                    const date = new Date(submission.timestamp);
+                    submissionsHtml += `
+                        <tr>
+                            <td class="${submission.status === 'Accepted' ? 'success' : 'error'}">${submission.status}</td>
+                            <td>${submission.language}</td>
+                            <td>${date.toLocaleString()}</td>
+                            <td><button onclick="loadSubmissionCode('${submission._id}')">View Code</button></td>
+                        </tr>
+                    `;
+                });
+                
+                submissionsHtml += `
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('user-submissions').innerHTML = submissionsHtml;
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                document.getElementById('user-submissions').innerHTML = `<p class="error">Error loading submissions: ${error.message}</p>`;
+            }
+        }
+
+        // Function to load submission code
+        window.loadSubmissionCode = async function(submissionId) {
+            try {
+                const response = await fetch(`/api/auth/submissions/${submissionId}`);
+                const submission = await response.json();
+                
+                if (response.ok) {
+                    // Set the code editor to the submission code
+                    codeEditor.value = submission.code;
+                    
+                    // Set the language selector
+                    languageSelect.value = submission.language;
+                }
+            } catch (error) {
+                console.error('Error loading submission code:', error);
+                alert(`Error loading submission code: ${error.message}`);
+            }
+        };
+
+        // Check for user authentication on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                console.log('User not signed in');
+                // You might want to show a sign-in prompt
             }
         });
     </script>
