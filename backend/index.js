@@ -205,6 +205,57 @@ app.post("/signin", async (req, res) => {
     }
 });
 
+// Profile route
+app.get("/profile", async (req, res) => {
+    // We'll render the profile page without data, as we'll fetch it with AJAX
+    res.render("profile");
+});
+
+// API endpoint to get user profile data
+app.get("/api/auth/profile/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await USER.findById(userId)
+            .select("-password")  // Exclude password from the result
+            .populate("problemsSolved");  // Populate the problems
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Get total submission count
+        const submissionCount = user.submissions ? user.submissions.length : 0;
+        
+        // Get total accepted solutions
+        const acceptedCount = user.submissions
+            ? user.submissions.filter(sub => sub.status === "Accepted").length
+            : 0;
+        
+        // Calculate relevant stats
+        const stats = {
+            problemsSolved: user.problemsSolved ? user.problemsSolved.length : 0,
+            totalSubmissions: submissionCount,
+            acceptedSubmissions: acceptedCount,
+            acceptanceRate: submissionCount > 0 ? Math.round((acceptedCount / submissionCount) * 100) : 0
+        };
+        
+        // Send combined response
+        res.json({
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt
+            },
+            stats,
+            submissions: user.submissions ? user.submissions.slice(0, 5) : [] // Get 5 most recent
+        });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({ message: "Error fetching user profile" });
+    }
+});
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {

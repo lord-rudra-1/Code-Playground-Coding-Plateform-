@@ -13,7 +13,7 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/home">
-                <img src="lo.png" alt="Logo">
+                <img src="/lo.png" alt="Logo">
             </a>
         </div>
         <ul class="nav-links">
@@ -22,7 +22,7 @@
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
             <li><a href="/about">About Us</a></li>
-            <li><a href="/profile">👤</a></li>
+            <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
 
@@ -75,116 +75,129 @@
     </footer>
 
     <script>
-        // Function to fetch problems from the API
-        async function fetchProblems(filters = {}) {
-            try {
-                // Build query string from filters
-                const queryParams = new URLSearchParams();
-                
-                if (filters.difficulty && filters.difficulty !== 'all') {
-                    queryParams.append('difficulty', filters.difficulty);
-                }
-                
-                if (filters.topic && filters.topic !== 'all') {
-                    queryParams.append('topic', filters.topic);
-                }
-                
-                if (filters.sort) {
-                    queryParams.append('sort', filters.sort);
-                }
-                
-                const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
-                
-                // Fetch problems from the API
-                const response = await fetch(`/api/problems${queryString}`);
-                const problems = await response.json();
-                
-                // Display problems
-                displayProblems(problems);
-            } catch (error) {
-                console.error('Error fetching problems:', error);
-                document.getElementById('problems-list').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="error-text">Error loading problems. Please try again later.</td>
-                    </tr>
-                `;
-            }
-        }
-        
-        // Function to display problems in the table
-        function displayProblems(problems) {
-            const problemsList = document.getElementById('problems-list');
-            
-            if (!problems || problems.length === 0) {
-                problemsList.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-text">No problems found.</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Filter problems based on search term
-            const searchTerm = document.getElementById('search-bar').value.toLowerCase();
-            const filteredProblems = searchTerm 
-                ? problems.filter(problem => problem.title.toLowerCase().includes(searchTerm))
-                : problems;
-            
-            if (filteredProblems.length === 0) {
-                problemsList.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-text">No problems match your search.</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Generate HTML for each problem
-            problemsList.innerHTML = filteredProblems.map(problem => `
-                <tr onclick="openProblem('${problem._id}')">
-                    <td>${problem.title}</td>
-                    <td class="${problem.difficulty.toLowerCase()}">${problem.difficulty}</td>
-                    <td>${problem.topic || 'General'}</td>
-                    <td>${calculateAcceptance(problem)}</td>
-                </tr>
-            `).join('');
-        }
-        
-        // Helper function to calculate acceptance rate (dummy for now)
-        function calculateAcceptance(problem) {
-            // In a real implementation, this would be calculated based on submissions
-            // For now, we'll just return a random percentage
-            return Math.floor(Math.random() * 100) + '%';
-        }
-        
-        // Function to open a problem
-        function openProblem(problemId) {
-            window.location.href = `/editcode/${problemId}`;
-        }
-        
-        // Event listeners for filters
-        document.getElementById('difficulty').addEventListener('change', applyFilters);
-        document.getElementById('topic').addEventListener('change', applyFilters);
-        document.getElementById('sort').addEventListener('change', applyFilters);
-        
-        // Debounce function for search
-        let searchTimeout;
-        document.getElementById('search-bar').addEventListener('input', () => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(applyFilters, 300);
-        });
-        
-        // Function to apply filters
-        function applyFilters() {
-            const difficulty = document.getElementById('difficulty').value;
-            const topic = document.getElementById('topic').value;
-            const sort = document.getElementById('sort').value;
-            
-            fetchProblems({ difficulty, topic, sort });
-        }
-        
-        // Fetch problems on page load
+        // Check if user is logged in and update UI accordingly
         document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            const profileLink = document.getElementById('profile-link');
+            
+            if (userId) {
+                // User is logged in, keep the profile link as is
+                profileLink.title = "View Profile";
+            } else {
+                // User is not logged in, change the icon to indicate this
+                profileLink.innerHTML = "👤 (Sign In)";
+                profileLink.title = "Please Sign In";
+            }
+            
+            // Function to fetch problems from the API
+            async function fetchProblems(filters = {}) {
+                try {
+                    // Build query string from filters
+                    const queryParams = new URLSearchParams();
+                    
+                    if (filters.difficulty && filters.difficulty !== 'all') {
+                        queryParams.append('difficulty', filters.difficulty);
+                    }
+                    
+                    if (filters.topic && filters.topic !== 'all') {
+                        queryParams.append('topic', filters.topic);
+                    }
+                    
+                    if (filters.sort) {
+                        queryParams.append('sort', filters.sort);
+                    }
+                    
+                    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+                    
+                    // Fetch problems from the API
+                    const response = await fetch(`/api/problems${queryString}`);
+                    const problems = await response.json();
+                    
+                    // Display problems
+                    displayProblems(problems);
+                } catch (error) {
+                    console.error('Error fetching problems:', error);
+                    document.getElementById('problems-list').innerHTML = `
+                        <tr>
+                            <td colspan="4" class="error-text">Error loading problems. Please try again later.</td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            // Function to display problems in the table
+            function displayProblems(problems) {
+                const problemsList = document.getElementById('problems-list');
+                
+                if (!problems || problems.length === 0) {
+                    problemsList.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="empty-text">No problems found.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Filter problems based on search term
+                const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+                const filteredProblems = searchTerm 
+                    ? problems.filter(problem => problem.title.toLowerCase().includes(searchTerm))
+                    : problems;
+                
+                if (filteredProblems.length === 0) {
+                    problemsList.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="empty-text">No problems match your search.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Generate HTML for each problem
+                problemsList.innerHTML = filteredProblems.map(problem => `
+                    <tr onclick="openProblem('${problem._id}')">
+                        <td>${problem.title}</td>
+                        <td class="${problem.difficulty.toLowerCase()}">${problem.difficulty}</td>
+                        <td>${problem.topic || 'General'}</td>
+                        <td>${calculateAcceptance(problem)}</td>
+                    </tr>
+                `).join('');
+            }
+            
+            // Helper function to calculate acceptance rate (dummy for now)
+            function calculateAcceptance(problem) {
+                // In a real implementation, this would be calculated based on submissions
+                // For now, we'll just return a random percentage
+                return Math.floor(Math.random() * 100) + '%';
+            }
+            
+            // Function to open a problem
+            function openProblem(problemId) {
+                window.location.href = `/editcode/${problemId}`;
+            }
+            
+            // Event listeners for filters
+            document.getElementById('difficulty').addEventListener('change', applyFilters);
+            document.getElementById('topic').addEventListener('change', applyFilters);
+            document.getElementById('sort').addEventListener('change', applyFilters);
+            
+            // Debounce function for search
+            let searchTimeout;
+            document.getElementById('search-bar').addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(applyFilters, 300);
+            });
+            
+            // Function to apply filters
+            function applyFilters() {
+                const difficulty = document.getElementById('difficulty').value;
+                const topic = document.getElementById('topic').value;
+                const sort = document.getElementById('sort').value;
+                
+                fetchProblems({ difficulty, topic, sort });
+            }
+            
+            // Fetch problems on page load
             fetchProblems();
         });
     </script>

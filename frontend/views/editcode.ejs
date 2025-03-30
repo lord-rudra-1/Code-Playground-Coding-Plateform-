@@ -219,6 +219,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="logo">
@@ -232,6 +233,7 @@
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
             <li><a href="/about">About Us</a></li>
+            <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
 
@@ -304,6 +306,20 @@
         const problemId = '<%= problem._id %>';
         let userId = localStorage.getItem('userId');
         
+        // Update profile link based on login status
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileLink = document.getElementById('profile-link');
+            
+            if (userId) {
+                // User is logged in, keep the profile link as is
+                profileLink.title = "View Profile";
+            } else {
+                // User is not logged in, change the icon to indicate this
+                profileLink.innerHTML = "👤 (Sign In)";
+                profileLink.title = "Please Sign In";
+            }
+        });
+        
         // Tab switching functionality
         const tabButtons = document.querySelectorAll('.tabs button');
         const tabContents = document.querySelectorAll('.tab-content > div');
@@ -314,10 +330,9 @@
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 tabContents.forEach(content => content.style.display = 'none');
 
-                // Add active class to the clicked button and show the corresponding content
                 button.classList.add('active');
                 tabContents[index].style.display = 'block';
-                
+
                 // If switching to submissions tab, load submissions
                 if (button.dataset.tab === 'submissions' && userId) {
                     loadUserSubmissions();
@@ -350,7 +365,6 @@
                 case 'c':
                     codeEditor.value = '#include<stdio.h>\n\nint main(){\n // your code goes here \n\n}';
                     break;
-                // Add more language templates as needed
             }
         }
 
@@ -359,19 +373,17 @@
             const code = codeEditor.value;
             const language = languageSelect.value;
             const input = document.getElementById('custom-input').value;
-            
             if (!code) {
                 alert('Please enter some code first');
                 return;
             }
-            
+
             try {
                 const resultContainer = document.getElementById('result-container');
                 const resultOutput = document.getElementById('result-output');
-                
                 resultContainer.style.display = 'block';
                 resultOutput.innerHTML = 'Running...';
-                
+
                 const response = await fetch('/api/execute', {
                     method: 'POST',
                     headers: {
@@ -394,7 +406,6 @@
                 console.error('Error running code:', error);
                 const resultContainer = document.getElementById('result-container');
                 const resultOutput = document.getElementById('result-output');
-                
                 resultContainer.style.display = 'block';
                 resultOutput.innerHTML = `<span class="error">Failed to run code: ${error.message}</span>`;
             }

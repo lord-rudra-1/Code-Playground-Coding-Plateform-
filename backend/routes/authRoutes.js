@@ -65,4 +65,51 @@ router.get("/submissions/:submissionId", async (req, res) => {
     }
 });
 
+// Update user profile
+router.put("/user/:userId/update", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const { username, password } = req.body;
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Update username if provided
+        if (username) {
+            user.username = username;
+        }
+        
+        // Update password if provided
+        if (password) {
+            user.password = await bcrypt.hash(password, 10);
+        }
+        
+        await user.save();
+        
+        res.json({ message: "User updated successfully" });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Error updating user" });
+    }
+});
+
+// Delete user account
+router.delete("/user/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        
+        const result = await User.findByIdAndDelete(userId);
+        if (!result) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        res.json({ message: "User deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ message: "Error deleting user" });
+    }
+});
+
 module.exports = router;

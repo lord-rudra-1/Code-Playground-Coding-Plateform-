@@ -6,6 +6,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Code Playground</title>
     <link rel="stylesheet" href="/css/profile.css">
+    <style>
+        /* Additional styles */
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #bd2130;
+        }
+        
+        .not-signed-in {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        
+        .not-signed-in h2 {
+            margin-bottom: 20px;
+            color: #5b9bd5;
+        }
+        
+        .not-signed-in button {
+            background-color: #5b9bd5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .not-signed-in button:hover {
+            background-color: #4a90e2;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #5b9bd5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .submission-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        
+        .status-accepted {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,7 +107,7 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/home">
-                <img src="lo.png" alt="Logo">
+                <img src="/lo.png" alt="Logo">
             </a>
         </div>
         <ul class="nav-links">
@@ -22,170 +115,301 @@
             <li><a href="/problems">Problems</a></li>
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
-            <li><a href="/contact">About Us</a></li>
+            <li><a href="/about">About Us</a></li>
             <li><a href="/profile">👤</a></li>
         </ul>
     </nav>
 
-    <!-- Profile Header -->
-    <div class="profile-header">
-        <div class="profile-left">
-            <img src="profile.png" alt="Profile Picture" class="profile-pic">
-            <div class="user-info">
-                <h2 class="username">John Doe</h2>
-                <p class="user-role">Competitive Programmer | Web Developer</p>
-            </div>
-        </div>
-        <div class="profile-right">
-            <div class="stat-box">
-                <h3>Rank</h3>
-                <p>#1245</p>
-            </div>
-            <div class="stat-box">
-                <h3>Rating</h3>
-                <p>2100</p>
-            </div>
-            <div class="stat-box">
-                <h3>Badges</h3>
-                <p>🏆 🎖️</p>
-            </div>
-        </div>
+    <!-- Main content that will be shown based on login status -->
+    <div id="profile-content">
+        <div class="loader"></div>
+        <p style="text-align: center;">Loading profile data...</p>
     </div>
-
-    <!-- Profile Content -->
-    <div class="profile-container">
-        <div class="sidebar">
-            <ul>
-                <li class="active" onclick="switchTab('overview')">Overview</li>
-                <li onclick="switchTab('submissions')">Submissions</li>
-                <li onclick="switchTab('badges')">Badges</li>
-                <li onclick="switchTab('settings')">Settings</li>
-            </ul>
+    
+    <!-- Not signed in template -->
+    <template id="not-signed-in-template">
+        <div class="not-signed-in">
+            <h2>Not Signed In</h2>
+            <p>Please sign in to view your profile.</p>
+            <div>
+                <button onclick="window.location.href='/signin'">Sign In</button>
+                <button onclick="window.location.href='/signup'">Sign Up</button>
+            </div>
         </div>
-
-        <div class="content">
-            <!-- Overview Section -->
-            <div class="tab-content" id="overview">
-                <h3>Profile Overview</h3>
-                <div class="profile-stats">
-                    <div class="info-box">
-                        <h4>Problems Solved</h4>
-                        <p>150</p>
-                    </div>
-                    <div class="info-box">
-                        <h4>Contests Participated</h4>
-                        <p>10</p>
-                    </div>
-                    <div class="info-box">
-                        <h4>Discussion Likes</h4>
-                        <p>340</p>
-                    </div>
+    </template>
+    
+    <!-- Profile template -->
+    <template id="profile-template">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-left">
+                <img src="/profile.png" alt="Profile Picture" class="profile-pic">
+                <div class="user-info">
+                    <h2 class="username" id="user-name">Loading...</h2>
+                    <p class="user-role" id="user-email">Loading...</p>
                 </div>
             </div>
-
-            <!-- Submissions Section -->
-            <div class="tab-content hidden" id="submissions">
-                <h3>Recent Submissions</h3>
-                <ul class="submission-list">
-                    <li>Two Sum - <span class="accepted">Accepted ✅</span></li>
-                    <li>Binary Search - <span class="wrong">Wrong Answer ❌</span></li>
-                    <li>Longest Subsequence - <span class="accepted">Accepted ✅</span></li>
-                    <li>Palindrome Check - <span class="accepted">Accepted ✅</span></li>
-                    <li>Graph Traversal - <span class="wrong">Time Limit Exceeded ⏳</span></li>
+            <div class="profile-right">
+                <div class="stat-box">
+                    <h3>Problems</h3>
+                    <p id="problems-solved">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Success Rate</h3>
+                    <p id="success-rate">0%</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Member Since</h3>
+                    <p id="member-since">--</p>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Profile Content -->
+        <div class="profile-container">
+            <div class="sidebar">
+                <ul>
+                    <li class="active" onclick="switchTab('overview')">Overview</li>
+                    <li onclick="switchTab('submissions')">Submissions</li>
+                    <li onclick="switchTab('settings')">Settings</li>
                 </ul>
             </div>
-
-            <!-- Badges Section -->
-            <div class="tab-content hidden" id="badges">
-                <h3>Achievements</h3>
-                <div class="badges">
-                    <span class="badge">🏆 Problem Solver</span>
-                    <span class="badge">🎖️ Contest Champion</span>
-                    <span class="badge">💡 Code Enthusiast</span>
-                    <span class="badge">⚡ Speed Coder</span>
-                    <span class="badge">🛡️ Security Expert</span>
+    
+            <div class="content">
+                <!-- Overview Section -->
+                <div class="tab-content" id="overview">
+                    <h3>Profile Overview</h3>
+                    <div class="profile-stats">
+                        <div class="info-box">
+                            <h4>Problems Solved</h4>
+                            <p id="overview-problems-solved">0</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Total Submissions</h4>
+                            <p id="overview-submissions">0</p>
+                        </div>
+                        <div class="info-box">
+                            <h4>Accepted Submissions</h4>
+                            <p id="overview-accepted">0</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Submissions Section -->
+                <div class="tab-content hidden" id="submissions">
+                    <h3>Recent Submissions</h3>
+                    <ul class="submission-list" id="submissions-list">
+                        <!-- Submissions will be loaded here -->
+                        <li>Loading submissions...</li>
+                    </ul>
+                </div>
+    
+                <!-- Settings Section -->
+                <div class="tab-content hidden" id="settings">
+                    <h3>Account Settings</h3>
+                    <div class="settings-form">
+                        <input type="text" id="username-input" placeholder="Change Username">
+                        <input type="password" id="password-input" placeholder="Change Password">
+                        <input type="password" id="confirm-password-input" placeholder="Confirm Password">
+                        <button id="save-changes">Save Changes</button>
+                        <button id="delete-account">Delete Account</button>
+                        <button class="logout-btn" id="logout-btn">Logout</button>
+                    </div>
                 </div>
             </div>
-
-
-            <!-- Badge Popup -->
-            <div class="badge-popup" id="badge-popup">
-                <h2 id="badge-title"></h2>
-                <p>You have earned this badge for outstanding achievements!</p>
-                <button id="close-popup">Close</button>
-            </div>
-
-            <!-- Settings Section -->
-            <div class="tab-content hidden" id="settings">
-                <h3>Account Settings</h3>
-                <div class="settings-form">
-                    <input type="text" placeholder="Change Username">
-                    <input type="password" placeholder="Change Password">
-                    <button id="save-changes">Save Changes</button>
-                    <button id="delete-account">Delete Account</button>
-                    <button class="logout-btn">Logout</button>
-                </div>
-            </div>
-
         </div>
-    </div>
+    </template>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const tabs = document.querySelectorAll(".sidebar li");
-            const contents = document.querySelectorAll(".tab-content");
-            const badgePopup = document.getElementById("badge-popup");
-            const badgeTitle = document.getElementById("badge-title");
-            const closePopupBtn = document.getElementById("close-popup");
+        // Global variables
+        let userId = localStorage.getItem('userId');
+        let userData = null;
+        
+        // Function to switch between tabs
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach((content) => content.classList.add("hidden"));
+            document.getElementById(tabId).classList.remove("hidden");
 
-            function switchTab(tabId) {
-                contents.forEach((content) => content.classList.add("hidden"));
-                document.getElementById(tabId).classList.remove("hidden");
-
-                tabs.forEach((tab) => tab.classList.remove("active"));
-                document
-                    .querySelector(`[onclick="switchTab('${tabId}')"]`)
-                    .classList.add("active");
+            document.querySelectorAll(".sidebar li").forEach((tab) => tab.classList.remove("active"));
+            document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add("active");
+        }
+        
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Function to load user profile data
+        async function loadUserProfile() {
+            if (!userId) {
+                showNotSignedIn();
+                return;
             }
-
-            tabs.forEach((tab) => {
-                tab.addEventListener("click", function () {
-                    switchTab(this.getAttribute("onclick").split("'")[1]);
+            
+            try {
+                const response = await fetch(`/api/auth/profile/${userId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile data');
+                }
+                
+                userData = await response.json();
+                displayUserProfile(userData);
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+                document.getElementById('profile-content').innerHTML = `
+                    <div class="not-signed-in">
+                        <h2>Error Loading Profile</h2>
+                        <p>${error.message}</p>
+                        <button onclick="window.location.reload()">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to show the "not signed in" message
+        function showNotSignedIn() {
+            const template = document.getElementById('not-signed-in-template');
+            const content = template.content.cloneNode(true);
+            const profileContent = document.getElementById('profile-content');
+            
+            profileContent.innerHTML = '';
+            profileContent.appendChild(content);
+        }
+        
+        // Function to display user profile
+        function displayUserProfile(data) {
+            const template = document.getElementById('profile-template');
+            const content = template.content.cloneNode(true);
+            const profileContent = document.getElementById('profile-content');
+            
+            profileContent.innerHTML = '';
+            profileContent.appendChild(content);
+            
+            // Fill in user information
+            document.getElementById('user-name').textContent = data.user.username;
+            document.getElementById('user-email').textContent = data.user.email;
+            document.getElementById('problems-solved').textContent = data.stats.problemsSolved;
+            document.getElementById('success-rate').textContent = `${data.stats.acceptanceRate}%`;
+            document.getElementById('member-since').textContent = formatDate(data.user.createdAt);
+            
+            // Fill in overview stats
+            document.getElementById('overview-problems-solved').textContent = data.stats.problemsSolved;
+            document.getElementById('overview-submissions').textContent = data.stats.totalSubmissions;
+            document.getElementById('overview-accepted').textContent = data.stats.acceptedSubmissions;
+            
+            // Fill in submissions
+            const submissionsList = document.getElementById('submissions-list');
+            
+            if (data.submissions && data.submissions.length > 0) {
+                submissionsList.innerHTML = '';
+                
+                data.submissions.forEach(submission => {
+                    const submissionDate = formatDate(submission.timestamp);
+                    const statusClass = submission.status === 'Accepted' ? 'status-accepted' : 'status-error';
+                    
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div>Problem: <strong>${submission.problem || 'Unknown'}</strong></div>
+                        <div>Language: ${submission.language}</div>
+                        <div>Date: ${submissionDate}</div>
+                        <div>Status: <span class="status-badge ${statusClass}">${submission.status}</span></div>
+                    `;
+                    
+                    submissionsList.appendChild(li);
                 });
-            });
-
-            switchTab("overview");
-
-            // Badge Click to Maximize
-            document.querySelectorAll(".badge").forEach((badge) => {
-                badge.addEventListener("click", function () {
-                    badgeTitle.textContent = this.textContent;
-                    badgePopup.style.display = "block";
+            } else {
+                submissionsList.innerHTML = '<div class="empty-message">No submissions yet</div>';
+            }
+            
+            // Set input values for settings
+            document.getElementById('username-input').value = data.user.username;
+            
+            // Add event listeners
+            document.getElementById('save-changes').addEventListener('click', saveChanges);
+            document.getElementById('delete-account').addEventListener('click', deleteAccount);
+            document.getElementById('logout-btn').addEventListener('click', logout);
+        }
+        
+        // Function to save profile changes
+        async function saveChanges() {
+            const username = document.getElementById('username-input').value;
+            const password = document.getElementById('password-input').value;
+            const confirmPassword = document.getElementById('confirm-password-input').value;
+            
+            if (!username) {
+                alert('Username cannot be empty');
+                return;
+            }
+            
+            if (password && password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/auth/user/${userId}/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password: password || undefined
+                    })
                 });
-            });
-
-            closePopupBtn.addEventListener("click", function () {
-                badgePopup.style.display = "none";
-            });
-
-            // Form Submissions
-            document
-                .getElementById("save-changes")
-                .addEventListener("click", function () {
-                    alert("Changes saved!");
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update profile');
+                }
+                
+                alert('Profile updated successfully');
+                // Reload profile data
+                loadUserProfile();
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert(`Error updating profile: ${error.message}`);
+            }
+        }
+        
+        // Function to delete account
+        async function deleteAccount() {
+            if (!confirm('Are you sure you want to delete your account? This cannot be undone!')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/auth/user/${userId}`, {
+                    method: 'DELETE'
                 });
-
-            document
-                .getElementById("delete-account")
-                .addEventListener("click", function () {
-                    if (
-                        confirm(
-                            "Are you sure you want to delete your account? This cannot be undone!"
-                        )
-                    ) {
-                        alert("Account deleted.");
-                    }
-                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete account');
+                }
+                
+                alert('Account deleted successfully');
+                logout();
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                alert(`Error deleting account: ${error.message}`);
+            }
+        }
+        
+        // Function to log out
+        function logout() {
+            localStorage.removeItem('userId');
+            alert('Logged out successfully');
+            window.location.href = '/home';
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserProfile();
         });
 
     </script>
