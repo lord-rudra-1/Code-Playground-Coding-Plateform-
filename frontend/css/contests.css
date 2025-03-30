@@ -57,6 +57,94 @@ body {
   color: #dbeafe;
 }
 
+/* Contest Container - Modern Look */
+.contest-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px; /* More space for a clean look */
+  margin-top: 30px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Common Button Styling */
+.btn {
+  padding: 14px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Create Contest Button with Gradient */
+.create-contest-btn {
+  background: linear-gradient(135deg, #ff7f50, #ff4500);
+  color: white;
+}
+
+.create-contest-btn:hover {
+  background: linear-gradient(135deg, #ff6347, #e63900);
+  transform: scale(1.05);
+  box-shadow: 0px 8px 20px rgba(255, 99, 71, 0.5);
+}
+
+/* Join Contest Section */
+.join-contest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Join Contest Form */
+#join-contest-form {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Input Field */
+#contest-code {
+  padding: 14px;
+  width: 250px;
+  border: 2px solid rgba(255, 99, 71, 0.4);
+  border-radius: 10px;
+  font-size: 16px;
+  transition: 0.3s ease-in-out;
+  background: rgba(255, 255, 255, 0.2);
+  color: black;
+  backdrop-filter: blur(5px);
+}
+
+/* Input Focus Effect */
+#contest-code:focus {
+  border-color: #ff4500;
+  box-shadow: 0px 0px 10px rgba(255, 69, 0, 0.5);
+  outline: none;
+}
+
+/* Join Contest Button */
+.join-contest-btn {
+  background: linear-gradient(135deg, #32cd32, #008000);
+  color: white;
+}
+
+.join-contest-btn:hover {
+  background: linear-gradient(135deg, #3cb371, #006400);
+  transform: scale(1.05);
+  box-shadow: 0px 8px 20px rgba(50, 205, 50, 0.5);
+}
+
 /* Contest Section */
 .contest-section {
   text-align: center;
