@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Contest - Code Playground</title>
+    <link rel="stylesheet" href="/css/create_contest.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home"><img src="lo.png" alt="Logo"></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/contact">About Us</a></li>
+            <li><a href="/profile" class="profile-icon">👤</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="contest-section">
+                <div class="contest-header">
+                    <h2>Create a New Contest</h2>
+                    <p>Fill out the form below to create your custom coding competition</p>
+                </div>
+
+                <form id="create-contest-form" class="form-grid">
+                    <!-- Basic Information -->
+                    <div class="form-group half-width">
+                        <label for="contest-name">Contest Name</label>
+                        <input type="text" id="contest-name" required placeholder="Enter contest name">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="contest-code">Contest Code</label>
+                        <input type="text" id="contest-code" required placeholder="Unique identifier">
+                    </div>
+
+                    <!-- Timing -->
+                    <div class="form-group half-width">
+                        <label for="start-time">Start Time</label>
+                        <input type="datetime-local" id="start-time" required>
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="end-time">End Time</label>
+                        <input type="datetime-local" id="end-time" required>
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div class="form-group half-width">
+                        <label for="difficulty">Difficulty Level</label>
+                        <select id="difficulty">
+                            <option>Easy</option>
+                            <option>Medium</option>
+                            <option>Hard</option>
+                        </select>
+                    </div>
+
+                    <!-- Problem Creation Section -->
+                    <div class="form-group full-width">
+                        <div class="form-section">
+                            <h4>Problem Management</h4>
+                            <p>Create new problems or select existing ones from the problem bank</p>
+
+                            <div class="problem-tabs">
+                                <div class="problem-tab active" data-tab="create">Create New Problem</div>
+                                <div class="problem-tab" data-tab="existing">Select Existing Problem</div>
+                            </div>
+
+                            <div class="problem-content active" id="create-problem">
+                                <div class="editor-container">
+                                    <label>Problem Title</label>
+                                    <input type="text" class="problem-title" placeholder="Enter problem title">
+
+                                    <label>Problem Description</label>
+                                    <div class="editor-toolbar">
+                                        <button type="button" class="editor-button" data-format="bold">B</button>
+                                        <button type="button" class="editor-button" data-format="italic">I</button>
+                                        <button type="button" class="editor-button" data-format="code">Code</button>
+                                    </div>
+                                    <textarea class="problem-description"
+                                        placeholder="Write problem description (Markdown supported)"></textarea>
+                                    <div class="markdown-preview" id="description-preview"></div>
+
+                                    <label>Test Cases</label>
+                                    <div id="test-cases-container">
+                                        <div class="test-case">
+                                            <div class="test-case-header">
+                                                <span>Test Case #1</span>
+                                                <span class="test-case-remove">✕ Remove</span>
+                                            </div>
+                                            <div class="io-pair">
+                                                <div>
+                                                    <label>Input</label>
+                                                    <textarea class="test-input" placeholder="Input data"></textarea>
+                                                </div>
+                                                <div>
+                                                    <label>Expected Output</label>
+                                                    <textarea class="test-output"
+                                                        placeholder="Expected output"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-secondary add-test-case">+ Add Test
+                                        Case</button>
+
+                                    <div class="problem-meta">
+                                        <div>
+                                            <label>Time Limit (seconds)</label>
+                                            <input type="number" class="time-limit" min="1" value="2">
+                                        </div>
+                                        <div>
+                                            <label>Memory Limit (MB)</label>
+                                            <input type="number" class="memory-limit" min="1" value="256">
+                                        </div>
+                                        <div>
+                                            <label>Difficulty</label>
+                                            <select class="problem-difficulty">
+                                                <option>Easy</option>
+                                                <option>Medium</option>
+                                                <option>Hard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary" id="add-problem">Add Problem to
+                                        Contest</button>
+                                </div>
+                            </div>
+
+                            <div class="problem-content" id="existing-problem">
+                                <select id="problem-bank-existing" multiple class="full-width">
+                                    <option value="p1">Problem 1: Two Sum (Easy)</option>
+                                    <option value="p2">Problem 2: Reverse String (Easy)</option>
+                                    <option value="p3">Problem 3: Binary Search (Medium)</option>
+                                </select>
+                                <button type="button" class="btn btn-secondary" onclick="addSelectedProblems()">Add
+                                    Selected Problems</button>
+
+                                <div class="problem-selection">
+                                    <h4>Selected Problems</h4>
+                                    <div class="problem-list" id="selected-problems">
+                                        <!-- Problems will be added here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scoring -->
+                    <div class="form-group half-width">
+                        <label for="score-distribution">Points per Problem</label>
+                        <input type="number" id="score-distribution" required min="1" value="100">
+                    </div>
+
+                    <!-- Language Selection Section -->
+                    <div class="form-group full-width">
+                        <div class="form-section">
+                            <h4>Allowed Programming Languages</h4>
+                            <p>Select which languages participants can use in this contest</p>
+
+                            <div class="language-selection">
+                                <div class="language-options">
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="Python" checked>
+                                        Python
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="C++" checked>
+                                        C++
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="Java" checked>
+                                        Java
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="JavaScript" checked>
+                                        JavaScript
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="C">
+                                        C
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="C#">
+                                        C#
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="Ruby">
+                                        Ruby
+                                    </label>
+
+                                    <label class="language-option">
+                                        <input type="checkbox" name="allowed-languages" value="Swift">
+                                        Swift
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contest Settings -->
+                    <div class="form-group full-width">
+                        <h4>Contest Settings</h4>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="plagiarism-check" checked>
+                            <label for="plagiarism-check">Enable Plagiarism Detection</label>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="email-verification">
+                            <label for="email-verification">Email Verification Required</label>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enable-leaderboard" checked>
+                            <label for="enable-leaderboard">Enable Leaderboard</label>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="manual-evaluation">
+                            <label for="manual-evaluation">Enable Manual Evaluation</label>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">🚀 Create Contest</button>
+                        <button type="reset" class="btn btn-secondary">Reset Form</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <script src="/js/create_contest.js"></script>
+</body>
+
+</html>

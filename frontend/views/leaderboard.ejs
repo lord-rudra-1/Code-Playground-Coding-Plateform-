@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Code Playground</title>
+    <link rel="stylesheet" href="/css/leaderboard.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/home">
+                <img src="lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/contact">About Us</a></li>
+            <li><a href="/profile" class="profile-icon">👤</a></li>
+        </ul>
+    </nav>
+
+    <!-- Leaderboard Section -->
+    <section class="leaderboard-section">
+        <h2>Contest Leaderboard</h2>
+
+        <!-- Contest Selection -->
+        <div class="contest-selector">
+            <label for="contest-dropdown">Select Contest:</label>
+            <select id="contest-dropdown">
+                <option value="january-challenge">January Code Challenge</option>
+                <option value="data-marathon">Data Structures Marathon</option>
+                <option value="algorithm-challenge">Algorithm Coding Challenge</option>
+            </select>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>JohnDoe123</td>
+                    <td>95</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>CodeMaster</td>
+                    <td>92</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>DevKing</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>SpeedCoder</td>
+                    <td>88</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>LogicPro</td>
+                    <td>85</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button id="prev-page">Previous</button>
+            <span id="current-page">1 / 5</span>
+            <button id="next-page">Next</button>
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const leaderboardTable = document.querySelector(".leaderboard-table tbody");
+            const currentPageElement = document.getElementById("current-page");
+            const prevPageBtn = document.getElementById("prev-page");
+            const nextPageBtn = document.getElementById("next-page");
+            const selectContest = document.getElementById("select-contest");
+
+            let participants = [];
+            let currentPage = 1;
+            const entriesPerPage = 10;
+
+            // Function to fetch leaderboard data
+            function fetchParticipants() {
+                let totalParticipants = Math.floor(Math.random() * 50) + 10; // Random between 10 and 60
+                participants = Array.from({ length: totalParticipants }, (_, i) => ({
+                    rank: i + 1,
+                    username: `User${i + 1}`,
+                    score: Math.floor(Math.random() * 1000),
+                }));
+
+                updateLeaderboard(); // Does NOT reset page number now
+            }
+
+            // Function to update leaderboard
+            function updateLeaderboard() {
+                const totalPages = Math.ceil(participants.length / entriesPerPage) || 1;
+
+                const startIndex = (currentPage - 1) * entriesPerPage;
+                const displayedParticipants = participants.slice(
+                    startIndex,
+                    startIndex + entriesPerPage
+                );
+
+                leaderboardTable.innerHTML = "";
+
+                displayedParticipants.forEach((participant) => {
+                    const row = `<tr>
+                      <td>${participant.rank}</td>
+                      <td>${participant.username}</td>
+                      <td>${participant.score}</td>
+                  </tr>`;
+                    leaderboardTable.innerHTML += row;
+                });
+
+                // Maintain fixed table size (fill empty rows)
+                let remainingRows = entriesPerPage - displayedParticipants.length;
+                for (let i = 0; i < remainingRows; i++) {
+                    leaderboardTable.innerHTML += `<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
+                }
+
+                currentPageElement.textContent = `${currentPage} / ${totalPages}`;
+                prevPageBtn.disabled = currentPage === 1;
+                nextPageBtn.disabled = currentPage >= totalPages;
+            }
+
+            // Pagination controls
+            prevPageBtn.addEventListener("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateLeaderboard();
+                }
+            });
+
+            nextPageBtn.addEventListener("click", function () {
+                const totalPages = Math.ceil(participants.length / entriesPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateLeaderboard();
+                }
+            });
+
+            // Contest selection: Now keeps the current page instead of resetting to Page 1
+            if (selectContest) {
+                selectContest.addEventListener("change", function () {
+                    fetchParticipants(); // Keeps the last viewed page instead of resetting
+                });
+            }
+
+            // Load initial leaderboard
+            fetchParticipants();
+        });
+    </script>
+
+</body>
+
+</html>

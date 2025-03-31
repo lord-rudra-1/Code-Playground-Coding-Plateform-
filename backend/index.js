@@ -7,8 +7,7 @@ const app = express();
 const connectDB = require("./config/db");
 const USER = require("./models/User");
 const bcrypt = require("bcrypt");
-const fs = require('fs');
-const { exec } = require("child_process");
+const Problem = require("./models/Problem");
 
 const SALT_ROUNDS = 10;
 
@@ -18,7 +17,7 @@ const SALT_ROUNDS = 10;
 const authRoutes = require("./routes/authRoutes");
 const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
-const bodyParser = require("body-parser");
+const discussRoutes = require("./routes/discussRoutes");
 
 const TEMP_DIR = path.join(__dirname, 'temp');
 
@@ -42,7 +41,8 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
-app.use("/api/execute", require("./routes/executeRoutes"));
+app.use("/api/execute", executeRoutes);
+app.use("/api/discuss", discussRoutes);
 
 
 
@@ -84,82 +84,21 @@ app.get("/contestpage", async (req, res) => {
 */
 
 // Route for Edit Code Page
-app.get("/editcode/:problemCode", (req, res) => {
-    const problemCode = req.params.problemCode;
-    res.render("editcode", { problemCode }); // Render the editcode page with problem code
-});
-
-
-// Ensure the temp directory exists
-if (!fs.existsSync(TEMP_DIR)) {
-    fs.mkdirSync(TEMP_DIR, { recursive: true });
-}
-
-app.post('/run', (req, res) => {
-    // console.log("ok\n");
-    const { code, language } = req.body;
-    console.log(code, language);
-
-    // Validate input
-    if (!code || !language) {
-        return res.status(400).json({ error: 'Missing required fields: code or language' });
-    }
-
-    // Determine the filename based on the language
-    const filename = `temp.${language === 'cpp' ? 'cpp' : language === 'java' ? 'java' : language === 'python' ? 'py' : 'c'}`;
-    const filePath = path.join(TEMP_DIR, filename);
-    console.log(filePath);
-
-    // Write the code to a temporary file
-    fs.writeFileSync(filePath, code);
-
-    // Command to execute the code based on the selected language
-    let command = '';
-    switch (language.toLowerCase()) {
-        case 'python':
-            command = `python ${filePath}`;
-            break;
-        case 'java':
-            command = `javac ${filePath} && java -cp ${TEMP_DIR} Main`;
-            break;
-        case 'cpp':
-            command = `g++ ${filePath} -o ${path.join(TEMP_DIR, 'temp')} && ${path.join(TEMP_DIR, 'temp')}`;
-            break;
-        case 'c':
-            command = `gcc ${filePath} -o ${path.join(TEMP_DIR, 'temp')} && ${path.join(TEMP_DIR, 'temp')}`;
-            break;
-        default:
-            return res.status(400).json({ error: 'Unsupported language' });
-    }
-
-    // Execute the command
-    exec(command, (error, stdout, stderr) => {
-        // Cleanup temporary files
-        // if (fs.existsSync(filePath)) {
-        //     fs.unlinkSync(filePath);
-        // }
-        if (language === 'java') {
-            const classFilePath = path.join(TEMP_DIR, 'Main.class');
-            if (fs.existsSync(classFilePath)) {
-                fs.unlinkSync(classFilePath);
-            }
-        } else if (language === 'cpp' || language === 'c') {
-            const tempFilePath = path.join(TEMP_DIR, 'temp');
-            if (fs.existsSync(tempFilePath)) {
-                fs.unlinkSync(tempFilePath);
-            }
+app.get("/editcode/:problemId", async (req, res) => {
+    try {
+        const problemId = req.params.problemId;
+        const problem = await Problem.findById(problemId);
+        
+        if (!problem) {
+            return res.status(404).send("Problem not found");
         }
-
-        // Handle errors and return the output
-        if (error) {
-            return res.status(500).json({ error: stderr || 'Error executing code' });
-        }
-        res.json({ output: stdout });
-    });
+        
+        res.render("editcode", { problem });
+    } catch (error) {
+        console.error("Error fetching problem for edit:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
-
-
-
 
 
 // Root Route
@@ -183,8 +122,14 @@ app.get("/explore", (req, res) => {
     res.render("explore");
 });
 
-app.get("/problems", (req, res) => {
-    res.render("problems");
+app.get("/problems", async (req, res) => {
+    try {
+        // We'll fetch problems in the template itself via client-side API call
+        res.render("problems");
+    } catch (error) {
+        console.error("Error fetching problems:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get("/contests", (req, res) => {
@@ -239,6 +184,11 @@ app.post("/signup", async (req, res) => {
 app.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+        
         // Find user
         const user = await USER.findOne({ email });
         if (!user) {
@@ -251,15 +201,68 @@ app.post("/signin", async (req, res) => {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
+        // Successful login
         res.json({
             email: user.email,
             userId: user._id,
+            username: user.username,
             message: "Signin successful"
         });
 
     } catch (error) {
         console.error("Signin error:", error);
         res.status(500).json({ message: "Error signing in" });
+    }
+});
+
+// Profile route
+app.get("/profile", async (req, res) => {
+    // We'll render the profile page without data, as we'll fetch it with AJAX
+    res.render("profile");
+});
+
+// API endpoint to get user profile data
+app.get("/api/auth/profile/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await USER.findById(userId)
+            .select("-password")  // Exclude password from the result
+            .populate("problemsSolved");  // Populate the problems
+        
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Get total submission count
+        const submissionCount = user.submissions ? user.submissions.length : 0;
+        
+        // Get total accepted solutions
+        const acceptedCount = user.submissions
+            ? user.submissions.filter(sub => sub.status === "Accepted").length
+            : 0;
+        
+        // Calculate relevant stats
+        const stats = {
+            problemsSolved: user.problemsSolved ? user.problemsSolved.length : 0,
+            totalSubmissions: submissionCount,
+            acceptedSubmissions: acceptedCount,
+            acceptanceRate: submissionCount > 0 ? Math.round((acceptedCount / submissionCount) * 100) : 0
+        };
+        
+        // Send combined response
+        res.json({
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                createdAt: user.createdAt
+            },
+            stats,
+            submissions: user.submissions ? user.submissions.slice(0, 5) : [] // Get 5 most recent
+        });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({ message: "Error fetching user profile" });
     }
 });
 
