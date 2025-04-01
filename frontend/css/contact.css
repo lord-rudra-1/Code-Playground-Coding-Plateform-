@@ -1,229 +1,220 @@
-  /* General Styles */
-  html {
-    overflow-y: scroll;
-  }
-  
-  body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f0f4f8;
-    color: #333;
-    overflow-x: hidden; /* Prevents horizontal scrolling */
-  }
-  
-  body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f0f4f8;
-    width: 100%;
-    height: 100%;
-    color: #333;
-    overflow-x: hidden; /* Prevents horizontal scrolling */
-    overflow-y: auto; /* Allows normal vertical scrolling */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+/* General Styles */
+html {
+  overflow-y: scroll;
+}
 
-  /* Navbar */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2rem; /* Keeps spacing without increasing height */
-    background: #5b9bd5;
-    height: 4rem; /* Fixed navbar height */
-  }
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f4f8;
+  width: 100%;
+  height: 100%;
+  color: #333;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  overflow-y: auto; /* Allows normal vertical scrolling */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Logo Wrapper */
-  .logo {
-    display: flex;
-    align-items: center;
-    height: 100%; /* Ensures logo is within navbar height */
-  }
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem; /* Keeps spacing without increasing height */
+  background: #5b9bd5;
+  height: 4rem; /* Fixed navbar height */
+}
 
-  /* Logo Image */
-  .logo a img {
-    height: 4rem; /* Fits within navbar height */
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    background: transparent; /* Ensures no extra background */
-    border-radius: 15%;
-  }
+/* Logo Wrapper */
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%; /* Ensures logo is within navbar height */
+}
 
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-  }
+/* Logo Image */
+.logo a img {
+  height: 4rem; /* Fits within navbar height */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  background: transparent; /* Ensures no extra background */
+  border-radius: 15%;
+}
 
-  .nav-links a {
-    text-decoration: none;
-    color: white;
-    font-weight: 600;
-    transition: color 0.3s ease;
-  }
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
 
-  .nav-links a:hover {
-    color: #dbeafe;
-  }
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
 
-  /* Contact Section */
-  .contact {
-    text-align: center;
-    padding: 4rem 2rem;
-  }
+.nav-links a:hover {
+  color: #dbeafe;
+}
 
-  .contact-container {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 2rem;
-    flex-wrap: wrap; /* Ensures responsiveness */
-    overflow: hidden; /* Prevents extra spacing */
-  }
+/* Contact Section */
+.contact {
+  text-align: center;
+  padding: 4rem 2rem;
+}
 
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    width: 100%;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+.contact-container {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2rem;
+  flex-wrap: wrap; /* Ensures responsiveness */
+  overflow: hidden; /* Prevents extra spacing */
+}
 
-  .contact-form label {
-    text-align: left;
-    font-weight: bold;
-    margin-top: 1rem;
-  }
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-  .contact-form input,
-  .contact-form textarea {
-    width: 93%;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
+.contact-form label {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 1rem;
+}
 
-  .contact-form textarea {
-    height: 150px; /* Fixed height */
-    resize: none; /* Prevents resizing */
-    overflow-y: auto; /* Enables scrolling if text exceeds space */
-  }
+.contact-form input,
+.contact-form textarea {
+  width: 93%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
 
-  .contact-form .btn {
-    width: 95%;
-    margin-top: 1rem;
-    margin-left: -5px;
-    padding: 1rem;
-    background: #ffd166;
-    color: #333;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+.contact-form textarea {
+  height: 150px; /* Fixed height */
+  resize: none; /* Prevents resizing */
+  overflow-y: auto; /* Enables scrolling if text exceeds space */
+}
 
-  .contact-form .btn:hover {
-    background: #ffcc80;
-  }
+.contact-form .btn {
+  width: 95%;
+  margin-top: 1rem;
+  margin-left: -5px;
+  padding: 1rem;
+  background: #ffd166;
+  color: #333;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  /* Contact Info */
-  .contact-info {
-    text-align: left;
-    max-width: 300px;
-  }
+.contact-form .btn:hover {
+  background: #ffcc80;
+}
 
-  .contact-info h3 {
-    color: #5b9bd5;
-  }
+/* Contact Info */
+.contact-info {
+  text-align: left;
+  max-width: 300px;
+}
 
-  .contact-info p {
-    margin: 0.5rem 0;
-  }
+.contact-info h3 {
+  color: #5b9bd5;
+}
 
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 1rem;
-    background: #5b9bd5;
-    color: white;
-    margin-top: auto;
-    width: 100%;
-    position: relative;
-    bottom: 0;
-  }
+.contact-info p {
+  margin: 0.5rem 0;
+}
 
-  /* new added */
-  /* FAQ Section */
-  .faq {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #f0f4f8;
-  }
+/* new added */
+/* FAQ Section */
+.faq {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f0f4f8;
+}
 
-  .faq h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #333;
-  }
+.faq h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
 
-  /* FAQ Items */
-  .faq-container {
-    max-width: 700px;
-    margin: auto;
-  }
+/* FAQ Items */
+.faq-container {
+  max-width: 700px;
+  margin: auto;
+}
 
-  .faq-item {
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    overflow: hidden;
-  }
+.faq-item {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
 
-  /* FAQ Questions */
-  .faq-question {
-    width: 100%;
-    padding: 1rem;
-    text-align: left;
-    background: #5b9bd5;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+/* FAQ Questions */
+.faq-question {
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  background: #5b9bd5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .faq-question .arrow {
-    transition: transform 0.3s ease;
-  }
+.faq-question .arrow {
+  transition: transform 0.3s ease;
+}
 
-  /* FAQ Answers */
-  .faq-answer {
-    display: none;
-    padding: 1rem;
-    margin: -1%;
-    background: white;
-    text-align: left;
-    border-left: 3px solid #5b9bd5;
-  }
+/* FAQ Answers */
+.faq-answer {
+  display: none;
+  padding: 1rem;
+  margin: -1%;
+  background: white;
+  text-align: left;
+  border-left: 3px solid #5b9bd5;
+}
 
-  /* Show Answer when Active */
-  .faq-item.active .faq-answer {
-    display: block;
-  }
+/* Show Answer when Active */
+.faq-item.active .faq-answer {
+  display: block;
+}
 
-  .faq-item.active .faq-question .arrow {
-    transform: rotate(180deg);
-  }
+.faq-item.active .faq-question .arrow {
+  transform: rotate(180deg);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #5b9bd5;
+  color: white;
+  margin-top: auto;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
