@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= problem.title %> - Code Playground</title>
     <style>
-        /* Add your custom CSS styles here */
         body {
             font-family: "Arial", sans-serif;
             margin: 0;
@@ -18,7 +18,6 @@
             min-height: 100vh;
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -218,6 +217,89 @@
             margin-top: 1rem;
         }
     </style>
+    <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            const savedCode = localStorage.getItem('code') || getInitialCode('java');
+            const savedLanguage = localStorage.getItem('language') || 'java';
+
+            const editor = monaco.editor.create(document.getElementById('editor'), {
+                value: savedCode,
+                language: savedLanguage
+            });
+
+            document.getElementById('language-select').value = savedLanguage;
+
+            document.getElementById('language-select').onchange = function () {
+                const selectedLanguage = this.value;
+                const template = getInitialCode(selectedLanguage);
+                editor.setValue(template);
+                monaco.editor.setModelLanguage(editor.getModel(), selectedLanguage);
+                localStorage.setItem('language', selectedLanguage);
+                localStorage.setItem('code', template);
+            };
+
+            editor.onDidChangeModelContent(() => {
+                const code = editor.getValue();
+                localStorage.setItem('code', code);
+            });
+
+            document.getElementById('runButton').onclick = function () {
+                const code = editor.getValue();
+                const selectedLanguage = document.getElementById('language-select').value;
+                runCode(code, selectedLanguage);
+            };
+
+            function getInitialCode(language) {
+                switch (language) {
+                    case 'java':
+                        return 'import java.util.*;\n\nclass Main {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}';
+                    case 'cpp':
+                        return '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
+                    case 'python':
+                        return '# Your Python code here';
+                    case 'C':
+                        return '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}';
+                }
+            }
+
+            function runCode(code, language) {
+                const outputDiv = document.getElementById('output');
+                outputDiv.innerHTML = '';
+                fetch('/run', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, language }),
+                })
+                .then(response => response.json())
+                    .then(data => {
+                        outputDiv.innerHTML = `<pre>${data.output || data.error}</pre>`;
+                    })
+                    .catch(error => {
+                        outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                    });
+
+            }
+
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tabs button');
+            const contents = document.querySelectorAll('.tab-content > div');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(content => content.style.display = 'none');
+
+                    tab.classList.add('active');
+                    const selectedTab = tab.getAttribute('data-tab');
+                    document.querySelector(`.${selectedTab}-content`).style.display = 'block';
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
