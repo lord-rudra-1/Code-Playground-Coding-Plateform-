@@ -19,6 +19,7 @@ const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
 const discussRoutes = require("./routes/discussRoutes");
 
+const TEMP_DIR = path.join(__dirname, 'temp');
 
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, '../frontend/views'));
@@ -35,8 +36,8 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
@@ -49,7 +50,7 @@ app.use("/api/discuss", discussRoutes);
 
 app.get("/contestpage/:id", (req, res) => {
     const contestId = req.params.id;
-    
+
     const problems = [ // Dummy Data
         { name: "Food Balance", code: "FOODBAL", submissions: 35726, accuracy: 68.05 },
         { name: "Placing 01 And 10", code: "PLACE0110", submissions: 14825, accuracy: 47.89 },
