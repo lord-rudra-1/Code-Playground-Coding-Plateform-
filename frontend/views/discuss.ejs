@@ -21,7 +21,7 @@
             <li><a href="/problems">Problems</a></li>
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
-            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact Us</a></li>
             <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
@@ -96,6 +96,22 @@
     <footer class="footer">
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
+
+    <style>
+        .vote-btn {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .vote-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .vote-btn.voted {
+            background-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+    </style>
 
     <script>
         // Global variables
@@ -179,8 +195,8 @@
                         <h3><a href="#" onclick="viewDiscussion('${discussion._id}'); return false;">${discussion.title}</a></h3>
                         <p>Posted by <strong>${discussion.authorName}</strong> • ${date} • Tags: ${tags}</p>
                         <div class="thread-stats">
-                            <span onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
-                            <span onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
+                            <span class="vote-btn ${discussion.upvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
+                            <span class="vote-btn ${discussion.downvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
                             <span onclick="viewDiscussion('${discussion._id}')">💬 ${discussion.comments ? discussion.comments.length : 0}</span>
                         </div>
                     </div>
@@ -264,8 +280,8 @@
                         <p class="tags">Tags: ${tags}</p>
                         <div class="content">${discussion.content}</div>
                         <div class="thread-stats">
-                            <span onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
-                            <span onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
+                            <span class="vote-btn ${discussion.upvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
+                            <span class="vote-btn ${discussion.downvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
                         </div>
                         <h3>Comments (${discussion.comments.length})</h3>
                     `;
@@ -351,24 +367,37 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ vote })
+                    body: JSON.stringify({ vote, userId })
                 });
                 
                 const data = await response.json();
                 
                 if (response.ok) {
-                    // Refresh discussions or discussion view
-                    if (currentDiscussionId === discussionId) {
-                        viewDiscussion(discussionId);
-                    } else {
-                        loadDiscussions(currentPage);
+                    // Update the UI based on the response
+                    const discussionElement = document.querySelector(`[data-id="${discussionId}"]`);
+                    if (discussionElement) {
+                        const upvoteBtn = discussionElement.querySelector('.vote-btn:first-child');
+                        const downvoteBtn = discussionElement.querySelector('.vote-btn:nth-child(2)');
+
+                        // Update vote counts
+                        upvoteBtn.textContent = `🔼 ${data.upvotes}`;
+                        downvoteBtn.textContent = `🔽 ${data.downvotes}`;
+
+                        // Update vote status
+                        if (vote === 'up') {
+                            upvoteBtn.classList.add('voted');
+                            downvoteBtn.classList.remove('voted');
+                        } else {
+                            downvoteBtn.classList.add('voted');
+                            upvoteBtn.classList.remove('voted');
+                        }
                     }
                 } else {
-                    alert(`Error voting: ${data.message}`);
+                    alert(data.message || 'Failed to vote');
                 }
             } catch (error) {
                 console.error('Error voting:', error);
-                alert(`Error voting: ${error.message}`);
+                alert('Failed to vote. Please try again.');
             }
         }
         
@@ -503,5 +532,4 @@
     </script>
 </body>
 
-</html>
 </html>
