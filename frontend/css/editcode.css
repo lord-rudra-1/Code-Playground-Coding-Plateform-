@@ -1,0 +1,457 @@
+/* ================= Enhanced Base Styles ================= */
+:root {
+    --primary-color: #5b9bd5;
+    --primary-dark: #4a89c7;
+    --secondary-color: #2c3e50;
+    --accent-color: #ffd166;
+    --light-bg: #f0f4f8;
+    --white: #ffffff;
+    --text-color: #2d3748;
+    --border-color: #e0e6ed;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
+    color: var(--text-color);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  
+  /* ================= Enhanced Navbar ================= */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    height: 4rem;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 10;
+  }
+  
+  .logo img {
+    height: 4rem;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: var(--transition);
+  }
+  
+  .logo img:hover {
+    transform: scale(1.05);
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: var(--transition);
+  }
+  
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+  }
+  
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  .nav-links a:hover {
+    color: #dbeafe;
+  }
+  
+  /* ================= Enhanced Content Layout ================= */
+  .content {
+    display: flex;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 2rem;
+  }
+  
+  .tabs-and-content {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    margin-right: 2rem;
+  }
+  
+  /* ================= Enhanced Tabs ================= */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+  }
+  
+  .tabs button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    transition: var(--transition);
+    position: relative;
+  }
+  
+  .tabs button.active {
+    color: #4e41fb;
+  }
+  
+  .tabs button.active::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  }
+  
+  .tabs button:hover:not(.active) {
+    background-color: rgba(91, 155, 213, 0.1);
+  }
+  
+  /* ================= Enhanced Tab Content ================= */
+  .tab-content {
+    background-color: var(--white);
+    box-shadow: 0 6px 20px rgba(91, 155, 213, 0.15);
+    padding: 2rem;
+    flex-grow: 1;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  /* ================= Enhanced Code Editor ================= */
+  .code-editor {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .code-editor-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  
+  #code-editor {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    resize: none;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    background: #282c34;
+    color: #abb2bf;
+    line-height: 1.5;
+    tab-size: 4;
+    transition: var(--transition);
+  }
+  
+  #code-editor:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
+  }
+  
+  /* ================= Enhanced Button Group ================= */
+  .actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .actions-container > div:first-child {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  
+  #run-btn, #test-btn, #submit-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  
+  #run-btn:hover, #test-btn:hover, #submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  #run-btn {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+  }
+  
+  #run-btn:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  }
+  
+  #test-btn {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  }
+  
+  #test-btn:hover {
+    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+  }
+  
+  #submit-btn {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: var(--secondary-color);
+  }
+  
+  #submit-btn:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%);
+  }
+  
+  /* ================= Enhanced Custom Input ================= */
+  #custom-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  #custom-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
+  }
+  
+  /* ================= Enhanced Language Selector ================= */
+  .language-selector {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+  }
+  
+  #language-select {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--white);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1rem;
+  }
+  
+  #language-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
+  }
+  
+  /* ================= Enhanced Result Container ================= */
+  #result-container {
+    margin-top: 1.5rem;
+    width: 100%;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .result-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  #result-output {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    white-space: pre-wrap;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  
+  .success {
+    color: var(--success-color);
+  }
+  
+  .error {
+    color: var(--error-color);
+  }
+  
+  /* ================= Enhanced Submissions Table ================= */
+  .submissions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .submissions-table th, 
+  .submissions-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.8rem;
+    text-align: left;
+  }
+  
+  .submissions-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+  }
+  
+  .submissions-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .submissions-table tr:hover {
+    background-color: #e9ecef;
+  }
+  
+  /* ================= Enhanced Test Cases ================= */
+  .test-case {
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    padding: 1.2rem;
+    border-radius: 8px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+  }
+  
+  .test-case:hover {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .test-case.pass {
+    border-left: 4px solid var(--success-color);
+    background-color: rgba(40, 167, 69, 0.05);
+  }
+  
+  .test-case.fail {
+    border-left: 4px solid var(--error-color);
+    background-color: rgba(220, 53, 69, 0.05);
+  }
+  
+  .test-case-header {
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* ================= Responsive Design ================= */
+  @media (max-width: 1024px) {
+    .content {
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+  
+    .tabs-and-content {
+      margin-right: 0;
+      margin-bottom: 2rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 0 1.5rem;
+    }
+  
+    .nav-links {
+      gap: 1rem;
+    }
+  
+    .tabs button {
+      padding: 0.8rem 1.2rem;
+      font-size: 0.9rem;
+    }
+  
+    .actions-container > div:first-child {
+      flex-direction: column;
+    }
+  
+    #run-btn, #test-btn, #submit-btn {
+      width: 100%;
+    }
+  }
+  
+  /* ================= Animations ================= */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .tab-content {
+    animation: fadeIn 0.4s ease-out;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  #run-btn:active, #test-btn:active, #submit-btn:active {
+    animation: pulse 0.2s ease;
+  }
