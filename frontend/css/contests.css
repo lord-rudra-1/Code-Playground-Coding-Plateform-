@@ -1,44 +1,57 @@
+/* Enhanced General Styles - Matching explore.css */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f0f4f8;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
   height: 100%;
-  color: #333;
+  color: #2d3748;
   overflow-x: hidden;
   overflow-y: scroll;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  line-height: 1.6;
 }
 
-/* Navbar */
+/* Enhanced Navbar - Matching explore.css */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: #5b9bd5;
+  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
   height: 4rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
+/* Enhanced Logo - Matching explore.css */
 .logo {
   display: flex;
   align-items: center;
-  height: 100%; /* Ensures logo is within navbar height */
+  height: 100%;
+  transition: transform 0.3s ease;
 }
 
-/* Logo Image */
+.logo:hover {
+  transform: scale(1.03);
+}
+
 .logo a img {
-  height: 4rem; /* Fits within navbar height */
+  height: 4rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  background: transparent; /* Ensures no extra background */
+  background: transparent;
   border-radius: 15%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
+/* Enhanced Nav Links - Matching explore.css */
 .nav-links {
   list-style: none;
   display: flex;
@@ -49,31 +62,54 @@ body {
   text-decoration: none;
   color: white;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #ffd166;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-links a:hover {
   color: #dbeafe;
 }
 
-/* Contest Container - Modern Look */
+/* Enhanced Contest Container - Same Layout */
 .contest-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 50px; /* More space for a clean look */
+  gap: 50px;
   margin-top: 30px;
   padding: 30px;
-  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   backdrop-filter: blur(10px);
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(91, 155, 213, 0.2);
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
-/* Common Button Styling */
+.contest-container:hover {
+  box-shadow: 0 15px 35px rgba(91, 155, 213, 0.3);
+}
+
+/* Enhanced Buttons - Matching explore.css */
 .btn {
   padding: 14px 28px;
   font-size: 18px;
@@ -83,127 +119,202 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Create Contest Button with Gradient */
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
 .create-contest-btn {
-  background: linear-gradient(135deg, #ff7f50, #ff4500);
+  background: linear-gradient(135deg, #ff7f50 0%, #ff4500 100%);
   color: white;
 }
 
 .create-contest-btn:hover {
-  background: linear-gradient(135deg, #ff6347, #e63900);
-  transform: scale(1.05);
-  box-shadow: 0px 8px 20px rgba(255, 99, 71, 0.5);
+  background: linear-gradient(135deg, #ff6347 0%, #e63900 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 99, 71, 0.5);
 }
 
-/* Join Contest Section */
+.join-contest-btn {
+  background: linear-gradient(135deg, #32cd32 0%, #008000 100%);
+  color: white;
+}
+
+.join-contest-btn:hover {
+  background: linear-gradient(135deg, #3cb371 0%, #006400 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(50, 205, 50, 0.5);
+}
+
+/* Enhanced Join Contest Section */
 .join-contest {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
-/* Join Contest Form */
 #join-contest-form {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-/* Input Field */
 #contest-code {
   padding: 14px;
   width: 250px;
   border: 2px solid rgba(255, 99, 71, 0.4);
   border-radius: 10px;
   font-size: 16px;
-  transition: 0.3s ease-in-out;
-  background: rgba(255, 255, 255, 0.2);
-  color: black;
-  backdrop-filter: blur(5px);
+  transition: 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d3748;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Input Focus Effect */
 #contest-code:focus {
   border-color: #ff4500;
-  box-shadow: 0px 0px 10px rgba(255, 69, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.2);
   outline: none;
 }
 
-/* Join Contest Button */
-.join-contest-btn {
-  background: linear-gradient(135deg, #32cd32, #008000);
-  color: white;
-}
-
-.join-contest-btn:hover {
-  background: linear-gradient(135deg, #3cb371, #006400);
-  transform: scale(1.05);
-  box-shadow: 0px 8px 20px rgba(50, 205, 50, 0.5);
-}
-
-/* Contest Section */
+/* Enhanced Contest Section */
 .contest-section {
   text-align: center;
   padding: 2rem;
 }
 
-/* Contest Table */
+.contest-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  position: relative;
+  display: inline-block;
+}
+
+.contest-section h2::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  bottom: -10px;
+  left: 0%;
+  background: linear-gradient(90deg, #5b9bd5 0%, #ffd166 100%);
+  border-radius: 3px;
+}
+
+/* Enhanced Contest Table - Same Layout */
 .contest-table {
   width: 90%;
   margin: auto;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 6px 15px rgba(91, 155, 213, 0.15);
+  transition: all 0.3s ease;
 }
 
-html,
-body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.contest-table:hover {
+  box-shadow: 0 8px 25px rgba(91, 155, 213, 0.25);
 }
 
 th,
 td {
-  padding: 1rem;
+  padding: 1.25rem;
   text-align: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #edf2f7;
 }
 
 th {
-  background: #5b9bd5;
+  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
   color: white;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  transform: none !important;
 }
 
-/* Buttons */
-.register-btn,
-.btn {
-  background: #ffd166;
+tr {
+  transition: all 0.3s ease;
+}
+
+tr:hover {
+  background: #f7fafc;
+}
+
+/* Enhanced Register Button */
+.register-btn {
+  background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
+  color: #2d3748;
   border: none;
   padding: 10px 16px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-left: -10px;
+  box-shadow: 0 3px 8px rgba(255, 179, 71, 0.3);
 }
 
-.register-btn:hover,
-.btn:hover {
-  background: #ffcc80;
-  transform: scale(1.05);
+.register-btn:hover {
+  background: linear-gradient(135deg, #ffb347 0%, #ff9a3f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(255, 179, 71, 0.4);
 }
 
-/* Footer */
+/* Enhanced Footer - Matching explore.css */
 .footer {
   text-align: center;
-  padding: 1rem;
-  background: #5b9bd5;
+  padding: 1.5rem;
+  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
   color: white;
   margin-top: auto;
   width: 100%;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .contest-container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  #join-contest-form {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #contest-code {
+    width: 100%;
+  }
 }
