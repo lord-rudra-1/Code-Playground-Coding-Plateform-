@@ -18,26 +18,26 @@
             font-weight: bold;
             margin-top: 10px;
         }
-        
+
         .logout-btn:hover {
             background-color: #bd2130;
         }
-        
+
         .not-signed-in {
             text-align: center;
             padding: 50px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin: 20px auto;
             max-width: 500px;
         }
-        
+
         .not-signed-in h2 {
             margin-bottom: 20px;
             color: #5b9bd5;
         }
-        
+
         .not-signed-in button {
             background-color: #5b9bd5;
             color: white;
@@ -48,11 +48,11 @@
             font-size: 16px;
             margin-top: 10px;
         }
-        
+
         .not-signed-in button:hover {
             background-color: #4a90e2;
         }
-        
+
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #5b9bd5;
@@ -62,36 +62,41 @@
             animation: spin 2s linear infinite;
             margin: 20px auto;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
+
         .submission-list li {
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 4px;
             background-color: #f8f9fa;
         }
-        
+
         .status-badge {
             padding: 4px 8px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 0.8em;
         }
-        
+
         .status-accepted {
             background-color: #d4edda;
             color: #155724;
         }
-        
+
         .status-error {
             background-color: #f8d7da;
             color: #721c24;
         }
-        
+
         .empty-message {
             text-align: center;
             padding: 20px;
@@ -125,7 +130,7 @@
         <div class="loader"></div>
         <p style="text-align: center;">Loading profile data...</p>
     </div>
-    
+
     <!-- Not signed in template -->
     <template id="not-signed-in-template">
         <div class="not-signed-in">
@@ -137,7 +142,7 @@
             </div>
         </div>
     </template>
-    
+
     <!-- Profile template -->
     <template id="profile-template">
         <!-- Profile Header -->
@@ -164,7 +169,7 @@
                 </div>
             </div>
         </div>
-    
+
         <!-- Profile Content -->
         <div class="profile-container">
             <div class="sidebar">
@@ -174,7 +179,7 @@
                     <li onclick="switchTab('settings')">Settings</li>
                 </ul>
             </div>
-    
+
             <div class="content">
                 <!-- Overview Section -->
                 <div class="tab-content" id="overview">
@@ -194,7 +199,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- Submissions Section -->
                 <div class="tab-content hidden" id="submissions">
                     <h3>Recent Submissions</h3>
@@ -203,7 +208,7 @@
                         <li>Loading submissions...</li>
                     </ul>
                 </div>
-    
+
                 <!-- Settings Section -->
                 <div class="tab-content hidden" id="settings">
                     <h3>Account Settings</h3>
@@ -220,11 +225,16 @@
         </div>
     </template>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
     <script>
         // Global variables
         let userId = localStorage.getItem('userId');
         let userData = null;
-        
+
         // Function to switch between tabs
         function switchTab(tabId) {
             document.querySelectorAll(".tab-content").forEach((content) => content.classList.add("hidden"));
@@ -233,31 +243,31 @@
             document.querySelectorAll(".sidebar li").forEach((tab) => tab.classList.remove("active"));
             document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add("active");
         }
-        
+
         // Function to format date
         function formatDate(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
         }
-        
+
         // Function to load user profile data
         async function loadUserProfile() {
             if (!userId) {
                 showNotSignedIn();
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/auth/profile/${userId}`);
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch profile data');
                 }
-                
+
                 userData = await response.json();
                 displayUserProfile(userData);
             } catch (error) {
@@ -271,48 +281,48 @@
                 `;
             }
         }
-        
+
         // Function to show the "not signed in" message
         function showNotSignedIn() {
             const template = document.getElementById('not-signed-in-template');
             const content = template.content.cloneNode(true);
             const profileContent = document.getElementById('profile-content');
-            
+
             profileContent.innerHTML = '';
             profileContent.appendChild(content);
         }
-        
+
         // Function to display user profile
         function displayUserProfile(data) {
             const template = document.getElementById('profile-template');
             const content = template.content.cloneNode(true);
             const profileContent = document.getElementById('profile-content');
-            
+
             profileContent.innerHTML = '';
             profileContent.appendChild(content);
-            
+
             // Fill in user information
             document.getElementById('user-name').textContent = data.user.username;
             document.getElementById('user-email').textContent = data.user.email;
             document.getElementById('problems-solved').textContent = data.stats.problemsSolved;
             document.getElementById('success-rate').textContent = `${data.stats.acceptanceRate}%`;
             document.getElementById('member-since').textContent = formatDate(data.user.createdAt);
-            
+
             // Fill in overview stats
             document.getElementById('overview-problems-solved').textContent = data.stats.problemsSolved;
             document.getElementById('overview-submissions').textContent = data.stats.totalSubmissions;
             document.getElementById('overview-accepted').textContent = data.stats.acceptedSubmissions;
-            
+
             // Fill in submissions
             const submissionsList = document.getElementById('submissions-list');
-            
+
             if (data.submissions && data.submissions.length > 0) {
                 submissionsList.innerHTML = '';
-                
+
                 data.submissions.forEach(submission => {
                     const submissionDate = formatDate(submission.timestamp);
                     const statusClass = submission.status === 'Accepted' ? 'status-accepted' : 'status-error';
-                    
+
                     const li = document.createElement('li');
                     li.innerHTML = `
                         <div>Problem: <strong>${submission.problem || 'Unknown'}</strong></div>
@@ -320,38 +330,38 @@
                         <div>Date: ${submissionDate}</div>
                         <div>Status: <span class="status-badge ${statusClass}">${submission.status}</span></div>
                     `;
-                    
+
                     submissionsList.appendChild(li);
                 });
             } else {
                 submissionsList.innerHTML = '<div class="empty-message">No submissions yet</div>';
             }
-            
+
             // Set input values for settings
             document.getElementById('username-input').value = data.user.username;
-            
+
             // Add event listeners
             document.getElementById('save-changes').addEventListener('click', saveChanges);
             document.getElementById('delete-account').addEventListener('click', deleteAccount);
             document.getElementById('logout-btn').addEventListener('click', logout);
         }
-        
+
         // Function to save profile changes
         async function saveChanges() {
             const username = document.getElementById('username-input').value;
             const password = document.getElementById('password-input').value;
             const confirmPassword = document.getElementById('confirm-password-input').value;
-            
+
             if (!username) {
                 alert('Username cannot be empty');
                 return;
             }
-            
+
             if (password && password !== confirmPassword) {
                 alert('Passwords do not match');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/auth/user/${userId}/update`, {
                     method: 'PUT',
@@ -363,11 +373,11 @@
                         password: password || undefined
                     })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to update profile');
                 }
-                
+
                 alert('Profile updated successfully');
                 // Reload profile data
                 loadUserProfile();
@@ -376,22 +386,22 @@
                 alert(`Error updating profile: ${error.message}`);
             }
         }
-        
+
         // Function to delete account
         async function deleteAccount() {
             if (!confirm('Are you sure you want to delete your account? This cannot be undone!')) {
                 return;
             }
-            
+
             try {
                 const response = await fetch(`/api/auth/user/${userId}`, {
                     method: 'DELETE'
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to delete account');
                 }
-                
+
                 alert('Account deleted successfully');
                 logout();
             } catch (error) {
@@ -399,14 +409,14 @@
                 alert(`Error deleting account: ${error.message}`);
             }
         }
-        
+
         // Function to log out
         function logout() {
             localStorage.removeItem('userId');
             alert('Logged out successfully');
             window.location.href = '/home';
         }
-        
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadUserProfile();
