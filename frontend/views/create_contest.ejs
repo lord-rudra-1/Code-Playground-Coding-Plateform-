@@ -5,65 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Contest - Code Playground</title>
     <style>
-        /* Main container styles */
+        /* Base styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Arial", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f7fa;
+            background: #f0f4f8;
             color: #333;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header styles */
+        /* Navbar */
         .navbar {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .navbar .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
+            background: #5b9bd5;
+            height: 4rem;
         }
 
         .logo img {
-            height: 40px;
+            height: 4rem;
+            width: auto;
+            object-fit: contain;
         }
 
         .nav-links {
-            display: flex;
             list-style: none;
-            gap: 20px;
-            margin: 0;
-            padding: 0;
+            display: flex;
+            gap: 1.5rem;
         }
 
         .nav-links a {
-            color: white;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            color: white;
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
 
         .nav-links a:hover {
-            color: #3498db;
+            color: #dbeafe;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         /* Form styles */
         .contest-section {
             background: white;
             border-radius: 8px;
-            padding: 30px;
+            padding: 50px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-top: 30px;
+            margin-left: -80px;
+            margin-right: -80px;
+            width: calc(100% + 160px);
         }
 
         .contest-header {
@@ -72,7 +76,7 @@
         }
 
         .contest-header h1 {
-            color: #2c3e50;
+            color: #5b9bd5;
             margin-bottom: 10px;
         }
 
@@ -94,7 +98,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #333;
         }
 
         input[type="text"],
@@ -113,7 +117,7 @@
         input[type="datetime-local"]:focus,
         select:focus,
         textarea:focus {
-            border-color: #3498db;
+            border-color: #5b9bd5;
             outline: none;
         }
 
@@ -154,11 +158,11 @@
         }
 
         .search-result-item strong {
-            color: #2c3e50;
+            color: #333;
         }
 
         .text-muted {
-            color: #7f8c8d;
+            color: #777;
             font-size: 14px;
         }
 
@@ -191,7 +195,7 @@
         }
 
         .empty-message {
-            color: #7f8c8d;
+            color: #777;
             text-align: center;
             margin: 20px 0;
         }
@@ -216,12 +220,12 @@
         }
 
         .btn-primary {
-            background-color: #3498db;
+            background-color: #5b9bd5;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: #2980b9;
+            background-color: #4a90e2;
         }
 
         .btn-secondary {
@@ -251,7 +255,7 @@
 
         /* Footer styles */
         .footer {
-            background-color: #2c3e50;
+            background-color: #5b9bd5;
             color: white;
             text-align: center;
             padding: 20px 0;
@@ -264,37 +268,58 @@
                 grid-template-columns: 1fr;
             }
             
-            .navbar .container {
+            .navbar {
                 flex-direction: column;
-                gap: 15px;
+                height: auto;
+                padding: 1rem;
             }
             
             .contest-section {
                 padding: 20px;
             }
         }
+
+        /* Status message */
+        .status-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
-            <div class="logo">
-                <a href="/explore">
-                    <img src="../imgg/lo.png" >
-                </a>
-            </div>
-            <ul class="nav-links">
-                <li><a href="/explore">Explore</a></li>
-                <li><a href="/problems">Problems</a></li>
-                <li><a href="/contests">Contests</a></li>
-                <li><a href="/discuss">Discuss</a></li>
-                <li><a href="/contact">Contact Us</a></li>
-                <li><a href="/profile">👤</a></li>
-            </ul>
+        <div class="logo">
+            <a href="/home">
+                <img src="/lo.png" alt="Logo">
+            </a>
         </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/profile">👤</a></li>
+        </ul>
     </nav>
 
     <main class="container">
+        <div id="status-message" class="status-message"></div>
+        
         <section class="contest-section">
             <div class="contest-header">
                 <h1>Create a New Contest</h1>
@@ -382,7 +407,7 @@
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2023 Code Playground. All rights reserved.</p>
+            <p>&copy; 2025 Code Playground. All rights reserved.</p>
         </div>
     </footer>
 
@@ -395,6 +420,7 @@
             const selectedProblemsInput = document.getElementById('selected-problems-input');
             const form = document.getElementById('create-contest-form');
             const adminOnlyLabel = document.getElementById('admin-only-label');
+            const statusMessage = document.getElementById('status-message');
             
             // State
             let selectedProblemsList = [];
@@ -408,16 +434,29 @@
                 '67e3a9e27dcd5a5316f96300'
             ];
 
+            // Function to show status messages
+            function showStatusMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message ' + type;
+                statusMessage.style.display = 'block';
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+
             // Function to check admin status
             async function checkAdminStatus() {
                 try {
                     // Get user ID from localStorage or your auth system
                     const userId = localStorage.getItem('userId');
-                    console.log('User ID:', userId);
+                    
+                    if (!userId) {
+                        showStatusMessage('Please sign in to create a contest', 'error');
+                        return false;
+                    }
                     
                     // Check if user is admin
                     isAdmin = ADMIN_USER_IDS.includes(userId);
-                    console.log('Is admin:', isAdmin);
                     return isAdmin;
                 } catch (error) {
                     console.error('Error checking admin status:', error);
@@ -493,15 +532,17 @@
             async function searchProblems(searchTerm) {
                 try {
                     const response = await fetch(`/api/problems/search?q=${encodeURIComponent(searchTerm)}`);
-                    if (!response.ok) throw new Error('Network response was not ok');
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
                     
-                    const problems = await response.json();
-                    if (!Array.isArray(problems)) throw new Error('Invalid response format');
+                    const data = await response.json();
+                    const problems = Array.isArray(data) ? data : (data.problems || []);
                     
                     displaySearchResults(problems);
                 } catch (error) {
                     console.error('Search failed:', error);
-                    searchResults.innerHTML = '<div class="search-result-item">Error loading problems</div>';
+                    searchResults.innerHTML = '<div class="search-result-item">Error loading problems: ' + error.message + '</div>';
                     searchResults.style.display = 'block';
                 }
             }
@@ -518,8 +559,8 @@
 
                 searchResults.innerHTML = results.map(problem => `
                     <div class="search-result-item" data-id="${problem._id}">
-                        <strong>${problem.title}</strong> (${problem.difficulty})
-                        <div class="text-muted">${problem.description?.substring(0, 50) || ''}...</div>
+                        <strong>${problem.title || 'Untitled Problem'}</strong> (${problem.difficulty || 'Unknown'})
+                        <div class="text-muted">${problem.description ? problem.description.substring(0, 50) + '...' : 'No description'}</div>
                     </div>
                 `).join('');
 
@@ -528,7 +569,8 @@
                     item.addEventListener('click', function() {
                         const problemId = this.getAttribute('data-id');
                         const problemTitle = this.querySelector('strong').textContent;
-                        const problemDifficulty = this.textContent.match(/\(([^)]+)\)/)[1];
+                        const difficultyMatch = this.textContent.match(/\(([^)]+)\)/);
+                        const problemDifficulty = difficultyMatch ? difficultyMatch[1] : 'Medium';
                         
                         addProblemToSelection({
                             _id: problemId,
@@ -547,7 +589,7 @@
             // Add problem to selected list
             function addProblemToSelection(problem) {
                 if (selectedProblemsList.some(p => p._id === problem._id)) {
-                    alert('This problem is already added');
+                    showStatusMessage('This problem is already added', 'error');
                     return;
                 }
 
@@ -590,114 +632,125 @@
 
             // Handle form submission
             form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    if (selectedProblemsList.length === 0) {
-        alert('Please select at least one problem');
-        return;
-    }
+                e.preventDefault();
+                
+                // Validate form
+                if (selectedProblemsList.length === 0) {
+                    showStatusMessage('Please select at least one problem', 'error');
+                    return;
+                }
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-        alert('User ID is required to create a contest');
-        return;
-    }
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    showStatusMessage('Please sign in to create a contest', 'error');
+                    return;
+                }
 
-    // Get the selected visibility value
-    const visibilitySelect = document.getElementById('visibility');
-    const selectedVisibility = visibilitySelect.value;
-    console.log(selectedVisibility);
-    const formData = {
-        name: document.getElementById('contest-name').value,
-        contestCode: document.getElementById('contest-code').value,
-        description: document.getElementById('contest-description').value,
-        startTime: document.getElementById('start-time').value,
-        endTime: document.getElementById('end-time').value,
-        difficulty: document.getElementById('difficulty').value,
-        visibility: selectedVisibility,  // Use the selected value
-        problems: selectedProblemsList.map(p => p._id),
-        userId: userId
-    };
+                // Get start and end times
+                const startTime = new Date(document.getElementById('start-time').value);
+                const endTime = new Date(document.getElementById('end-time').value);
+                
+                // Validate times
+                if (startTime >= endTime) {
+                    showStatusMessage('End time must be after start time', 'error');
+                    return;
+                }
 
-    console.log('Form data being sent:', formData); // Debug log
+                if (startTime < new Date()) {
+                    showStatusMessage('Start time cannot be in the past', 'error');
+                    return;
+                }
 
-    try {
-        const response = await fetch('/api/contests', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-        
-        const result = await response.json();
-        console.log('Full response from server:', result); // Debug log
-        
-        if (response.ok && result.success) {
-            // Use the visibility from the form if not in response
-            const visibility = result.contest?.visibility || selectedVisibility;
-            console.log('Using visibility:', visibility); // Debug log
-            
-            // Create success message
-            const successMessage = `Contest created successfully!
-Status: ${result.contest.status}
-Visibility: ${visibility}
-Code: ${result.contest.contestCode}`;
+                // Get the selected visibility value
+                const visibilitySelect = document.getElementById('visibility');
+                const selectedVisibility = visibilitySelect.value;
+                
+                // Create form data
+                const formData = {
+                    name: document.getElementById('contest-name').value,
+                    contestCode: document.getElementById('contest-code').value,
+                    description: document.getElementById('contest-description').value,
+                    startTime: document.getElementById('start-time').value,
+                    endTime: document.getElementById('end-time').value,
+                    difficulty: document.getElementById('difficulty').value,
+                    visibility: selectedVisibility,
+                    problems: selectedProblemsList.map(p => p._id),
+                    userId: userId
+                };
 
-            // Rest of your notification code...
-            const notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.top = '20px';
-            notification.style.right = '20px';
-            notification.style.padding = '15px';
-            notification.style.background = '#4CAF50';
-            notification.style.color = 'white';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '1000';
-            notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-
-            notification.innerHTML = `
-                <p style="margin:0 0 10px 0;">${successMessage.replace(/\n/g, '<br>')}</p>
-                <button id="copy-code-btn" style="
-                    background: white;
-                    color: #4CAF50;
-                    border: none;
-                    padding: 5px 10px;
-                    border-radius: 3px;
-                    cursor: pointer;
-                ">Copy Code</button>
-            `;
-
-            document.body.appendChild(notification);
-
-            // Add copy functionality
-            document.getElementById('copy-code-btn').addEventListener('click', function() {
-                navigator.clipboard.writeText(result.contest.contestCode)
-                    .then(() => {
-                        this.textContent = 'Copied!';
-                        setTimeout(() => {
-                            notification.remove();
-                        }, 2000);
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy: ', err);
-                        this.textContent = 'Failed to copy';
+                try {
+                    // Show loading state
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Creating...';
+                    showStatusMessage('Creating contest...', 'success');
+                    
+                    // Send request
+                    const response = await fetch('/api/contests', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
                     });
+                    
+                    const result = await response.json();
+                    
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Create Contest';
+                    
+                    if (response.ok && result.success) {
+                        // Show success message with contest details
+                        const successHtml = `
+                            <strong>Contest created successfully!</strong><br>
+                            Status: ${result.contest.status || 'Scheduled'}<br>
+                            Visibility: ${result.contest.visibility || selectedVisibility}<br>
+                            Code: <span style="font-weight:bold;" id="contest-code-display">${result.contest.contestCode}</span>
+                            <button id="copy-code-btn" style="margin-left:10px;">Copy Code</button>
+                        `;
+                        
+                        statusMessage.innerHTML = successHtml;
+                        statusMessage.className = 'status-message success';
+                        statusMessage.style.display = 'block';
+                        
+                        // Add copy functionality
+                        document.getElementById('copy-code-btn').addEventListener('click', function() {
+                            const codeText = document.getElementById('contest-code-display').textContent;
+                            navigator.clipboard.writeText(codeText)
+                                .then(() => {
+                                    this.textContent = 'Copied!';
+                                })
+                                .catch(err => {
+                                    console.error('Failed to copy: ', err);
+                                    this.textContent = 'Failed';
+                                });
+                        });
+                        
+                        // Reset form after successful submission
+                        form.reset();
+                        selectedProblemsList = [];
+                        renderSelectedProblems();
+                        initializeForm();
+                        
+                        // Redirect after a delay
+                        setTimeout(() => {
+                            window.location.href = '/contests';
+                        }, 5000);
+                    } else {
+                        showStatusMessage(result.msg || 'Failed to create contest', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error creating contest:', error);
+                    showStatusMessage('Failed to create contest: ' + error.message, 'error');
+                    
+                    // Reset button state
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Create Contest';
+                }
             });
 
-            // Auto-close after 5 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 10000);
-            
-        } else {
-            alert(result.msg || 'Failed to create contest');
-        }
-    } catch (error) {
-        console.error('Error creating contest:', error);
-        alert('Failed to create contest. Please try again.');
-    }
-});
             // Initialize the form
             initializeForm();
         });
