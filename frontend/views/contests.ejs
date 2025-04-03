@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
@@ -30,7 +29,7 @@
     <div class="contest-container">
         <!-- Create Contest Section -->
         <div class="create-contest">
-            <a href="create_contest.html" class="btn create-contest-btn">Create Contest</a>
+            <a href="create_contest" class="btn create-contest-btn">Create Contest</a>
         </div>
 
         <!-- Join Contest Section -->
@@ -49,33 +48,17 @@
             <thead>
                 <tr>
                     <th>Contest Name</th>
+                    <th>Description</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Difficulty</th>
+                    <th>Status</th>
                     <th>Participants</th>
-                    <th>Time Left</th>
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Code Playground Monthly Challenge</td>
-                    <td class="start-time">April 10, 2025 18:00</td>
-                    <td class="end-time">April 10, 2025 21:00</td>
-                    <td>Medium</td>
-                    <td>500+</td>
-                    <td class="countdown"></td>
-                    <td><button class="register-btn" data-contest-id="1">Register Now</button></td>
-                </tr>
-                <tr>
-                    <td>Algorithm Coding Challenge</td>
-                    <td class="start-time">April 15, 2025 16:00</td>
-                    <td class="end-time">April 15, 2025 19:00</td>
-                    <td>Hard</td>
-                    <td>800+</td>
-                    <td class="countdown"></td>
-                    <td><button class="register-btn" data-contest-id="2">Register Now</button></td>
-                </tr>
+            <tbody id="upcoming-contests-body">
+                <!-- Dynamically populated from database -->
             </tbody>
         </table>
     </section>
@@ -87,21 +70,17 @@
             <thead>
                 <tr>
                     <th>Contest Name</th>
+                    <th>Description</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Difficulty</th>
+                    <th>Status</th>
                     <th>Winner</th>
                     <th>Leaderboard</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>January Code Challenge</td>
-                    <td>JohnDoe123</td>
-                    <td><a href="/leaderboard" class="btn">View Leaderboard</a></td>
-                </tr>
-                <tr>
-                    <td>Data Structures Marathon</td>
-                    <td>CodeMaster</td>
-                    <td><a href="/leaderboard" class="btn">View Leaderboard</a></td>
-                </tr>
+            <tbody id="past-contests-body">
+                <!-- Dynamically populated from database -->
             </tbody>
         </table>
     </section>
@@ -111,18 +90,201 @@
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
 
-    <script src="js/contests.js"></script>
     <script>
-        // Add event listener to the "Register Now" buttons
-        const registerButtons = document.querySelectorAll('.register-btn');
-        registerButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const contestId = button.dataset.contestId;
-                window.location.href = `/contestpage/${contestId}`;
+        // Fetch and populate only public contests
+        async function fetchContests() {
+            try {
+                console.log("Fetching public contests...");
+                const response = await fetch('http://localhost:4000/api/contests');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                
+                // Filter to show only public contests
+                const publicCurrentContests = data.currentContests.filter(contest => contest.visibility === 'Public');
+                const publicPastContests = data.pastContests.filter(contest => contest.visibility === 'Public');
+                
+                renderContests(publicCurrentContests, publicPastContests);
+
+            } catch (error) {
+                console.error('Failed to fetch contests:', error);
+                alert('Failed to load contests. Please try again later.');
+            }
+        }
+
+        function renderContests(currentContests = [], pastContests = []) {
+            const upcomingBody = document.getElementById('upcoming-contests-body');
+            const pastBody = document.getElementById('past-contests-body');
+
+            // Clear existing rows
+            upcomingBody.innerHTML = '';
+            pastBody.innerHTML = '';
+
+            // Render current contests (upcoming and ongoing)
+            currentContests.forEach(contest => {
+                const row = document.createElement('tr');
+                const startTime = new Date(contest.startTime).toLocaleString();
+                const endTime = new Date(contest.endTime).toLocaleString();
+
+                row.innerHTML = `
+                    <td>${contest.name}</td>
+                    <td>${contest.description || 'No description'}</td>
+                    <td>${startTime}</td>
+                    <td>${endTime}</td>
+                    <td>${contest.difficulty || 'Medium'}</td>
+                    <td>${contest.status || 'Scheduled'}</td>
+                    <td>${contest.participants ? contest.participants.length : 0}</td>
+                    <td>
+                        <button onclick="handleContestRegistration('${contest._id}')" class="register-btn" data-contest-id="${contest._id}">
+                            ${contest.status === 'Ongoing' ? 'Join Now' : 'Register'}
+                        </button>
+                    </td>
+                `;
+                upcomingBody.appendChild(row);
             });
+
+            // Render past contests with leaderboard button
+            pastContests.forEach(contest => {
+                const row = document.createElement('tr');
+                const startTime = new Date(contest.startTime).toLocaleString();
+                const endTime = new Date(contest.endTime).toLocaleString();
+                const topPerformer = contest.leaderboard && contest.leaderboard.length > 0
+                    ? contest.leaderboard[0].username || 'Anonymous'
+                    : 'No winner';
+
+                row.innerHTML = `
+                    <td>${contest.name}</td>
+                    <td>${contest.description || 'No description'}</td>
+                    <td>${startTime}</td>
+                    <td>${endTime}</td>
+                    <td>${contest.difficulty || 'Medium'}</td>
+                    <td>${contest.status || 'Completed'}</td>
+                    <td>${topPerformer}</td>
+                    <td>
+                        <button onclick="viewLeaderboard('${contest._id}')" class="leaderboard-btn">
+                            View Leaderboard
+                        </button>
+                    </td>
+                `;
+                pastBody.appendChild(row);
+            });
+
+            setupCountdownTimers();
+        }
+
+        // Handle contest registration/joining
+        async function handleContestRegistration(contestId) {
+    try {
+        // Get user data from localStorage
+        const userId = localStorage.getItem('userId');
+        console.log(userId)
+        
+        if (!userId) {
+            alert('Please login first');
+            window.location.href = '/signin';
+            return;
+        }
+
+        const response = await fetch(`/api/contests/join/${contestId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                userId: userId
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to register for contest');
+        }
+
+        if (result.success) {
+            alert('Successfully registered for the contest!');
+            window.location.href = `/contestpage/${contestId}`;
+        } else {
+            alert(result.message || 'Failed to register for contest');
+        }
+    } catch (error) {
+        console.error('Registration failed:', error);
+        alert('Failed to register for contest. Please try again.');
+    }
+}
+        function viewLeaderboard(contestId) {
+            console.log(`Viewing leaderboard for contest ${contestId}`);
+            window.location.href = `/contest/${contestId}/leaderboard`;
+        }
+
+        function setupCountdownTimers() {
+            const countdownElements = document.querySelectorAll('.countdown');
+            countdownElements.forEach(el => {
+                const endTime = new Date(el.dataset.endTime);
+
+                const updateCountdown = () => {
+                    const now = new Date();
+                    const diff = endTime - now;
+
+                    if (diff <= 0) {
+                        el.textContent = 'Ended';
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                };
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            });
+        }
+
+        // Join private contest by code
+        document.getElementById('join-contest-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const contestCode = document.getElementById('contest-code').value.trim();
+
+            if (!contestCode) {
+                alert('Please enter a contest code');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/contests/join-by-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ contestCode })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Successfully joined the contest!');
+                    window.location.href = `/contestpage/${result.contestId}`;
+                } else {
+                    alert(result.message || 'Failed to join the contest');
+                }
+            } catch (error) {
+                console.error('Join contest failed:', error);
+                alert('Failed to join the contest');
+            }
+        });
+
+        // Fetch contests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded and parsed");
+            fetchContests();
         });
     </script>
-
 </body>
-
 </html>

@@ -17,6 +17,37 @@ router.post("/add", async (req, res) => {
     }
 });
 
+
+router.get('/search', async (req, res) => {
+    try {
+        const searchTerm = req.query.q;
+        
+        if (!searchTerm || searchTerm.trim().length < 2) {
+            return res.status(400).json([]); // Return empty array for short queries
+        }
+
+        const problems = await Problem.find({
+            $or: [
+                { title: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } },
+                { difficulty: { $regex: searchTerm, $options: 'i' } }
+            ]
+        })
+        .select('_id title description difficulty')
+        .limit(10)
+        .lean();
+
+        // Return as array directly
+        res.json(problems); // Just send the array of problems without wrapper
+
+    } catch (error) {
+        console.error('Problem search error:', error);
+        res.status(500).json([]); // Return empty array on error
+    }
+});
+
+
+
 // Get All Problems
 router.get("/", async (req, res) => {
     try {

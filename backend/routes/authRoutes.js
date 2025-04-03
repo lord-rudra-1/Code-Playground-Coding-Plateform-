@@ -112,4 +112,20 @@ router.delete("/user/:userId", async (req, res) => {
     }
 });
 
+router.get('/check-admin', async (req, res) => {
+    try {
+        // List of admin user IDs (could also check user.role === 'admin')
+        const ADMIN_USER_IDS = [
+            '67ea948007fde9615f747b4d', // Example admin ID
+            '67e941f80831114bcb33d6a2'  // Another admin ID
+        ];
+
+        const isAdmin = ADMIN_USER_IDS.includes(req.user.id.toString());
+        res.json({ isAdmin });
+    } catch (error) {
+        console.error('Error checking admin status:', error);
+        res.status(500).json({ msg: 'Server error' });
+    }
+});
+
 module.exports = router;

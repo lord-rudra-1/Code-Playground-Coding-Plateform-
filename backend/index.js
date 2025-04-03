@@ -8,9 +8,9 @@ const connectDB = require("./config/db");
 const USER = require("./models/User");
 const bcrypt = require("bcrypt");
 const Problem = require("./models/Problem");
-
+const Contest = require("./models/Contest");
 const SALT_ROUNDS = 10;
-
+const mongoose = require('mongoose');
 // await connectDB();
 
 // Import Routes
@@ -18,7 +18,8 @@ const authRoutes = require("./routes/authRoutes");
 const problemRoutes = require("./routes/problemRoutes");
 const executeRoutes = require("./routes/executeRoutes");
 const discussRoutes = require("./routes/discussRoutes");
-
+const contestRoutes = require("./routes/contestRoutes"); 
+const contestjoinRoutes = require("./routes/contestjoinRoutes");
 const TEMP_DIR = path.join(__dirname, 'temp');
 
 app.set("view engine", "ejs");
@@ -37,62 +38,92 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/problems", problemRoutes);
 app.use("/api/execute", executeRoutes);
 app.use("/api/discuss", discussRoutes);
+app.use("/api/contests", contestRoutes); // Add this line
+app.use("/api/contests/join",contestjoinRoutes);
 
 
 
 
-
-app.get("/contestpage/:id", (req, res) => {
-    const contestId = req.params.id;
-
-    const problems = [ // Dummy Data
-        { name: "Food Balance", code: "FOODBAL", submissions: 35726, accuracy: 68.05 },
-        { name: "Placing 01 And 10", code: "PLACE0110", submissions: 14825, accuracy: 47.89 },
-        { name: "Permutation Construct", code: "PERMCON", submissions: 13413, accuracy: 33.07 },
-        { name: "Smoothly Increasing", code: "SMOOTHINC", submissions: 599, accuracy: 5.5 },
-        { name: "Minimum Colours (Easy)", code: "MINCOL", submissions: 189, accuracy: 5.08 },
-    ];
-
-    res.render("contestpage", { contestId, problems }); // Pass problems array
-});
-
-
-
-/* 
-// Database version: Fetch 2 Easy, 2 Medium, and 1 Hard problem randomly
-const Problem = require("./models/Problem"); // Assuming you have a Problem model
-
-app.get("/contestpage", async (req, res) => {
+app.get("/contestpage/:id", async (req, res) => {
     try {
-        const easy = await Problem.aggregate([{ $match: { difficulty: "Easy" } }, { $sample: { size: 2 } }]);
-        const medium = await Problem.aggregate([{ $match: { difficulty: "Medium" } }, { $sample: { size: 2 } }]);
-        const hard = await Problem.aggregate([{ $match: { difficulty: "Hard" } }, { $sample: { size: 1 } }]);
+        const contestId = req.params.id;
+        
+        // Validate ID format
+        if (!mongoose.Types.ObjectId.isValid(contestId)) {
+            return res.status(400).render('error', { message: 'Invalid contest ID format' });
+        }
 
-        const problems = [...easy, ...medium, ...hard];
-        res.render("contestpage", { problems });
+        // Fetch contest with modified population
+        const contest = await Contest.findById(contestId)
+            .populate({
+                path: 'problems',
+                select: 'title description difficulty', // Updated to match your problem schema
+                options: { lean: true }
+            })
+            .populate({
+                path: 'participants.user',
+                select: 'username', // Assuming your User model has username
+                options: { lean: true }
+            })
+            .lean();
+
+        if (!contest) {
+            return res.status(404).render('error', { message: 'Contest not found' });
+        }
+
+        // Safely check participant status
+        let isParticipant = false;
+        if (req.user && contest.participants) {
+            const userId = req.user._id.toString();
+            isParticipant = contest.participants.some(p => 
+                p.user && p.user._id.toString() === userId
+            );
+        }
+
+        // Transform problems to match what your EJS template expects
+        const problems = contest.problems ? contest.problems.map(problem => ({
+            name: problem.title,
+            code: problem._id.toString(), // Using ID as code since no code field exists
+            submissions: 0, // Default value since not in schema
+            accuracy: 0 // Default value since not in schema
+        })) : [];
+
+        res.render('contestpage', {
+            contestId: contest._id,
+            problems,
+            // isParticipant
+        });
+
     } catch (error) {
-        console.error("Error fetching problems:", error);
-        res.status(500).send("Internal Server Error");
+        console.error('Full error:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
+        res.status(500).render('error', { 
+            message: 'Failed to fetch contest details',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
-*/
+
 
 // Route for Edit Code Page
 app.get("/editcode/:problemId", async (req, res) => {
     try {
         const problemId = req.params.problemId;
         const problem = await Problem.findById(problemId);
-        
+
         if (!problem) {
             return res.status(404).send("Problem not found");
         }
-        
+
         res.render("editcode", { problem });
     } catch (error) {
         console.error("Error fetching problem for edit:", error);
@@ -151,6 +182,10 @@ app.get("/about", (req, res) => {
     res.render("about");
 });
 
+app.get("/create_contest", (req, res) => {
+    res.render("create_contest");
+});
+
 app.post("/signup", async (req, res) => {
     try {
         const { name, email, password, confirm_password } = req.body;
@@ -184,11 +219,11 @@ app.post("/signup", async (req, res) => {
 app.post("/signin", async (req, res) => {
     try {
         const { email, password } = req.body;
-        
+
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required" });
         }
-        
+
         // Find user
         const user = await USER.findOne({ email });
         if (!user) {
@@ -228,19 +263,19 @@ app.get("/api/auth/profile/:userId", async (req, res) => {
         const user = await USER.findById(userId)
             .select("-password")  // Exclude password from the result
             .populate("problemsSolved");  // Populate the problems
-        
+
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        
+
         // Get total submission count
         const submissionCount = user.submissions ? user.submissions.length : 0;
-        
+
         // Get total accepted solutions
         const acceptedCount = user.submissions
             ? user.submissions.filter(sub => sub.status === "Accepted").length
             : 0;
-        
+
         // Calculate relevant stats
         const stats = {
             problemsSolved: user.problemsSolved ? user.problemsSolved.length : 0,
@@ -248,7 +283,7 @@ app.get("/api/auth/profile/:userId", async (req, res) => {
             acceptedSubmissions: acceptedCount,
             acceptanceRate: submissionCount > 0 ? Math.round((acceptedCount / submissionCount) * 100) : 0
         };
-        
+
         // Send combined response
         res.json({
             user: {
