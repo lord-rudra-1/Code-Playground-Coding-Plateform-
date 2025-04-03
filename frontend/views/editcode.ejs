@@ -103,7 +103,7 @@
             <li><a href="/problems">Problems</a></li>
             <li><a href="/contests">Contests</a></li>
             <li><a href="/discuss">Discuss</a></li>
-            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact Us</a></li>
             <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
@@ -123,6 +123,53 @@
                     <div class="problem-description">
                         <%- problem.description %>
                     </div>
+                    
+                    <% if (problem.inputFormat) { %>
+                    <div class="problem-input-format">
+                        <h3>Input Format</h3>
+                        <p><%- problem.inputFormat %></p>
+                    </div>
+                    <% } %>
+                    
+                    <% if (problem.outputFormat) { %>
+                    <div class="problem-output-format">
+                        <h3>Output Format</h3>
+                        <p><%- problem.outputFormat %></p>
+                    </div>
+                    <% } %>
+                    
+                    <% if (problem.constraints) { %>
+                    <div class="problem-constraints">
+                        <h3>Constraints</h3>
+                        <ul>
+                            <% 
+                            // Handle different possible formats of constraints
+                            try {
+                                if (problem.constraints instanceof Map) {
+                                    // If it's a native Map object
+                                    for (const [constraint, description] of problem.constraints.entries()) { %>
+                                        <li><code><%= constraint %></code>: <%= description %></li>
+                                    <% }
+                                } else if (problem.constraints.constructor && problem.constraints.constructor.name === 'Map') {
+                                    // If it's a MongoDB Map object with get method
+                                    const keys = Array.from(problem.constraints.keys());
+                                    for (const key of keys) { %>
+                                        <li><code><%= key %></code>: <%= problem.constraints.get(key) %></li>
+                                    <% }
+                                } else if (typeof problem.constraints === 'object') {
+                                    // If it's a plain object
+                                    Object.entries(problem.constraints).forEach(([key, value]) => {
+                                        if (key !== '_parent' && key !== '_path' && key !== '_schemaType') { %>
+                                            <li><code><%= key %></code>: <%= value %></li>
+                                        <% }
+                                    });
+                                }
+                            } catch (e) { %>
+                                <li>Error rendering constraints: <%= e.message %></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    <% } %>
                 </div>
 
                 <div class="submissions-content" style="display: none;">
@@ -265,7 +312,7 @@
                 const response = await fetch('/api/execute', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ code, language, input })
                 });
@@ -397,15 +444,54 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    document.getElementById('result-output').innerHTML = `<span class="success">Submission result: ${result.message}</span>`;
+                    // Display submission status
+                    document.getElementById('result-output').innerHTML = 
+                        `<span class="${result.status === 'Accepted' ? 'success' : 'error'}">
+                            Submission result: ${result.message}
+                        </span>`;
                     
-                    // Switch to submissions tab and refresh
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabContents.forEach(content => content.style.display = 'none');
+                    // If there are test results, show them
+                    if (result.results && result.results.length > 0) {
+                        // Switch to the solution tab to show test results
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabContents.forEach(content => content.style.display = 'none');
+                        
+                        tabButtons[2].classList.add('active');
+                        tabContents[2].style.display = 'block';
+                        
+                        // Format the test results similar to the test button
+                        let resultsHtml = `
+                            <div class="test-summary">
+                                <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
+                            </div>
+                            <h4>Test Cases:</h4>
+                        `;
+                        
+                        result.results.forEach((testResult, index) => {
+                            resultsHtml += `
+                                <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
+                                    <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
+                                    <div>
+                                        <strong>Input:</strong> 
+                                        <pre>${testResult.input}</pre>
+                                    </div>
+                                    <div>
+                                        <strong>Expected Output:</strong> 
+                                        <pre>${testResult.expected}</pre>
+                                    </div>
+                                    <div>
+                                        <strong>Your Output:</strong> 
+                                        <pre>${testResult.actual}</pre>
+                                    </div>
+                                    ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
+                                </div>
+                            `;
+                        });
+                        
+                        document.getElementById('test-results').innerHTML = resultsHtml;
+                    }
                     
-                    tabButtons[1].classList.add('active');
-                    tabContents[1].style.display = 'block';
-                    
+                    // Load submissions in the background
                     loadUserSubmissions();
                 } else {
                     document.getElementById('result-output').innerHTML = `<span class="error">Error: ${result.message || 'Failed to submit solution'}</span>`;

@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(
-            "mongodb+srv://madaraxghost404:Bq5kpz28E0hWfGUE@codeplayground.po6vj.mongodb.net/?retryWrites=true&w=majority&appName=codeplayground"
+            `mongodb+srv://madaraxghost404:Bq5kpz28E0hWfGUE@codeplayground.po6vj.mongodb.net/?retryWrites=true&w=majority&appName=codeplayground`
         );
 
         console.log(`MongoDB Connected: {conn.connection.host}`);

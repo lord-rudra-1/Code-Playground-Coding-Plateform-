@@ -146,8 +146,12 @@ router.post("/:id/comments", async (req, res) => {
 // Update discussion upvotes/downvotes
 router.put("/:id/vote", async (req, res) => {
     try {
-        const { vote } = req.body;
+        const { vote, userId } = req.body;
         const discussionId = req.params.id;
+        
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
         
         if (vote !== "up" && vote !== "down") {
             return res.status(400).json({ message: "Vote must be 'up' or 'down'" });
@@ -158,19 +162,52 @@ router.put("/:id/vote", async (req, res) => {
         if (!discussion) {
             return res.status(404).json({ message: "Discussion not found" });
         }
-        
-        // Update vote count
+
+        // Check if user has already voted
+        const hasUpvoted = discussion.upvotedBy.includes(userId);
+        const hasDownvoted = discussion.downvotedBy.includes(userId);
+
         if (vote === "up") {
-            discussion.upvotes += 1;
+            if (hasUpvoted) {
+                // Remove upvote
+                discussion.upvotes -= 1;
+                discussion.upvotedBy = discussion.upvotedBy.filter(id => id.toString() !== userId);
+            } else {
+                // Add upvote
+                discussion.upvotes += 1;
+                discussion.upvotedBy.push(userId);
+                
+                // Remove downvote if exists
+                if (hasDownvoted) {
+                    discussion.downvotes -= 1;
+                    discussion.downvotedBy = discussion.downvotedBy.filter(id => id.toString() !== userId);
+                }
+            }
         } else {
-            discussion.downvotes += 1;
+            if (hasDownvoted) {
+                // Remove downvote
+                discussion.downvotes -= 1;
+                discussion.downvotedBy = discussion.downvotedBy.filter(id => id.toString() !== userId);
+            } else {
+                // Add downvote
+                discussion.downvotes += 1;
+                discussion.downvotedBy.push(userId);
+                
+                // Remove upvote if exists
+                if (hasUpvoted) {
+                    discussion.upvotes -= 1;
+                    discussion.upvotedBy = discussion.upvotedBy.filter(id => id.toString() !== userId);
+                }
+            }
         }
         
         await discussion.save();
         
         res.json({
             upvotes: discussion.upvotes,
-            downvotes: discussion.downvotes
+            downvotes: discussion.downvotes,
+            upvotedBy: discussion.upvotedBy,
+            downvotedBy: discussion.downvotedBy
         });
     } catch (error) {
         console.error("Error voting:", error);
