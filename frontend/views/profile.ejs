@@ -103,6 +103,95 @@
             color: #6c757d;
             font-style: italic;
         }
+
+        /* Profile picture styles */
+        .profile-pic-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .profile-pic-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .change-pic-btn {
+            margin-top: 8px;
+            background-color: #5b9bd5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+            width: 100px;
+        }
+
+        .change-pic-btn:hover {
+            background-color: #4a90e2;
+        }
+
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        /* Contest styles */
+        .contest-history {
+            margin-top: 20px;
+        }
+
+        .rating-chart {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .contest-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .contest-table th, .contest-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .contest-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .rating-increase {
+            color: #28a745;
+        }
+
+        .rating-decrease {
+            color: #dc3545;
+        }
     </style>
 </head>
 
@@ -148,7 +237,13 @@
         <!-- Profile Header -->
         <div class="profile-header">
             <div class="profile-left">
-                <img src="/profile.png" alt="Profile Picture" class="profile-pic">
+                <div class="profile-pic-section">
+                    <div class="profile-pic-container">
+                        <img id="profile-pic" src="/profile.png" alt="Profile Picture" class="profile-pic">
+                        <input type="file" id="profile-pic-input" class="file-input" accept="image/*">
+                    </div>
+                    <button type="button" class="change-pic-btn" id="change-profile-pic">Change Picture</button>
+                </div>
                 <div class="user-info">
                     <h2 class="username" id="user-name">Loading...</h2>
                     <p class="user-role" id="user-email">Loading...</p>
@@ -160,8 +255,8 @@
                     <p id="problems-solved">0</p>
                 </div>
                 <div class="stat-box">
-                    <h3>Success Rate</h3>
-                    <p id="success-rate">0%</p>
+                    <h3>Contest Rating</h3>
+                    <p id="contest-rating">1500</p>
                 </div>
                 <div class="stat-box">
                     <h3>Member Since</h3>
@@ -176,6 +271,7 @@
                 <ul>
                     <li class="active" onclick="switchTab('overview')">Overview</li>
                     <li onclick="switchTab('submissions')">Submissions</li>
+                    <li onclick="switchTab('contests')">Contests</li>
                     <li onclick="switchTab('settings')">Settings</li>
                 </ul>
             </div>
@@ -207,6 +303,32 @@
                         <!-- Submissions will be loaded here -->
                         <li>Loading submissions...</li>
                     </ul>
+                </div>
+
+                <!-- Contests Section -->
+                <div class="tab-content hidden" id="contests">
+                    <h3>Contest History</h3>
+                    <div class="contest-history">
+                        <div class="rating-chart" id="rating-chart">
+                            <!-- Rating chart will be displayed here -->
+                            <p style="text-align: center; padding-top: 140px;">Rating chart will be displayed here</p>
+                        </div>
+                        <h4>Recent Contests</h4>
+                        <table class="contest-table" id="contest-table">
+                            <thead>
+                                <tr>
+                                    <th>Contest</th>
+                                    <th>Rank</th>
+                                    <th>Score</th>
+                                    <th>Rating</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contest-history">
+                                <!-- Contest history will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Settings Section -->
@@ -305,8 +427,14 @@
             document.getElementById('user-name').textContent = data.user.username;
             document.getElementById('user-email').textContent = data.user.email;
             document.getElementById('problems-solved').textContent = data.stats.problemsSolved;
-            document.getElementById('success-rate').textContent = `${data.stats.acceptanceRate}%`;
+            document.getElementById('contest-rating').textContent = data.user.contestRating?.current || 1500;
             document.getElementById('member-since').textContent = formatDate(data.user.createdAt);
+
+            // Set profile picture
+            const profilePic = document.getElementById('profile-pic');
+            if (data.user.profilePicture) {
+                profilePic.src = data.user.profilePicture;
+            }
 
             // Fill in overview stats
             document.getElementById('overview-problems-solved').textContent = data.stats.problemsSolved;
@@ -337,6 +465,31 @@
                 submissionsList.innerHTML = '<div class="empty-message">No submissions yet</div>';
             }
 
+            // Fill in contest history
+            const contestHistory = document.getElementById('contest-history');
+            
+            if (data.user.contestRating?.history && data.user.contestRating.history.length > 0) {
+                contestHistory.innerHTML = '';
+                
+                data.user.contestRating.history.forEach(contest => {
+                    const changeClass = contest.change > 0 ? 'rating-increase' : (contest.change < 0 ? 'rating-decrease' : '');
+                    const changeSign = contest.change > 0 ? '+' : '';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${contest.contestName || 'Contest'}</td>
+                        <td>${data.user.contestsParticipated?.find(c => c.contest == contest.contestId)?.rank || '-'}</td>
+                        <td>${data.user.contestsParticipated?.find(c => c.contest == contest.contestId)?.score || '-'}</td>
+                        <td>${contest.rating}</td>
+                        <td class="${changeClass}">${changeSign}${contest.change}</td>
+                    `;
+                    
+                    contestHistory.appendChild(row);
+                });
+            } else {
+                contestHistory.innerHTML = '<tr><td colspan="5" class="empty-message">No contest history yet</td></tr>';
+            }
+
             // Set input values for settings
             document.getElementById('username-input').value = data.user.username;
 
@@ -344,6 +497,69 @@
             document.getElementById('save-changes').addEventListener('click', saveChanges);
             document.getElementById('delete-account').addEventListener('click', deleteAccount);
             document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Profile picture change event
+            const changeProfilePic = document.getElementById('change-profile-pic');
+            const profilePicInput = document.getElementById('profile-pic-input');
+            
+            changeProfilePic.addEventListener('click', () => {
+                profilePicInput.click();
+            });
+            
+            profilePicInput.addEventListener('change', handleProfilePictureChange);
+        }
+
+        // Function to handle profile picture change
+        async function handleProfilePictureChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validImageTypes.includes(file.type)) {
+                alert('Please select a valid image file (JPEG, PNG, GIF, WEBP)');
+                return;
+            }
+            
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Image size must be less than 2MB');
+                return;
+            }
+            
+            // Create FormData object
+            const formData = new FormData();
+            formData.append('profilePicture', file);
+            formData.append('userId', userId);
+            
+            try {
+                // Show loading state
+                const profilePic = document.getElementById('profile-pic');
+                profilePic.style.opacity = '0.5';
+                
+                // Upload image
+                const response = await fetch('/api/auth/upload-profile-picture', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to upload profile picture');
+                }
+                
+                const result = await response.json();
+                
+                // Update profile picture
+                if (result.profilePicture) {
+                    profilePic.src = result.profilePicture + '?t=' + new Date().getTime(); // Add timestamp to prevent caching
+                }
+                
+                profilePic.style.opacity = '1';
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                alert('Failed to upload profile picture: ' + error.message);
+                document.getElementById('profile-pic').style.opacity = '1';
+            }
         }
 
         // Function to save profile changes
@@ -414,14 +630,13 @@
         function logout() {
             localStorage.removeItem('userId');
             alert('Logged out successfully');
-            window.location.href = '/home';
+            window.location.href = '/';
         }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadUserProfile();
         });
-
     </script>
 
 </body>
