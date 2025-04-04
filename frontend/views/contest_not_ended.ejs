@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Not Available - Code Playground</title>
+    <link rel="stylesheet" href="/css/leaderboard.css">
+    <style>
+        .message-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .message-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .message-container p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+        
+        .button-container {
+            margin-top: 25px;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .contest-details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/explore">
+                <img src="/lo.png" alt="Logo">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/explore">Explore</a></li>
+            <li><a href="/problems">Problems</a></li>
+            <li><a href="/contests">Contests</a></li>
+            <li><a href="/discuss">Discuss</a></li>
+            <li><a href="/contact">About Us</a></li>
+            <li><a href="/profile" class="profile-icon">👤</a></li>
+        </ul>
+    </nav>
+
+    <div class="message-container">
+        <h2>Leaderboard Not Available Yet</h2>
+        
+        <div class="contest-details">
+            <h3><%= contestName %></h3>
+            <p>The leaderboard for this contest will be available after it has ended.</p>
+        </div>
+        
+        <p>The contest will end on:</p>
+        <div class="countdown" id="countdown" data-end-time="<%= endTime %>">
+            Calculating...
+        </div>
+        
+        <p>You can still participate in the contest while it's ongoing. The leaderboard will be automatically generated when the contest ends.</p>
+        
+        <div class="button-container">
+            <a href="/contestpage/<%= contestId %>" class="back-btn">Go to Contest Page</a>
+            <a href="/contests" class="back-btn">Back to Contests</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Countdown timer
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            const endTimeStr = countdownElement.getAttribute('data-end-time');
+            const endTime = new Date(endTimeStr);
+            const now = new Date();
+            
+            // Calculate time difference
+            const timeDiff = endTime - now;
+            
+            if (timeDiff <= 0) {
+                // Contest has ended
+                countdownElement.textContent = 'Contest has ended! Refreshing...';
+                // Reload the page to show the leaderboard
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+                return;
+            }
+            
+            // Calculate days, hours, minutes, seconds
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            // Update countdown display
+            countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        // Update countdown immediately and then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+
+</html> 

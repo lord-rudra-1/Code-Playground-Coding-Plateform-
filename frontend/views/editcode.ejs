@@ -133,6 +133,93 @@
             border-radius: 4px;
         }
         
+        /* Contest-specific styles */
+        .contest-update {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #6c757d;
+        }
+        
+        .contest-update.success {
+            border-left-color: #28a745;
+            background-color: #f0fff0;
+        }
+        
+        .contest-update p {
+            margin: 5px 0;
+        }
+        
+        .contest-results {
+            margin: 15px 0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #f0f8ff;
+            border-left: 3px solid #007bff;
+        }
+        
+        .contest-results h4 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        
+        #leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        #leaderboard-table th,
+        #leaderboard-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        #leaderboard-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        #leaderboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        #leaderboard-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Highlight your position in the leaderboard */
+        .your-rank {
+            background-color: #e6f7ff !important;
+            font-weight: bold;
+        }
+        
+        /* styles for test case display */
+        .test-case {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .test-case.pass {
+            border-left: 4px solid #28a745;
+        }
+        
+        .test-case.fail {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
         @media (min-width: 992px) {
             .content {
                 flex-direction: row;
@@ -248,6 +335,20 @@
                     document.querySelector(`.${selectedTab}-content`).style.display = 'block';
                 });
             });
+        });
+    </script>
+    <script>
+        // Add this script to the head section to detect if the problem is being solved as part of a contest
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for URL parameters to see if we're in a contest
+            const urlParams = new URLSearchParams(window.location.search);
+            const contestId = urlParams.get('contestId');
+            
+            // Store contest ID if present
+            if (contestId) {
+                localStorage.setItem('currentContestId', contestId);
+                console.log('Working on contest problem:', contestId);
+            }
         });
     </script>
 </head>
@@ -525,8 +626,8 @@
             }
             
             try {
-                // Show testing message
-                document.getElementById('test-results').innerHTML = 'Testing your code against test cases...';
+                // Show a loading indicator
+                document.getElementById('test-results').innerHTML = '<div class="loading">Running tests...</div>';
                 
                 // Switch to the solution tab
                 tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -534,6 +635,10 @@
                 
                 tabButtons[2].classList.add('active');
                 tabContents[2].style.display = 'block';
+                
+                // Get user ID and contest ID if available
+                const userId = localStorage.getItem('userId');
+                const contestId = localStorage.getItem('currentContestId');
                 
                 // Fetch problem's test cases
                 const problemResponse = await fetch(`/api/problems/${problemId}`);
@@ -544,13 +649,22 @@
                     return;
                 }
                 
+                const problemTestCases = problem.testCases;
+                
                 // Test against each test case
                 const response = await fetch('/api/execute/test', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ code, language, testCases: problem.testCases })
+                    body: JSON.stringify({
+                        code,
+                        language,
+                        testCases: problemTestCases,
+                        userId: userId || null,
+                        problemId: problemId,
+                        contestId: contestId || null
+                    })
                 });
                 
                 const result = await response.json();
@@ -611,22 +725,50 @@
                 document.getElementById('result-container').style.display = 'block';
                 document.getElementById('result-output').innerHTML = 'Submitting solution...';
                 
+                // Check if we're in a contest
+                const contestId = localStorage.getItem('currentContestId');
+                
                 const response = await fetch(`/api/problems/${problemId}/submit`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ userId, code, language })
+                    body: JSON.stringify({ 
+                        userId, 
+                        code, 
+                        language,
+                        contestId: contestId || null // Include contest ID if present
+                    })
                 });
                 
                 const result = await response.json();
                 
                 if (response.ok) {
                     // Display submission status
-                    document.getElementById('result-output').innerHTML = 
-                        `<span class="${result.status === 'Accepted' ? 'success' : 'error'}">
-                            Submission result: ${result.message}
-                        </span>`;
+                    let submissionMessage = `<span class="${result.status === 'Accepted' ? 'success' : 'error'}">
+                        Submission result: ${result.message}
+                    </span>`;
+                    
+                    // Show contest update info if present
+                    if (contestId && result.contestUpdate) {
+                        const contestUpdate = result.contestUpdate;
+                        if (contestUpdate.updated) {
+                            submissionMessage += `<div class="contest-update success">
+                                <p>Contest leaderboard updated!</p>
+                                <p>Your current score: ${contestUpdate.totalScore}</p>
+                                <p>Problems solved: ${contestUpdate.problemsCount}</p>
+                            </div>`;
+                        } else {
+                            // If problem was already solved or submission wasn't accepted
+                            submissionMessage += `<div class="contest-update">
+                                <p>${contestUpdate.message || 'No change in contest score'}</p>
+                                <p>Your current score: ${contestUpdate.totalScore}</p>
+                                <p>Problems solved: ${contestUpdate.problemsCount}</p>
+                            </div>`;
+                        }
+                    }
+                    
+                    document.getElementById('result-output').innerHTML = submissionMessage;
                     
                     // If there are test results, show them
                     if (result.results && result.results.length > 0) {
@@ -641,9 +783,19 @@
                         let resultsHtml = `
                             <div class="test-summary">
                                 <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
-                            </div>
-                            <h4>Test Cases:</h4>
-                        `;
+                            </div>`;
+                            
+                        // Add contest info if this is a contest submission
+                        if (contestId && result.contestUpdate) {
+                            const contestUpdate = result.contestUpdate;
+                            resultsHtml += `<div class="contest-results">
+                                <h4>Contest Submission:</h4>
+                                <p>${contestUpdate.message || (contestUpdate.updated ? 'Score updated' : 'No score change')}</p>
+                                <p>Your current score: ${contestUpdate.totalScore}</p>
+                            </div>`;
+                        }
+                        
+                        resultsHtml += '<h4>Test Cases:</h4>';
                         
                         result.results.forEach((testResult, index) => {
                             resultsHtml += `
@@ -671,6 +823,18 @@
                     
                     // Load submissions in the background
                     loadUserSubmissions();
+                    
+                    // If this was a contest submission and was successful, refresh the page
+                    // after a short delay to show the updated contest info
+                    if (contestId && result.status === 'Accepted' && result.contestUpdate) {
+                        setTimeout(() => {
+                            const shouldRefresh = confirm('Solution submitted successfully! Refresh to see updated contest status?');
+                            if (shouldRefresh) {
+                                // To ensure we come back to the same problem with contest context
+                                window.location.href = window.location.pathname + '?contestId=' + contestId;
+                            }
+                        }, 2000);
+                    }
                 } else {
                     document.getElementById('result-output').innerHTML = `<span class="error">Error: ${result.message || 'Failed to submit solution'}</span>`;
                 }

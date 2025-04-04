@@ -215,4 +215,105 @@ router.post('/join-by-code', [
     }
 });
 
+// @route   GET /api/contests/:id
+// @desc    Get a single contest by ID
+// @access  Public
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.query.userId;
+        
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'Invalid contest ID' });
+        }
+        
+        const contest = await Contest.findById(id)
+            .populate({
+                path: 'participants.user',
+                select: 'username'
+            })
+            .populate({
+                path: 'leaderboard.user',
+                select: 'username'
+            })
+            .populate({
+                path: 'createdBy',
+                select: 'username _id'
+            })
+            .populate({
+                path: 'problems',
+                select: 'title difficulty'
+            });
+            
+        if (!contest) {
+            return res.status(404).json({ error: 'Contest not found' });
+        }
+        
+        // Update contest status
+        await contest.updateStatus();
+        
+        // Find user's solved problems if userId is provided
+        let userSolvedProblems = [];
+        let userLeaderboardEntry = null;
+        
+        if (userId && mongoose.Types.ObjectId.isValid(userId)) {
+            // Find user's leaderboard entry
+            const leaderboardEntry = contest.leaderboard.find(
+                entry => entry.user && entry.user._id.toString() === userId
+            );
+            
+            if (leaderboardEntry) {
+                userLeaderboardEntry = {
+                    totalScore: leaderboardEntry.totalScore,
+                    rank: leaderboardEntry.rank || 0,
+                    problemsCount: leaderboardEntry.submissions.length
+                };
+                
+                // Get list of problems solved by user in this contest
+                userSolvedProblems = leaderboardEntry.submissions
+                    .filter(sub => sub.score > 0)
+                    .map(sub => sub.problem.toString());
+            }
+        }
+        
+        // Format response to include only necessary data
+        const response = {
+            _id: contest._id,
+            name: contest.name,
+            description: contest.description,
+            startTime: contest.startTime,
+            endTime: contest.endTime,
+            difficulty: contest.difficulty,
+            status: contest.status,
+            visibility: contest.visibility,
+            participants: contest.participants,
+            contestCode: contest.contestCode,
+            createdBy: contest.createdBy._id,
+            createdAt: contest.createdAt,
+            problems: contest.problems.map(p => ({
+                _id: p._id,
+                title: p.title,
+                difficulty: p.difficulty,
+                solved: userSolvedProblems.includes(p._id.toString())
+            })),
+            leaderboard: contest.leaderboard.map(entry => ({
+                userId: entry.user ? entry.user._id : null,
+                username: entry.user ? entry.user.username : 'Unknown',
+                totalScore: entry.totalScore,
+                problemCount: entry.submissions.length
+            }))
+        };
+        
+        // Include user info if requested
+        if (userLeaderboardEntry) {
+            response.userStats = userLeaderboardEntry;
+        }
+        
+        res.json(response);
+    } catch (error) {
+        console.error('Error fetching contest:', error);
+        res.status(500).json({ error: 'Failed to fetch contest details' });
+    }
+});
+
 module.exports = router;

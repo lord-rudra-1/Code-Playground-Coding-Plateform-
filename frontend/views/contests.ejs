@@ -90,6 +90,15 @@
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
 
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="leaderboard-modal">
+        <div class="leaderboard-modal-content">
+            <h3>Leaderboard Not Available</h3>
+            <p>The leaderboard will be available after the contest has ended.</p>
+            <button id="close-modal-btn" class="close-modal-btn">Close</button>
+        </div>
+    </div>
+
     <script>
         // Fetch and populate only public contests
         async function fetchContests() {
@@ -152,6 +161,11 @@
                 const topPerformer = contest.leaderboard && contest.leaderboard.length > 0
                     ? contest.leaderboard[0].username || 'Anonymous'
                     : 'No winner';
+                    
+                // Check if contest has actually ended
+                const isCompleted = contest.status === 'Completed';
+                const leaderboardBtnClass = isCompleted ? 'leaderboard-btn' : 'leaderboard-btn disabled';
+                const leaderboardBtnText = isCompleted ? 'View Leaderboard' : 'Leaderboard (Not Available)';
 
                 row.innerHTML = `
                     <td>${contest.name}</td>
@@ -162,8 +176,8 @@
                     <td>${contest.status || 'Completed'}</td>
                     <td>${topPerformer}</td>
                     <td>
-                        <button onclick="viewLeaderboard('${contest._id}')" class="leaderboard-btn">
-                            View Leaderboard
+                        <button onclick="viewLeaderboard('${contest._id}')" class="${leaderboardBtnClass}" data-contest-id="${contest._id}">
+                            ${leaderboardBtnText}
                         </button>
                     </td>
                 `;
@@ -214,10 +228,43 @@
         alert('Failed to register for contest. Please try again.');
     }
 }
-        function viewLeaderboard(contestId) {
-            console.log(`Viewing leaderboard for contest ${contestId}`);
-            window.location.href = `/contest/${contestId}/leaderboard`;
+        async function viewLeaderboard(contestId) {
+            console.log(`Checking leaderboard availability for contest ${contestId}`);
+            try {
+                // Fetch contest details to check if it has ended
+                const response = await fetch(`/api/contests/${contestId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch contest details');
+                }
+                
+                const contest = await response.json();
+                
+                // If contest is completed, redirect to leaderboard
+                if (contest.status === 'Completed') {
+                    window.location.href = `/contest/${contestId}/leaderboard`;
+                } else {
+                    // Show modal with message that leaderboard is not available yet
+                    const modal = document.getElementById('leaderboard-modal');
+                    modal.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error checking leaderboard availability:', error);
+                alert('Failed to check leaderboard availability. Please try again later.');
+            }
         }
+        
+        // Close modal when close button is clicked
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            document.getElementById('leaderboard-modal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('leaderboard-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
 
         function setupCountdownTimers() {
             const countdownElements = document.querySelectorAll('.countdown');

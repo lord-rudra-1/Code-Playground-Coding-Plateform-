@@ -103,6 +103,67 @@
         h2 {
             margin-top: 0;
         }
+        
+        /* Styles for solved problems */
+        .problem-row {
+            transition: background-color 0.3s ease;
+        }
+        
+        .problem-row:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .problem-solved {
+            background-color: #e6fff0;
+        }
+        
+        .problem-solved td:first-child::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .problem-name {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-stats {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .action-buttons {
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #0069d9;
+        }
+        
+        #end-contest-btn {
+            background-color: #dc3545;
+        }
+        
+        #end-contest-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 
@@ -128,76 +189,287 @@
     <div class="container">
         <div class="left-panel">
             <h1>Contest Problems</h1>
-            <table border="1">
+            <div class="contest-info">
+                <p><strong>Contest ID:</strong> <span id="contest-id"></span></p>
+                <p><strong>Start Time:</strong> <span id="start-time"></span></p>
+                <p><strong>End Time:</strong> <span id="end-time"></span></p>
+                <p><strong>Status:</strong> <span id="contest-status"></span></p>
+                
+                <div id="user-stats" class="user-stats" style="display: none;">
+                    <p><strong>Your Score:</strong> <span id="user-score">0</span></p>
+                    <p><strong>Problems Solved:</strong> <span id="problems-solved">0</span></p>
+                    <p><strong>Current Rank:</strong> <span id="user-rank">-</span></p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="end-contest-btn" class="btn" style="display: none;">End Contest</button>
+                </div>
+            </div>
+            <table border="1" id="problems-table">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Code</th>
-                        <th>Successful Submissions</th>
-                        <th>Accuracy</th>
+                        <th>Difficulty</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <% problems.forEach(problem=> { %>
-                        <tr>
-                            <td><a href="/editcode/<%= problem.code %>">
-                                    <%= problem.name %>
-                                </a></td>
-                            <td>
-                                <%= problem.code %>
-                            </td>
-                            <td>
-                                <%= problem.submissions %>
-                            </td>
-                            <td>
-                                <%= problem.accuracy %>%
-                            </td>
-                        </tr>
-                        <% }); %>
+                <tbody id="problems-body">
+                    <tr>
+                        <td colspan="3">Loading problems...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="right-panel">
-            <h2>Ratings Graph</h2>
+            <h2>Contest Leaderboard</h2>
+            <div id="leaderboard-container">
+                <table id="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>User</th>
+                            <th>Score</th>
+                            <th>Problems Solved</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <tr>
+                            <td colspan="4">Loading leaderboard...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 style="margin-top: 20px;">Score Distribution</h3>
             <canvas id="ratingsChart"></canvas>
         </div>
     </div>
 
     <script>
+        // Get contest ID from URL
+        const contestId = window.location.pathname.split('/').pop();
+        
+        // Set contest ID in the page
+        document.getElementById('contest-id').textContent = contestId;
+        
+        // Store contest ID for problem solving
+        localStorage.setItem('currentContestId', contestId);
+        
+        // Fetch contest details when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchContestDetails();
+        });
+        
+        // Function to fetch contest details
+        async function fetchContestDetails() {
+            try {
+                const userId = localStorage.getItem('userId');
+                let url = `/api/contests/${contestId}`;
+                
+                // Include userId in request if available to get personalized data
+                if (userId) {
+                    url += `?userId=${userId}`;
+                }
+                
+                const response = await fetch(url);
+                const contest = await response.json();
+                
+                if (response.ok) {
+                    // Update contest info
+                    document.getElementById('start-time').textContent = new Date(contest.startTime).toLocaleString();
+                    document.getElementById('end-time').textContent = new Date(contest.endTime).toLocaleString();
+                    document.getElementById('contest-status').textContent = contest.status;
+                    
+                    // Show end contest button for contest creators if contest is ongoing
+                    if (userId && userId === contest.createdBy && contest.status === 'Ongoing') {
+                        document.getElementById('end-contest-btn').style.display = 'inline-block';
+                    }
+                    
+                    // Update problems table
+                    updateProblemsTable(contest.problems);
+                    
+                    // Update user stats if available
+                    if (contest.userStats) {
+                        const userStats = document.getElementById('user-stats');
+                        userStats.style.display = 'block';
+                        document.getElementById('user-score').textContent = contest.userStats.totalScore;
+                        document.getElementById('problems-solved').textContent = contest.userStats.problemsCount;
+                        document.getElementById('user-rank').textContent = contest.userStats.rank > 0 ? 
+                            contest.userStats.rank : 'Not ranked yet';
+                    }
+                    
+                    // Update leaderboard with real data if available
+                    if (contest.leaderboard && contest.leaderboard.length > 0) {
+                        updateLeaderboard(contest.leaderboard);
+                        updateRatingsGraph(contest.leaderboard);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching contest details:', error);
+            }
+        }
+        
+        // Function to update the problems table
+        function updateProblemsTable(problems) {
+            const problemsBody = document.getElementById('problems-body');
+            
+            // Clear current problems
+            problemsBody.innerHTML = '';
+            
+            // No problems case
+            if (!problems || problems.length === 0) {
+                problemsBody.innerHTML = '<tr><td colspan="3">No problems available</td></tr>';
+                return;
+            }
+            
+            // Add each problem to the table
+            problems.forEach(problem => {
+                const row = document.createElement('tr');
+                row.className = `problem-row ${problem.solved ? 'problem-solved' : ''}`;
+                
+                const difficultyClass = problem.difficulty.toLowerCase();
+                
+                row.innerHTML = `
+                    <td>
+                        <a href="/editcode/${problem._id}?contestId=${contestId}" class="problem-name">
+                            ${problem.title}
+                        </a>
+                    </td>
+                    <td class="${difficultyClass}">${problem.difficulty}</td>
+                    <td>${problem.solved ? 'Solved' : 'Not Solved'}</td>
+                `;
+                
+                problemsBody.appendChild(row);
+            });
+        }
+        
+        // Function to update the leaderboard table
+        function updateLeaderboard(leaderboardData) {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            const currentUserId = localStorage.getItem('userId');
+            
+            // Sort by total score (higher scores first)
+            const sortedLeaderboard = [...leaderboardData].sort((a, b) => b.totalScore - a.totalScore);
+            
+            // Clear current leaderboard
+            leaderboardBody.innerHTML = '';
+            
+            // No participants case
+            if (sortedLeaderboard.length === 0) {
+                leaderboardBody.innerHTML = '<tr><td colspan="4">No participants yet</td></tr>';
+                return;
+            }
+            
+            // Add each participant to the leaderboard
+            sortedLeaderboard.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                
+                // Highlight current user's row
+                if (currentUserId && entry.userId === currentUserId) {
+                    row.className = 'your-rank';
+                }
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${entry.username || 'Unknown'}${currentUserId && entry.userId === currentUserId ? ' (You)' : ''}</td>
+                    <td>${entry.totalScore}</td>
+                    <td>${entry.problemCount || 0}</td>
+                `;
+                
+                leaderboardBody.appendChild(row);
+            });
+        }
+        
+        // Handle end contest button
+        document.getElementById('end-contest-btn').addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to end this contest? This will calculate final rankings and update user ratings.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/problems/contest/${contestId}/end`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Contest ended successfully. Ratings have been updated.');
+                    window.location.href = `/contest/${contestId}/leaderboard`;
+                } else {
+                    alert(`Failed to end contest: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error ending contest:', error);
+                alert('Error ending contest. Please try again later.');
+            }
+        });
+
         // Dummy data for the rating graph
         const ctx = document.getElementById('ratingsChart').getContext('2d');
-        const ratingsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['15', '30', '45', '75'], // Minutes
-                datasets: [{
-                    label: 'Rating',
-                    data: [1000, 1500, 2000, 2500], // Ratings
-                    borderColor: 'blue',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        title: {
-                            display: true,
-                            text: 'Rating'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Minutes'
+        let ratingsChart;
+        
+        function initRatingsChart() {
+            ratingsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Initial'], // Will be replaced with real data
+                    datasets: [{
+                        label: 'Rating',
+                        data: [1000], // Will be replaced with real data
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Rating'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Users'
+                            }
                         }
                     }
                 }
+            });
+        }
+        
+        function updateRatingsGraph(leaderboard) {
+            // Sort leaderboard by score
+            const sortedLeaderboard = [...leaderboard].sort((a, b) => b.totalScore - a.totalScore);
+            
+            // Extract usernames and scores
+            const labels = sortedLeaderboard.map((entry, index) => `#${index + 1}`);
+            const scores = sortedLeaderboard.map(entry => entry.totalScore);
+            
+            // If chart already exists, update it
+            if (ratingsChart) {
+                ratingsChart.data.labels = labels;
+                ratingsChart.data.datasets[0].data = scores;
+                ratingsChart.update();
+            } else {
+                // Initialize chart with data
+                initRatingsChart();
+                ratingsChart.data.labels = labels;
+                ratingsChart.data.datasets[0].data = scores;
+                ratingsChart.update();
             }
-        });
+        }
+        
+        // Initialize empty chart on page load
+        initRatingsChart();
     </script>
 </body>
 

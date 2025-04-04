@@ -309,6 +309,63 @@ app.get("/api/auth/profile/:userId", async (req, res) => {
     }
 });
 
+app.get("/contest/:id/leaderboard", async (req, res) => {
+    try {
+        const contestId = req.params.id;
+        
+        // Validate ID format
+        if (!mongoose.Types.ObjectId.isValid(contestId)) {
+            return res.status(400).render('error', { message: 'Invalid contest ID format' });
+        }
+
+        // Fetch contest with leaderboard data
+        const contest = await Contest.findById(contestId)
+            .populate({
+                path: 'leaderboard.user',
+                select: 'username',
+                options: { lean: true }
+            })
+            .lean();
+
+        if (!contest) {
+            return res.status(404).render('error', { message: 'Contest not found' });
+        }
+
+        // Check if contest has ended
+        if (contest.status !== 'Completed') {
+            return res.render('contest_not_ended', { 
+                contestId: contest._id,
+                contestName: contest.name,
+                endTime: contest.endTime
+            });
+        }
+
+        // Sort and format leaderboard for display
+        const leaderboard = contest.leaderboard
+            .filter(entry => entry.user) // Ensure user exists
+            .map((entry, index) => ({
+                rank: index + 1,
+                username: entry.user.username || 'Unknown',
+                score: entry.totalScore || 0,
+                problemsSolved: entry.submissions ? entry.submissions.length : 0
+            }))
+            .sort((a, b) => b.score - a.score); // Sort by score
+
+        res.render('leaderboard', {
+            contestId: contest._id,
+            contestName: contest.name,
+            leaderboard: leaderboard
+        });
+
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).render('error', { 
+            message: 'Failed to fetch leaderboard details',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+});
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
