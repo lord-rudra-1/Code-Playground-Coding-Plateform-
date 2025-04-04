@@ -193,16 +193,18 @@ app.get("/create_contest", (req, res) => {
 app.post("/signup", async (req, res) => {
     try {
         const { name, email, password, confirm_password } = req.body;
+        
+        console.log("Signup request received:", { name, email, password: "***", confirm_password: "***" });
 
         // Check if user already exists
         const user_exist = await USER.findOne({ email });
         if (user_exist) {
-            res.render("signup", { message: "User already exists" });
+            return res.render("signup", { message: "User already exists" });
         }
 
         // Validate password match
         if (password !== confirm_password) {
-            res.render("signup", { message: "Passwords do not match" });
+            return res.render("signup", { message: "Passwords do not match" });
         }
 
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
@@ -213,10 +215,12 @@ app.post("/signup", async (req, res) => {
             email: email,
             password: hashedPassword,
         });
-        res.redirect("/signin");
+        
+        console.log("User created successfully:", { userId: user._id, email: user.email });
+        return res.redirect("/signin");
     } catch (error) {
         console.error("Signup error:", error);
-        res.render("signup", { message: "Error creating user" })
+        return res.render("signup", { message: "Error creating user: " + error.message });
     }
 });
 

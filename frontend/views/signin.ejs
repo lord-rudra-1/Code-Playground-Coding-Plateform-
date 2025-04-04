@@ -506,7 +506,7 @@
     </div>
 
     <!-- Font Awesome for icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <script>
         // Toggle between sign in and sign up
@@ -564,44 +564,58 @@
         });
         
         document.getElementById("signup-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("signup-email").value;
-    const password = document.getElementById("signup-password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-    
-    if (password !== confirmPassword) {
-        alert("Passwords don't match!");
-        return;
-    }
-    
-    try {
-        const response = await fetch("/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password, confirm_password: confirmPassword }),
+            e.preventDefault();
+            
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("signup-email").value;
+            const password = document.getElementById("signup-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            
+            if (password !== confirmPassword) {
+                alert("Passwords don't match!");
+                return;
+            }
+            
+            try {
+                // Create URL-encoded form data
+                const formData = new URLSearchParams();
+                formData.append("name", name);
+                formData.append("email", email);
+                formData.append("password", password);
+                formData.append("confirm_password", confirmPassword);
+                
+                const response = await fetch("/signup", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+                
+                if (response.redirected) {
+                    // If the server redirects, follow the redirect
+                    window.location.href = response.url;
+                } else {
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        const data = await response.json();
+                        if (!response.ok) {
+                            alert(data.message || "Error during signup");
+                        } else {
+                            window.location.href = "/explore";
+                        }
+                    } else {
+                        // If not JSON and not redirect, it's likely an HTML response with an error message
+                        const text = await response.text();
+                        // For HTML responses, we just redirect to the signin page
+                        window.location.href = "/signin";
+                    }
+                }
+            } catch (error) {
+                console.error("Signup Error:", error);
+                alert("An error occurred during signup. Please try again.");
+            }
         });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.message || "Failed to sign up");
-        }
-        
-        // Store the token and user data
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userEmail", data.email);
-        localStorage.setItem("userId", data.userId);
-        
-        // Redirect to explore page
-        window.location.href = "/explore";
-        
-    } catch (error) {
-        console.error("Signup Error:", error);
-        alert(error.message || "An error occurred. Please try again.");
-    }
-});
     </script>
 </body>
 </html>
