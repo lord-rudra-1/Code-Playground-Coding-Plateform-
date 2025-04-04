@@ -21,7 +21,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -41,14 +41,12 @@ body {
 }
 
 .logo a img {
-  height: 4rem;
+  height: 4rem; /* Fits within navbar height */
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  background: transparent;
-  border-radius: 15%;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-  transition: all 0.3s ease;
+  background: transparent; /* Ensures no extra background */
+  border-radius: 2%;
 }
 
 /* Enhanced Nav Links - Matching explore.css */
@@ -74,7 +72,7 @@ body {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #ffd166;
+  background-color: rgba(255, 255, 255, 0.8);
   transition: width 0.3s ease;
 }
 
@@ -97,7 +95,7 @@ body {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 25px rgba(91, 155, 213, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 84, 180, 0.2);
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
@@ -106,7 +104,7 @@ body {
 }
 
 .contest-container:hover {
-  box-shadow: 0 15px 35px rgba(91, 155, 213, 0.3);
+  box-shadow: 0 15px 35px rgba(0, 84, 180, 0.3);
 }
 
 /* Enhanced Buttons - Matching explore.css */
@@ -145,25 +143,25 @@ body {
 }
 
 .create-contest-btn {
-  background: linear-gradient(135deg, #ff7f50 0%, #ff4500 100%);
+  background: rgba(0, 122, 255, 0.9);
   color: white;
 }
 
 .create-contest-btn:hover {
-  background: linear-gradient(135deg, #ff6347 0%, #e63900 100%);
+  background: rgba(0, 84, 180, 0.9);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(255, 99, 71, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.5);
 }
 
 .join-contest-btn {
-  background: linear-gradient(135deg, #32cd32 0%, #008000 100%);
+  background: rgba(64, 156, 255, 0.9);
   color: white;
 }
 
 .join-contest-btn:hover {
-  background: linear-gradient(135deg, #3cb371 0%, #006400 100%);
+  background: rgba(0, 122, 255, 0.9);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(50, 205, 50, 0.5);
+  box-shadow: 0 8px 20px rgba(64, 156, 255, 0.5);
 }
 
 /* Enhanced Join Contest Section */
@@ -183,7 +181,7 @@ body {
 #contest-code {
   padding: 14px;
   width: 250px;
-  border: 2px solid rgba(255, 99, 71, 0.4);
+  border: 2px solid rgba(0, 122, 255, 0.4);
   border-radius: 10px;
   font-size: 16px;
   transition: 0.3s ease;
@@ -193,8 +191,8 @@ body {
 }
 
 #contest-code:focus {
-  border-color: #ff4500;
-  box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.2);
+  border-color: rgba(0, 122, 255, 0.9);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
   outline: none;
 }
 
@@ -288,7 +286,7 @@ tr:hover {
 .footer {
   text-align: center;
   padding: 1.5rem;
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;

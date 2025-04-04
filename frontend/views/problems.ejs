@@ -36,6 +36,7 @@
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
         </select>
+        <!-- Topic filter commented out
         <select id="topic">
             <option value="all">All Topics</option>
             <option value="arrays">Arrays</option>
@@ -43,6 +44,7 @@
             <option value="graphs">Graphs</option>
             <option value="dp">Dynamic Programming</option>
         </select>
+        -->
         <select id="sort">
             <option value="newest">Newest</option>
             <option value="most-solved">Most Solved</option>
@@ -185,7 +187,8 @@
 
             // Event listeners for filters
             document.getElementById('difficulty').addEventListener('change', applyFilters);
-            document.getElementById('topic').addEventListener('change', applyFilters);
+            // Topic filter listener commented out
+            // document.getElementById('topic').addEventListener('change', applyFilters);
             document.getElementById('sort').addEventListener('change', applyFilters);
 
             // Debounce function for search
@@ -198,10 +201,11 @@
             // Function to apply filters
             function applyFilters() {
                 const difficulty = document.getElementById('difficulty').value;
-                const topic = document.getElementById('topic').value;
+                // Topic filter commented out
+                // const topic = document.getElementById('topic').value;
                 const sort = document.getElementById('sort').value;
 
-                fetchProblems({ difficulty, topic, sort });
+                fetchProblems({ difficulty, /* topic, */ sort });
             }
 
             // Fetch problems on page load

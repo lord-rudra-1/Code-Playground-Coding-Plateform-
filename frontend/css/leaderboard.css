@@ -1,27 +1,28 @@
-/* General Styles */
+/* Enhanced General Styles */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f0f4f8;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
-  height: 100%;
-  color: #333;
-  overflow-x: hidden;
-  overflow-y: scroll;
   min-height: 100vh;
+  color: #2d3748;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Navbar */
+/* Enhanced Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: #5b9bd5;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   height: 4rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .logo {
@@ -32,14 +33,18 @@ body {
 
 /* Logo Image */
 .logo a img {
-  height: 4rem; /* Fits within navbar height */
+  height: 4rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  background: transparent; /* Ensures no extra background */
-  border-radius: 15%;
+  background: transparent;
+  border-radius: 2%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+
 }
 
+/* Nav Links */
 .nav-links {
   list-style: none;
   display: flex;
@@ -50,104 +55,98 @@ body {
   text-decoration: none;
   color: white;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-links a:hover {
   color: #dbeafe;
 }
 
-/* Leaderboard Section */
-.leaderboard-section {
-  text-align: center;
+/* Enhanced Leaderboard Container */
+.leaderboard-container {
+  max-width: 800px;
+  margin: 2rem auto;
   padding: 2rem;
-}
-
-/* Contest Selector */
-.contest-selector {
-  margin-bottom: 1.5rem;
-}
-
-#contest-dropdown {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Leaderboard Table */
-.leaderboard-table {
-  width: 90%;
-  margin: auto;
-  border-collapse: collapse;
   background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 84, 180, 0.15);
+}
+
+.leaderboard-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: rgba(0, 84, 180, 0.9);
+}
+
+/* Enhanced Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 84, 180, 0.1);
   border-radius: 8px;
   overflow: hidden;
 }
 
-html,
-body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+th {
+  background-color: rgba(0, 122, 255, 0.9);
+  color: white;
+  padding: 1rem;
+  text-align: left;
 }
 
-th,
 td {
   padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background: #5b9bd5;
-  color: white;
-}
-
-tr:nth-child(odd) {
-  background: #f9f9f9;
+  border-top: 1px solid #eaeaea;
 }
 
 tr:hover {
-  background: #e3f2fd;
+  background-color: rgba(0, 122, 255, 0.05);
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-  gap: 1rem;
-}
-
-.pagination button {
-  padding: 8px 12px;
-  font-size: 1rem;
+/* Top ranks highlighting */
+tr:nth-child(1) td {
+  background-color: rgba(0, 122, 255, 0.15);
   font-weight: bold;
-  border: none;
-  background: #605dff;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: 0.3s ease;
 }
 
-.pagination button:hover {
-  background: #4a00e0;
+tr:nth-child(2) td {
+  background-color: rgba(0, 122, 255, 0.1);
+  font-weight: bold;
 }
 
-.pagination button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+tr:nth-child(3) td {
+  background-color: rgba(0, 122, 255, 0.05);
+  font-weight: bold;
 }
 
-/* Footer */
+/* Enhanced Footer */
 .footer {
-  text-align: center;
-  padding: 1rem;
-  background: #5b9bd5;
-  color: white;
   margin-top: auto;
-  width: 100%;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  text-align: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.footer p {
+  color: #6c757d;
+  font-size: 0.9rem;
 }

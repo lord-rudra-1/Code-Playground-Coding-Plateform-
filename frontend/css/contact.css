@@ -1,27 +1,29 @@
-/* General Styles */
+/* Enhanced General Styles */
 body {
-  font-family: "Arial", sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f0f4f8;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
-  height: 100%;
-  color: #333;
-  overflow-x: hidden;
-  overflow-y: scroll;
   min-height: 100vh;
+  color: #2d3748;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  line-height: 1.6;
 }
 
-/* Navbar */
+/* Enhanced Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem; /* Keeps spacing without increasing height */
-  background: #5b9bd5;
-  height: 4rem; /* Fixed navbar height */
+  padding: 0 2rem;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
+  height: 4rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 /* Logo Wrapper */
@@ -29,6 +31,11 @@ body {
   display: flex;
   align-items: center;
   height: 100%; /* Ensures logo is within navbar height */
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.03);
 }
 
 /* Logo Image */
@@ -38,7 +45,9 @@ body {
   max-width: 100%;
   object-fit: contain;
   background: transparent; /* Ensures no extra background */
-  border-radius: 15%;
+  border-radius: 2%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .nav-links {
@@ -51,11 +60,28 @@ body {
   text-decoration: none;
   color: white;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
 }
 
 .nav-links a:hover {
   color: #dbeafe;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 /* Contact Section */
@@ -106,22 +132,23 @@ body {
   overflow-y: auto; /* Enables scrolling if text exceeds space */
 }
 
-.contact-form .btn {
-  width: 95%;
-  margin-top: 1rem;
-  margin-left: -5px;
-  padding: 1rem;
-  background: #ffd166;
-  color: #333;
-  font-weight: bold;
+.contact-form button {
+  padding: 12px 24px;
+  background: rgba(0, 122, 255, 0.9);
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
   transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 84, 180, 0.25);
 }
 
-.contact-form .btn:hover {
-  background: #ffcc80;
+.contact-form button:hover {
+  background: rgba(0, 84, 180, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 84, 180, 0.35);
 }
 
 /* Contact Info */
@@ -143,13 +170,27 @@ body {
 .faq {
   text-align: center;
   padding: 4rem 2rem;
-  background: #f0f4f8;
+  background: rgba(245, 247, 250, 0.8);
 }
 
 .faq h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #333;
+  color: rgba(0, 84, 180, 0.9);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.faq h2::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(64, 156, 255, 0.9) 100%);
+  border-radius: 3px;
 }
 
 /* FAQ Items */
@@ -162,6 +203,13 @@ body {
   margin-bottom: 1rem;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 84, 180, 0.1);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 84, 180, 0.2);
+  transform: translateY(-2px);
 }
 
 /* FAQ Questions */
@@ -169,7 +217,7 @@ body {
   width: 100%;
   padding: 1rem;
   text-align: left;
-  background: #5b9bd5;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   border: none;
   cursor: pointer;
@@ -178,6 +226,11 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  background: rgba(0, 84, 180, 0.9);
 }
 
 .faq-question .arrow {
@@ -187,16 +240,22 @@ body {
 /* FAQ Answers */
 .faq-answer {
   display: none;
-  padding: 1rem;
-  margin: -1%;
+  padding: 1.2rem;
   background: white;
   text-align: left;
-  border-left: 3px solid #5b9bd5;
+  border-left: 3px solid rgba(0, 122, 255, 0.9);
+  line-height: 1.6;
 }
 
 /* Show Answer when Active */
 .faq-item.active .faq-answer {
   display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .faq-item.active .faq-question .arrow {
@@ -206,9 +265,17 @@ body {
 /* Footer */
 .footer {
   text-align: center;
-  padding: 1rem;
-  background: #5b9bd5;
+  padding: 1.5rem;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }

@@ -21,7 +21,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -46,7 +46,7 @@ body {
   max-width: 100%;
   object-fit: contain;
   background: transparent;
-  border-radius: 15%;
+  border-radius: 2%;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: all 0.3s ease;
 }
@@ -74,7 +74,7 @@ body {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #ffd166;
+  background-color: rgba(255, 255, 255, 0.8);
   transition: width 0.3s ease;
 }
 
@@ -139,20 +139,20 @@ body {
   height: 3px;
   bottom: 0;
   left: 0;
-  background: linear-gradient(90deg, #5b9bd5 0%, #ffd166 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(64, 156, 255, 0.9) 100%);
   border-radius: 3px;
 }
 
 #create-discussion-btn {
   padding: 0.75rem 1.25rem; /* Slightly reduced horizontal padding */
-  background: linear-gradient(135deg, #5b9bd5 0%, #4a89c7 100%);
+  background: rgba(0, 122, 255, 0.9);
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(91, 155, 213, 0.3);
+  box-shadow: 0 3px 8px rgba(0, 84, 180, 0.3);
   white-space: nowrap;
   font-size: 0.95rem; /* Slightly smaller font size */
   min-width: fit-content; /* Ensure button fits content */
@@ -163,9 +163,9 @@ body {
 }
 
 #create-discussion-btn:hover {
-  background: linear-gradient(135deg, #4a89c7 0%, #3a78b9 100%);
+  background: rgba(0, 84, 180, 0.9);
   transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(91, 155, 213, 0.4);
+  box-shadow: 0 5px 12px rgba(0, 84, 180, 0.4);
 }
 
 /* Enhanced Buttons - Matching explore.css */
@@ -181,8 +181,8 @@ body {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
-  color: #2d3748;
+  background: rgba(0, 122, 255, 0.9);
+  color: white;
 }
 
 .btn::before {

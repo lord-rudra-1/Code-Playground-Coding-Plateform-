@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Code Playground</title>
     <link rel="stylesheet" href="css/contact.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -13,7 +15,7 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/explore" title="Logo">
-                <img src="lo.png" alt="Logo" class="logo">
+                <img src="lo.png" alt="Logo">
             </a>
         </div>
         <ul class="nav-links">
@@ -46,55 +48,75 @@
                 <label for="message">Message</label>
                 <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
 
-                <button type="submit" class="btn">Send Message</button>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
             </form>
 
             <!-- Contact Info -->
             <div class="contact-info">
                 <h3>Get in Touch</h3>
-                <p><strong>Email:</strong> support@codeplayground.com</p>
-                <p><strong>Phone:</strong> +1 234 567 890</p>
-                <p><strong>Address:</strong> 123 Coding Lane, Tech City, TX 78901</p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@codeplayground.com</p>
+                <p><i class="fas fa-phone"></i> <strong>Phone:</strong> +1 234 567 890</p>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 123 Coding Lane, Tech City, TX 78901</p>
             </div>
         </div>
     </section>
 
-    <!-- // new added -->
     <!-- FAQ Section -->
     <section class="faq">
         <h2>Frequently Asked Questions</h2>
         <div class="faq-container">
             <div class="faq-item">
-                <button class="faq-question">What is Code Playground? <span class="arrow">&#9660;</span></button>
-                <div class="faq-answer">Code Playground is an online coding platform where users can practice coding,
-                    compete in contests, and prepare for interviews.</div>
+                <button class="faq-question">
+                    <i class="fas fa-question-circle"></i> What is Code Playground? 
+                    <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>Code Playground is an online coding platform where users can practice coding,
+                    compete in contests, and prepare for interviews. We offer a wide range of programming
+                    problems across different difficulty levels and topics.</p>
+                </div>
             </div>
             <div class="faq-item">
-                <button class="faq-question">Is Code Playground free to use? <span class="arrow">&#9660;</span></button>
-                <div class="faq-answer">Yes! You can solve problems and participate in contests for free. Some premium
-                    features may require a subscription.</div>
+                <button class="faq-question">
+                    <i class="fas fa-credit-card"></i> Is Code Playground free to use? 
+                    <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! You can solve problems and participate in contests for free. Some premium
+                    features may require a subscription, but the core functionality of the platform
+                    is completely free for all users.</p>
+                </div>
             </div>
             <div class="faq-item">
-                <button class="faq-question">How do I participate in a contest? <span
-                        class="arrow">&#9660;</span></button>
-                <div class="faq-answer">Simply navigate to the 'Contests' section, register for an ongoing contest, and
-                    start solving problems.</div>
+                <button class="faq-question">
+                    <i class="fas fa-trophy"></i> How do I participate in a contest? 
+                    <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>Simply navigate to the 'Contests' section, register for an ongoing contest, and
+                    start solving problems. You can see your ranking in real-time on the leaderboard
+                    during the contest period.</p>
+                </div>
             </div>
             <div class="faq-item">
-                <button class="faq-question">How can I contact support? <span class="arrow">&#9660;</span></button>
-                <div class="faq-answer">You can reach us at support@codeplayground.com or use the contact form above.
+                <button class="faq-question">
+                    <i class="fas fa-headset"></i> How can I contact support? 
+                    <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>You can reach us at support@codeplayground.com or use the contact form above.
+                    Our support team is available Monday through Friday, 9 AM to 6 PM EST, and we
+                    typically respond within 24 hours.</p>
                 </div>
             </div>
         </div>
     </section>
 
-
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 Code Playground. All rights reserved.</p>
+        <p><i class="far fa-copyright"></i> 2025 Code Playground. All rights reserved.</p>
     </footer>
 
-    <!-- new added -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const faqItems = document.querySelectorAll(".faq-item");

@@ -20,7 +20,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -44,9 +44,10 @@ body {
   max-width: 100%;
   object-fit: contain;
   background: transparent;
-  border-radius: 15%;
+  border-radius: 2%;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: all 0.3s ease;
+
 }
 
 .nav-links {
@@ -71,7 +72,7 @@ body {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #ffd166;
+  background-color: rgba(255, 255, 255, 0.8);
   transition: width 0.3s ease;
 }
 
@@ -91,7 +92,7 @@ body {
   background: white;
   padding: 2.5rem;
   margin-top: 4rem;
-  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 84, 180, 0.15);
   border-radius: 12px;
   max-width: 1100px;
   margin-left: auto;
@@ -109,7 +110,7 @@ body {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(90deg, #5b9bd5 0%, #ffd166 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(64, 156, 255, 0.9) 100%);
 }
 
 .profile-left {
@@ -122,8 +123,8 @@ body {
   height: 100px;
   border-radius: 50%;
   margin-right: 1.5rem;
-  border: 3px solid #5b9bd5;
-  box-shadow: 0 4px 10px rgba(91, 155, 213, 0.3);
+  border: 3px solid rgba(0, 122, 255, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 84, 180, 0.3);
   transition: transform 0.3s ease;
 }
 
@@ -148,11 +149,11 @@ body {
 
 .stat-box:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(91, 155, 213, 0.2);
+  box-shadow: 0 8px 15px rgba(0, 84, 180, 0.2);
 }
 
 .stat-box h3 {
-  color: #5b9bd5;
+  color: rgba(0, 122, 255, 0.9);
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
 }
@@ -176,7 +177,7 @@ body {
 .sidebar {
   width: 250px;
   background: white;
-  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 84, 180, 0.15);
   border-radius: 12px;
   padding: 1.5rem;
   height: fit-content;
@@ -398,7 +399,7 @@ body {
 .footer {
   text-align: center;
   padding: 1.5rem;
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;

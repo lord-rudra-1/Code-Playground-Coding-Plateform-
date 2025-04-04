@@ -1,9 +1,9 @@
 /* ================= Enhanced Base Styles ================= */
 :root {
-    --primary-color: #5b9bd5;
-    --primary-dark: #4a89c7;
+    --primary-color: rgba(0, 122, 255, 0.9);
+    --primary-dark: rgba(0, 84, 180, 0.9);
     --secondary-color: #2c3e50;
-    --accent-color: #ffd166;
+    --accent-color: rgba(64, 156, 255, 0.9);
     --light-bg: #f0f4f8;
     --white: #ffffff;
     --text-color: #2d3748;
@@ -35,23 +35,33 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-color) 100%);
     height: 4rem;
     box-shadow: var(--shadow-md);
     position: relative;
     z-index: 10;
   }
   
-  .logo img {
-    height: 4rem;
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-    transition: var(--transition);
+  .logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: transform 0.3s ease;
   }
   
-  .logo img:hover {
-    transform: scale(1.05);
+  .logo:hover {
+    transform: scale(1.03);
+  }
+  
+  .logo a img {
+    height: 4rem;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    background: transparent;
+    border-radius: 2%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: all 0.3s ease;
   }
   
   .nav-links {
@@ -64,9 +74,9 @@
     text-decoration: none;
     color: white;
     font-weight: 600;
+    transition: all 0.3s ease;
     padding: 0.5rem 0;
     position: relative;
-    transition: var(--transition);
   }
   
   .nav-links a::after {
@@ -76,7 +86,7 @@
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: var(--accent-color);
+    background-color: rgba(255, 255, 255, 0.8);
     transition: width 0.3s ease;
   }
   
@@ -136,11 +146,11 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-color) 100%);
   }
   
   .tabs button:hover:not(.active) {
-    background-color: rgba(91, 155, 213, 0.1);
+    background-color: rgba(0, 122, 255, 0.1);
   }
   
   /* ================= Enhanced Tab Content ================= */
@@ -205,47 +215,39 @@
   }
   
   #run-btn, #test-btn, #submit-btn {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-    color: white;
+    padding: 0.85rem 1.5rem;
     border: none;
-    padding: 0.8rem 1.8rem;
-    font-size: 1rem;
     border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
     transition: var(--transition);
-    box-shadow: var(--shadow-md);
+    color: white;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-  }
-  
-  #run-btn:hover, #test-btn:hover, #submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    gap: 0.5rem;
+    box-shadow: 0 3px 8px rgba(0, 84, 180, 0.3);
   }
   
   #run-btn {
-    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    background: var(--primary-color);
   }
   
   #run-btn:hover {
-    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    background: var(--primary-dark);
   }
   
   #test-btn {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    background: var(--accent-color);
   }
   
   #test-btn:hover {
-    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+    background: var(--primary-color);
   }
   
   #submit-btn {
-    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-    color: var(--secondary-color);
+    background: var(--primary-dark);
   }
   
   #submit-btn:hover {

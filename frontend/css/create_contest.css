@@ -1,11 +1,12 @@
 /* ================= Base Styles ================= */
 :root {
-  --primary-color: #5b9bd5;
+  --primary-color: rgba(0, 122, 255, 0.9);
+  --primary-dark: rgba(0, 84, 180, 0.9);
   --secondary-color: #2c3e50;
-  --accent-color: #ff7f50;
+  --accent-color: rgba(64, 156, 255, 0.9);
   --light-bg: #f0f4f8;
   --white: #ffffff;
-  --text-color: #333333;
+  --text-color: #2d3748;
   --border-color: #e0e6ed;
   --success-color: #32cd32;
 }
@@ -21,13 +22,13 @@ html {
 }
 
 body {
-  font-family: "Arial", sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f0f4f8;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
   height: 100%;
-  color: #333;
+  color: #2d3748;
   overflow-x: hidden;
   overflow-y: auto;
   min-height: 100vh;
@@ -41,8 +42,22 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  background: #5b9bd5;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%) !important;
   height: 4rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.03);
 }
 
 .logo a img {
@@ -51,11 +66,9 @@ body {
   max-width: 100%;
   object-fit: contain;
   background: transparent; /* Ensures no extra background */
-  border-radius: 15%;
-}
-
-.logo img:hover {
-  transform: scale(1.05);
+  border-radius: 2%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 .nav-links {
@@ -68,7 +81,9 @@ body {
   text-decoration: none;
   color: white;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
 }
 
 .nav-links a:hover {
@@ -76,7 +91,18 @@ body {
 }
 
 .nav-links a::after {
-  content: none;
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 /* ================= Main Content Styles ================= */
@@ -95,9 +121,22 @@ body {
 .contest-section {
   background: var(--white);
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 84, 180, 0.15);
   padding: 2.5rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.contest-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(64, 156, 255, 0.9) 100%);
 }
 
 .contest-header {
@@ -109,10 +148,24 @@ body {
   color: var(--secondary-color);
   font-size: 2rem;
   margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.contest-header h2::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(64, 156, 255, 0.9) 100%);
+  border-radius: 3px;
 }
 
 .contest-header p {
-  color: #666;
+  color: #6b7280;
 }
 
 .form-grid {
@@ -148,10 +201,11 @@ textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 2px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
   background-color: var(--white);
+  box-shadow: 0 2px 6px rgba(0, 84, 180, 0.1);
 }
 
 input[type="text"]:focus,
@@ -161,7 +215,8 @@ select:focus,
 textarea:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 select[multiple] {
@@ -204,21 +259,38 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: var(--white);
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 84, 180, 0.25);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #4a8bc9, #1a2b3c);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 84, 180, 0.35);
 }
 
 .btn-secondary {
@@ -229,6 +301,7 @@ body {
 
 .btn-secondary:hover {
   background: #e0e6ed;
+  transform: translateY(-2px);
 }
 
 .form-actions {
@@ -259,15 +332,19 @@ body {
 /* ================= Footer Styles ================= */
 .footer {
   text-align: center;
-  padding: 1rem;
-  background: #5b9bd5;
+  padding: 1.5rem;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
 }
 
 .footer p {
   margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
 /* ================= Responsive Styles ================= */
@@ -534,4 +611,32 @@ body {
   .problem-meta {
     grid-template-columns: 1fr;
   }
+}
+
+.status-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-weight: 500;
+  display: none;
+}
+
+.status-message.success {
+  background-color: rgba(46, 204, 113, 0.2);
+  border: 1px solid rgba(46, 204, 113, 0.5);
+  color: #27ae60;
+}
+
+.status-message.error {
+  background-color: rgba(231, 76, 60, 0.2);
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  color: #c0392b;
+}
+
+.admin-only {
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-left: 10px;
+  display: none;
 }

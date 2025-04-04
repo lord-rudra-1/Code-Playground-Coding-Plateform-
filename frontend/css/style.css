@@ -95,16 +95,25 @@ body::before {
 
 /* Logo Image */
 .logo {
-  height: 8rem;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(74, 0, 224, 0.1));
+  display: flex;
+  align-items: center;
+  height: 100%;
   transition: transform 0.3s ease;
 }
 
 .logo:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
+}
+
+.logo a img {
+  height: 4rem;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  background: transparent;
+  border-radius: 2%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
 /* Divider Lines */
@@ -283,10 +292,12 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: var(--primary);
-  color: var(--white);
-  padding-right: 40px;
+  padding: 0 2rem;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
+  height: 4rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .nav-links {
@@ -297,13 +308,30 @@ body::before {
 
 .nav-links a {
   text-decoration: none;
-  color: var(--white);
+  color: white;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-links a:hover {
-  color: var(--primary-dark);
+  color: #dbeafe;
 }
 
 .hero {
