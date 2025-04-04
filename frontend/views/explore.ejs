@@ -16,6 +16,7 @@
                 <img src="lo.png" alt="Logo" class="logo">
             </a>
         </div>
+        <button class="menu-toggle">☰</button>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
             <li><a href="/problems">Problems</a></li>
@@ -128,5 +129,11 @@
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
 </body>
+
+<script>
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.nav-links').classList.toggle('active');
+    });
+</script>
 
 </html>

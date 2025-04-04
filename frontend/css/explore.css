@@ -5,35 +5,45 @@ body {
   padding: 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   color: #2d3748;
   overflow-x: hidden;
-  overflow-y: scroll;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   line-height: 1.6;
 }
 
+/* Base Mobile Styles */
+
 /* Enhanced Navbar */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
+  flex-direction: column;
+  padding: 1rem;
   background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
-  height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 10;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  align-self: flex-end;
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  background: none;
+  border: none;
 }
 
 /* Enhanced Logo */
 .logo {
   display: flex;
   align-items: center;
-  height: 100%;
+  justify-content: center;
   transition: transform 0.3s ease;
+  margin-bottom: 1rem;
 }
 
 .logo:hover {
@@ -41,7 +51,7 @@ body {
 }
 
 .logo a img {
-  height: 4rem;
+  height: 3rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -54,8 +64,17 @@ body {
 /* Enhanced Nav Links */
 .nav-links {
   list-style: none;
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links.active {
   display: flex;
-  gap: 1.5rem;
 }
 
 .nav-links a {
@@ -63,8 +82,9 @@ body {
   color: white;
   font-weight: 600;
   transition: all 0.3s ease;
-  padding: 0.5rem 0;
+  padding: 0.5rem;
   position: relative;
+  display: block;
 }
 
 .nav-links a::after {
@@ -73,13 +93,14 @@ body {
   width: 0;
   height: 2px;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: #ffd166;
   transition: width 0.3s ease;
 }
 
 .nav-links a:hover::after {
-  width: 100%;
+  width: 80%;
 }
 
 .nav-links a:hover {
@@ -89,12 +110,12 @@ body {
 /* Enhanced Explore Section */
 .explore {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   background: transparent;
 }
 
 .explore h1 {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   margin-bottom: 1.5rem;
   color: #2d3748;
   position: relative;
@@ -106,7 +127,7 @@ body {
   position: absolute;
   width: 100%;
   height: 3px;
-  bottom: -10px;
+  bottom: -8px;
   left: 0;
   background: linear-gradient(90deg, #5b9bd5 0%, #ffd166 100%);
   border-radius: 3px;
@@ -116,59 +137,36 @@ body {
 .scroll-container {
   display: flex;
   overflow-x: auto;
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 1rem;
+  padding: 1rem 0.5rem;
   scroll-snap-type: x mandatory;
-  white-space: nowrap;
-  scrollbar-width: thin;
-  scrollbar-color: #5b9bd5 #f0f4f8;
+  scrollbar-width: none; /* Hide scrollbar for mobile */
+  -ms-overflow-style: none;
 }
 
 .scroll-container::-webkit-scrollbar {
-  height: 8px;
+  display: none; /* Hide scrollbar for mobile */
 }
 
-.scroll-container::-webkit-scrollbar-track {
-  background: #f0f4f8;
-  border-radius: 10px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
-  border-radius: 10px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #5b9bd5;
-}
-
-/* Enhanced Explore Cards - With Full-Width Underlines */
+/* Enhanced Explore Cards */
 .explore-card {
   flex: 0 0 auto;
-  width: 280px;
+  width: 260px;
   background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(91, 155, 213, 0.15);
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(91, 155, 213, 0.15);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   scroll-snap-align: start;
   text-align: left;
-  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(2px);
   position: relative;
 }
 
-.explore-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 25px rgba(91, 155, 213, 0.25);
-  border-color: rgba(91, 155, 213, 0.5);
-}
-
 .explore-card h2 {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #5b9bd5;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -185,82 +183,58 @@ body {
   bottom: 0;
   left: 0;
   background: #ffd166;
-  transform-origin: left;
-  transform: scaleX(1);
 }
 
 .explore-card p {
   color: #4a5568;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
-  height: 50px;
+  height: 60px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
-  margin: 1rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin: 0.8rem 0;
 }
 
 /* Enhanced Button */
 .btn {
-  padding: 14px 28px;
-  font-size: 18px;
+  padding: 10px 20px;
+  font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
   color: #2d3748;
   position: relative;
   overflow: hidden;
+  display: inline-block;
 }
 
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-}
-
-.btn:hover::before {
-  left: 100%;
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-}
-
-/* Enhanced Card Links */
+/* Card Links */
 .explore-card a {
   display: inline-block;
-  margin-top: 1rem;
-  padding: 10px 15px;
+  margin-top: 0.8rem;
+  padding: 8px 12px;
+  font-size: 0.9rem;
   background: linear-gradient(90deg, #ffd166 0%, #ffb347 100%);
   color: #2d3748;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: 6px;
   text-decoration: none;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(255, 179, 71, 0.3);
-}
-
-.explore-card a:hover {
-  background: linear-gradient(90deg, #ffb347 0%, #ff9a3f 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(255, 179, 71, 0.4);
+  box-shadow: 0 2px 6px rgba(255, 179, 71, 0.3);
 }
 
 /* Enhanced Footer */
 .footer {
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.2rem;
   background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
   color: white;
   margin-top: auto;
@@ -272,9 +246,15 @@ body {
   margin: 0;
   font-weight: 500;
   letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
-/* New: Card Hover Glow Effect */
+/* Card Hover Effects */
+.explore-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(91, 155, 213, 0.25);
+}
+
 .explore-card::before {
   content: '';
   position: absolute;
@@ -282,7 +262,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   background: radial-gradient(circle at center, rgba(255, 209, 102, 0.1) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -293,7 +273,7 @@ body {
   opacity: 1;
 }
 
-/* New: Smooth Card Entry Animation */
+/* Animations */
 @keyframes cardEntry {
   from {
     opacity: 0;
@@ -308,4 +288,140 @@ body {
 .explore-card {
   animation: cardEntry 0.5s ease-out forwards;
   animation-delay: calc(var(--order) * 0.1s);
+}
+
+/* Tablet Breakpoint (768px and up) */
+@media (min-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    height: 4rem;
+  }
+  
+  .menu-toggle {
+    display: none;
+  }
+  
+  .logo {
+    margin-bottom: 0;
+  }
+  
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    width: auto;
+  }
+  
+  .nav-links a {
+    padding: 0.5rem 0;
+  }
+  
+  .nav-links a::after {
+    left: 0;
+    transform: none;
+  }
+  
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  .explore {
+    padding: 3rem 2rem;
+  }
+  
+  .explore h1 {
+    font-size: 2.2rem;
+  }
+  
+  .scroll-container {
+    gap: 1.5rem;
+    padding: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: #5b9bd5 #f0f4f8;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    display: block;
+    height: 8px;
+  }
+  
+  .scroll-container::-webkit-scrollbar-track {
+    background: #f0f4f8;
+    border-radius: 10px;
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #5b9bd5 0%, #4a89c7 100%);
+    border-radius: 10px;
+  }
+  
+  .explore-card {
+    width: 280px;
+    padding: 1.5rem;
+  }
+  
+  .explore-card h2 {
+    font-size: 1.2rem;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+  }
+  
+  .explore-card a {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+}
+
+/* Desktop Breakpoint (1024px and up) */
+@media (min-width: 1024px) {
+  .explore {
+    padding: 4rem 2rem;
+  }
+  
+  .explore h1 {
+    font-size: 2.5rem;
+  }
+  
+  .scroll-container {
+    gap: 2rem;
+    padding: 1.5rem;
+  }
+  
+  .explore-card {
+    width: 300px;
+    padding: 2rem;
+  }
+  
+  .explore-card h2 {
+    font-size: 1.3rem;
+  }
+  
+  .explore-card p {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile Menu Toggle for small screens */
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .logo a img {
+    height: 2.5rem;
+  }
+  
+  .scroll-container {
+    padding-bottom: 1.5rem; /* Add space for scrollbar */
+  }
 }
