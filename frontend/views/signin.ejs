@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: rgba(100, 181, 246, 0.8);  /* Light blue */
-            --secondary: rgba(66, 165, 245, 0.8);
-            --accent: rgba(144, 202, 249, 0.8);
-            --light: rgba(248, 249, 250, 0.6);
-            --dark: rgba(33, 37, 41, 0.85);
+            --primary: rgba(0, 122, 255, 0.9);  /* Deeper blue */
+            --secondary: rgba(0, 84, 180, 0.9);  /* Darker blue */
+            --accent: rgba(64, 156, 255, 0.9);  /* Lighter blue */
+            --light: rgba(255, 255, 255, 0.9);
+            --dark: rgba(0, 0, 0, 0.9);
             --text-light: rgba(255, 255, 255, 0.95);
-            --text-dark: rgba(0, 0, 0, 0.75);
-            --error: rgba(239, 83, 80, 0.9);
+            --text-dark: rgba(0, 0, 0, 0.85);
+            --error: rgba(255, 59, 48, 0.9);
         }
         
         * {
@@ -31,7 +31,7 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-            background: url("/auth.gif") center/cover no-repeat fixed;
+            background: url("/auth.gif") center/100% no-repeat fixed;
             animation: none !important;
         }
         
@@ -42,36 +42,36 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.1);  /* Lighter overlay */
+            background: rgba(0, 0, 0, 0.2);  /* Darker overlay */
             z-index: -1;
         }
         
         .container {
             position: relative;
             width: 90%;
-            max-width: 800px;  /* Reduced width */
-            min-height: 500px;  /* Reduced height */
-            background: rgba(255, 255, 255, 0.08);
+            max-width: 800px;
+            min-height: 500px;
+            background: rgba(0, 0, 0, 0.6);  /* Dark background */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             display: flex;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            margin: 20px auto;  /* Centering */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 20px auto;
         }
         
         .form-container {
             width: 50%;
-            padding: 30px;  /* Reduced padding */
+            padding: 30px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             transition: all 0.6s ease-in-out;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);  /* Dark background */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         
         .form-container.sign-in {
@@ -98,10 +98,10 @@
         }
         
         .logo {
-            width: 100px;  /* Smaller logo */
+            width: 100px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         
         .logo:hover {
@@ -109,8 +109,8 @@
         }
         
         h2 {
-            font-size: 24px;  /* Smaller heading */
-            color: var(--text-dark);
+            font-size: 24px;
+            color: var(--light);  /* White text */
             margin-bottom: 20px;
             font-weight: 600;
         }
@@ -122,27 +122,27 @@
         
         .input-group input {
             width: 100%;
-            padding: 12px 15px;  /* Smaller padding */
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.1);  /* Semi-transparent white */
+            color: var(--light);  /* White text */
         }
         
         .input-group input:focus {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 8px rgba(100, 181, 246, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
         
         .input-group label {
             position: absolute;
             top: 12px;
             left: 15px;
-            color: rgba(0, 0, 0, 0.5);
+            color: rgba(255, 255, 255, 0.7);  /* Light white color */
             font-size: 14px;
             pointer-events: none;
             transition: all 0.3s ease;
@@ -153,9 +153,9 @@
             top: -8px;
             left: 10px;
             font-size: 11px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.8);  /* Dark background */
             padding: 0 5px;
-            color: var(--primary);
+            color: var(--primary);  /* Blue color */
         }
         
         .btn {
@@ -169,13 +169,13 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(100, 181, 246, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
         .btn:hover {
             background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(66, 165, 245, 0.4);
+            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.4);
         }
         
         .toggle-container {
@@ -195,7 +195,7 @@
         
         .toggle {
             height: 100%;
-            background: linear-gradient(to right, rgba(100, 181, 246, 0.8), rgba(66, 165, 245, 0.8));
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             position: relative;
             left: -100%;
@@ -306,14 +306,14 @@
         }
         
         .forgot-password a {
-            color: rgba(0, 0, 0, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
             text-decoration: none;
             transition: all 0.3s ease;
         }
         
         .forgot-password a:hover {
-            color: var(--primary);
+            color: var(--accent);
         }
         
         .divider {
@@ -327,22 +327,22 @@
             content: "";
             flex: 1;
             height: 1px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .divider span {
             padding: 0 10px;
-            color: rgba(0, 0, 0, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 13px;
         }
         
         p {
-            color: var(--text-dark);
+            color: var(--light);
             font-size: 14px;
         }
         
         a {
-            color: var(--primary);
+            color: var(--accent);
             font-weight: 500;
             text-decoration: none;
             transition: all 0.3s ease;
@@ -364,7 +364,7 @@
             .form-container {
                 width: 100%;
                 padding: 25px;
-                background: rgba(255, 255, 255, 0.15);
+                background: rgba(0, 0, 0, 0.6);
             }
             
             .toggle-container {

@@ -5,9 +5,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Code Playground</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Use Font Awesome from cdnjs instead of the kit URL that has CORS issues -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary: rgba(0, 122, 255, 0.9);  /* Deeper blue */
+            --secondary: rgba(0, 84, 180, 0.9);  /* Darker blue */
+            --accent: rgba(64, 156, 255, 0.9);  /* Lighter blue */
+            --light: rgba(255, 255, 255, 0.9);
+            --dark: rgba(0, 0, 0, 0.9);
+            --text-light: rgba(255, 255, 255, 0.95);
+            --text-dark: rgba(0, 0, 0, 0.85);
+            --error: rgba(255, 59, 48, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            background: url("/auth.gif") center/90% no-repeat fixed;  /* Zoomed out to 90% */
+            animation: none !important;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);  /* Darker overlay */
+            z-index: -1;
+        }
+        
+        .CP_form {
+            width: 90%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.6);  /* Dark background */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .CP_logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            width: 100px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        h2 {
+            font-size: 24px;
+            color: var(--light);  /* White text */
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .text-field {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .text-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--light);
+        }
+        
+        .text-field input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);  /* Semi-transparent white */
+            color: var(--light);  /* White text */
+        }
+        
+        .text-field input:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
+        }
+        
+        .CP_button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+        
+        .CP_button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.4);
+        }
+        
+        .CP_actions {
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .CP_row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .CP_row span {
+            color: var(--light);
+            font-size: 14px;
+        }
+        
+        .CP_row a {
+            color: var(--accent);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .CP_row a:hover {
+            text-decoration: underline;
+        }
+        
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
 </head>
 
 <body>
