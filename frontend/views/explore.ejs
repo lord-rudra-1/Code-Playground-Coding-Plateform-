@@ -33,21 +33,11 @@
 
         <!-- Scrollable Featured Problems -->
         <h2>Featured Problems</h2>
-        <div class="scroll-container">
-            <div class="explore-card" style="--order: 1;">
-                <h2>Two Sum</h2>
-                <p>A classic array problem to test your skills.</p>
-                <a href="#">Solve Now</a>
-            </div>
-            <div class="explore-card" style="--order: 2;">
-                <h2>Binary Tree Level Order</h2>
-                <p>Master tree traversal with this problem.</p>
-                <a href="#">Solve Now</a>
-            </div>
-            <div class="explore-card" style="--order: 3;">
-                <h2>Longest Subsequence</h2>
-                <p>Improve your dynamic programming skills.</p>
-                <a href="#">Solve Now</a>
+        <div class="scroll-container" id="featured-problems">
+            <!-- Problems will be loaded here -->
+            <div class="explore-card loading">
+                <h2>Loading problems...</h2>
+                <p>Please wait while we fetch featured problems.</p>
             </div>
         </div>
 
@@ -57,17 +47,17 @@
             <div class="explore-card" style="--order: 1;">
                 <h2>Data Structures</h2>
                 <p>Learn stacks, queues, trees, and more.</p>
-                <a href="#">Explore</a>
+                <a href="/problems">Explore</a>
             </div>
             <div class="explore-card" style="--order: 2;">
                 <h2>Algorithms</h2>
                 <p>Master sorting, searching, and more.</p>
-                <a href="#">Explore</a>
+                <a href="/problems">Explore</a>
             </div>
             <div class="explore-card" style="--order: 3;">
                 <h2>System Design</h2>
                 <p>Prepare for scalable system interviews.</p>
-                <a href="#">Explore</a>
+                <a href="/problems">Explore</a>
             </div>
         </div>
 
@@ -77,32 +67,12 @@
             <div class="explore-card" style="--order: 1;">
                 <h2>Daily Challenge</h2>
                 <p>Practice one coding problem every day.</p>
-                <a href="#">Try Now</a>
+                <a href="/contests">Try Now</a>
             </div>
             <div class="explore-card" style="--order: 2;">
                 <h2>Upcoming Contests</h2>
                 <p>Join coding contests to test your skills.</p>
-                <a href="#">Register</a>
-            </div>
-        </div>
-
-        <!-- Scrollable Learning Paths -->
-        <h2>Learning Paths</h2>
-        <div class="scroll-container">
-            <div class="explore-card" style="--order: 1;">
-                <h2>DSA in C++</h2>
-                <p>Master Data Structures and Algorithms in C++.</p>
-                <a href="#">Start Learning</a>
-            </div>
-            <div class="explore-card" style="--order: 2;">
-                <h2>Python for AI</h2>
-                <p>Learn how to build AI models using Python.</p>
-                <a href="#">Start Learning</a>
-            </div>
-            <div class="explore-card" style="--order: 3;">
-                <h2>Web Development</h2>
-                <p>Learn HTML, CSS, and JavaScript step by step.</p>
-                <a href="#">Start Learning</a>
+                <a href="/contests">Register</a>
             </div>
         </div>
 
@@ -112,12 +82,12 @@
             <div class="explore-card" style="--order: 1;">
                 <h2>Join Discussions</h2>
                 <p>Engage in discussions and solve doubts.</p>
-                <a href="#">Join Now</a>
+                <a href="/discuss">Join Now</a>
             </div>
             <div class="explore-card" style="--order: 2;">
                 <h2>Interview Experiences</h2>
                 <p>Read real interview experiences from coders.</p>
-                <a href="#">Read More</a>
+                <a href="/discuss">Read More</a>
             </div>
         </div>
 
@@ -134,6 +104,55 @@
     document.querySelector('.menu-toggle').addEventListener('click', function() {
         document.querySelector('.nav-links').classList.toggle('active');
     });
+
+    // Fetch featured problems from the database
+    async function fetchFeaturedProblems() {
+        try {
+            const response = await fetch('/api/problems?sort=newest&limit=3');
+            if (!response.ok) {
+                throw new Error('Failed to fetch problems');
+            }
+            const problems = await response.json();
+            displayFeaturedProblems(problems);
+        } catch (error) {
+            console.error('Error fetching problems:', error);
+            document.getElementById('featured-problems').innerHTML = `
+                <div class="explore-card error">
+                    <h2>Error Loading Problems</h2>
+                    <p>Unable to load featured problems. Please try again later.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Display the fetched problems in the UI
+    function displayFeaturedProblems(problems) {
+        const container = document.getElementById('featured-problems');
+        
+        if (!problems || problems.length === 0) {
+            container.innerHTML = `
+                <div class="explore-card">
+                    <h2>No Problems Found</h2>
+                    <p>There are currently no featured problems available.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Create HTML for each problem
+        const problemsHTML = problems.map((problem, index) => `
+            <div class="explore-card" style="--order: ${index + 1};">
+                <h2>${problem.title}</h2>
+                <p>${problem.difficulty} | ${problem.description.substring(0, 60)}${problem.description.length > 60 ? '...' : ''}</p>
+                <a href="/editcode/${problem._id}">Solve Now</a>
+            </div>
+        `).join('');
+
+        container.innerHTML = problemsHTML;
+    }
+
+    // Load problems when the page loads
+    document.addEventListener('DOMContentLoaded', fetchFeaturedProblems);
 </script>
 
 </html>
