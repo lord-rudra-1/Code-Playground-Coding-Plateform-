@@ -230,21 +230,52 @@ async function updateContestLeaderboard(userId, problemId, status, contestId, pr
         throw new Error("Contest is not active");
     }
 
-    // Find user's entry in the leaderboard
-    const leaderboardEntry = contest.leaderboard.find(
-        entry => entry.user.toString() === userId
-    );
-
-    if (!leaderboardEntry) {
-        throw new Error("User not found in contest leaderboard");
-    }
-
     // Check if the problem is part of the contest
     const isProblemInContest = contest.problems.some(p => p.toString() === problemId);
     if (!isProblemInContest) {
         throw new Error("Problem is not part of this contest");
     }
 
+    // Find user's entry in the leaderboard
+    let leaderboardEntry = contest.leaderboard.find(
+        entry => entry.user && entry.user.toString() === userId
+    );
+
+    // If user is not in leaderboard, check if they're a participant
+    const isParticipant = contest.participants.some(p => 
+        p.user && p.user.toString() === userId
+    );
+
+    // If user is a participant but not in leaderboard, add them
+    if (!leaderboardEntry && isParticipant) {
+        leaderboardEntry = {
+            user: new mongoose.Types.ObjectId(userId),
+            totalScore: 0,
+            submissions: []
+        };
+        contest.leaderboard.push(leaderboardEntry);
+    }
+    
+    // If user is not in participants, add them first
+    if (!isParticipant) {
+        contest.participants.push({ 
+            user: new mongoose.Types.ObjectId(userId),
+            registeredAt: new Date()
+        });
+        
+        // If not in leaderboard, create a new entry
+        if (!leaderboardEntry) {
+            leaderboardEntry = {
+                user: new mongoose.Types.ObjectId(userId),
+                totalScore: 0,
+                submissions: []
+            };
+            contest.leaderboard.push(leaderboardEntry);
+        }
+    }
+    
+    // Now we have a leaderboard entry for sure
+    
     // Check if user has already solved this problem successfully
     const existingSubmission = leaderboardEntry.submissions.find(
         sub => sub.problem.toString() === problemId
@@ -283,7 +314,7 @@ async function updateContestLeaderboard(userId, problemId, status, contestId, pr
             existingSubmission.score = score;
         } else {
             leaderboardEntry.submissions.push({
-                problem: new ObjectId(problemId),
+                problem: new mongoose.Types.ObjectId(problemId),
                 score: score,
                 timeTaken: now - contest.startTime // in milliseconds
             });
@@ -302,15 +333,14 @@ async function updateContestLeaderboard(userId, problemId, status, contestId, pr
             totalScore: leaderboardEntry.totalScore,
             problemsCount: leaderboardEntry.submissions.length
         };
-    } else {
-        // If not accepted, just return current status
-        return { 
-            updated: false,
-            message: "Submission was not accepted",
-            totalScore: leaderboardEntry.totalScore,
-            problemsCount: leaderboardEntry.submissions.filter(sub => sub.score > 0).length
-        };
     }
+    // If not accepted, just return current status
+    return { 
+        updated: false,
+        message: "Submission was not accepted",
+        totalScore: leaderboardEntry.totalScore,
+        problemsCount: leaderboardEntry.submissions.filter(sub => sub.score > 0).length
+    };
 }
 
 // Add new route to check contest end and update ratings

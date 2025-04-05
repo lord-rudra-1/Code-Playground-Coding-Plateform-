@@ -43,8 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Add click event for register button
       registerBtn.addEventListener("click", function () {
-          const contestName = row.querySelector("td:first-child").textContent;
-          window.location.href = `/contestpage/${encodeURIComponent(contestName)}`;
+          // Get the contest ID from the data attribute
+          const contestId = registerBtn.getAttribute("data-contest-id");
+          if (contestId) {
+              window.location.href = `/contest/${contestId}`;
+          } else {
+              // Fallback to name-based navigation if ID is not available
+              const contestName = row.querySelector("td:first-child").textContent;
+              window.location.href = `/contestpage/${encodeURIComponent(contestName)}`;
+          }
       });
 
       setInterval(updateCountdown, 1000);

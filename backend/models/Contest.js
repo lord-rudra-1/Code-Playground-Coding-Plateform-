@@ -95,7 +95,6 @@ ContestSchema.methods.updateStatus = async function() {
         this.status = 'Completed';
         await this.save();
     }
-    
     // Return the document whether changed or not
     return this;
 };
