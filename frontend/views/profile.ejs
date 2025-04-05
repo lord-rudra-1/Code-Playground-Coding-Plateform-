@@ -227,7 +227,7 @@
             <p>Please sign in to view your profile.</p>
             <div>
                 <button onclick="window.location.href='/signin'">Sign In</button>
-                <button onclick="window.location.href='/signup'">Sign Up</button>
+                <button onclick="window.location.href='/signin'">Sign Up</button>
             </div>
         </div>
     </template>
@@ -630,7 +630,7 @@
         function logout() {
             localStorage.removeItem('userId');
             alert('Logged out successfully');
-            window.location.href = '/';
+            window.location.href = '/signin';
         }
 
         // Initialize the page
