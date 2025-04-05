@@ -72,8 +72,19 @@
             min-height: 450px;
             flex-grow: 1;
             border-radius: 8px;
-            padding: 1rem;
             border: 2px solid var(--border-color, #e0e6ed);
+            overflow: hidden; /* Ensure the Monaco editor content doesn't overflow */
+        }
+        
+        /* Monaco editor specific styles */
+        .monaco-editor {
+            padding: 0 !important;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .monaco-editor .overflow-guard {
+            border-radius: 8px;
         }
         
         .problem-description,
@@ -220,6 +231,52 @@
             color: #dc3545;
         }
         
+        /* Contest navigation styles */
+        #contest-nav {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: none;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        #contest-name-display {
+            font-weight: 500;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px; /* For mobile */
+        }
+        
+        /* Contest navigation button */
+        #back-to-contest-btn {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+        
+        #back-to-contest-btn:hover {
+            background-color: #4a8bc6;
+        }
+        
+        #back-to-contest-btn:before {
+            content: "←";
+            margin-right: 6px;
+        }
+        
         @media (min-width: 992px) {
             .content {
                 flex-direction: row;
@@ -227,6 +284,10 @@
                 align-items: stretch;
                 gap: 3px;
                 min-height: calc(100vh - 9rem); /* Account for navbar and padding */
+            }
+            
+            #contest-nav {
+                padding: 12px 2.5rem;
             }
             
             .tabs-and-content {
@@ -250,104 +311,139 @@
             #code-editor {
                 flex-grow: 1;
                 min-height: auto;
-                height: calc(100vh - 20rem); /* Account for navbar, padding, and other elements */
+                height: calc(100vh - 20rem) !important; /* Account for navbar, padding, and other elements */
+            }
+            
+            #contest-name-display {
+                max-width: 500px; /* Larger on desktop */
             }
         }
     </style>
     <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
     <script>
         require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' } });
-        require(['vs/editor/editor.main'], function () {
-            const savedCode = localStorage.getItem('code') || getInitialCode('java');
-            const savedLanguage = localStorage.getItem('language') || 'java';
-
-            const editor = monaco.editor.create(document.getElementById('editor'), {
-                value: savedCode,
-                language: savedLanguage
-            });
-
-            document.getElementById('language-select').value = savedLanguage;
-
-            document.getElementById('language-select').onchange = function () {
-                const selectedLanguage = this.value;
-                const template = getInitialCode(selectedLanguage);
-                editor.setValue(template);
-                monaco.editor.setModelLanguage(editor.getModel(), selectedLanguage);
-                localStorage.setItem('language', selectedLanguage);
-                localStorage.setItem('code', template);
-            };
-
-            editor.onDidChangeModelContent(() => {
-                const code = editor.getValue();
-                localStorage.setItem('code', code);
-            });
-
-            document.getElementById('runButton').onclick = function () {
-                const code = editor.getValue();
-                const selectedLanguage = document.getElementById('language-select').value;
-                runCode(code, selectedLanguage);
-            };
-
-            function getInitialCode(language) {
-                switch (language) {
-                    case 'java':
-                        return 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass Main\n{\n    public static void main(String[] args) throws java.lang.Exception\n    {\n        // your code goes here\n    }\n}';
-                    case 'cpp':
-                        return '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
-                    case 'python':
-                        return '# Your Python code here';
-                    case 'C':
-                        return '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}';
-                }
-            }
-
-            function runCode(code, language) {
-                const outputDiv = document.getElementById('output');
-                outputDiv.innerHTML = '';
-                fetch('/run', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code, language }),
-                })
-                .then(response => response.json())
-                    .then(data => {
-                        outputDiv.innerHTML = `<pre>${data.output || data.error}</pre>`;
-                    })
-                    .catch(error => {
-                        outputDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            require(['vs/editor/editor.main'], function() {
+                const savedCode = localStorage.getItem('code') || getInitialCode('java');
+                const savedLanguage = localStorage.getItem('language') || 'java';
+                
+                // Get the correct element by ID
+                const editorElement = document.getElementById('code-editor');
+                
+                if (editorElement) {
+                    window.monacoEditor = monaco.editor.create(editorElement, {
+                        value: savedCode,
+                        language: savedLanguage,
+                        theme: 'vs-dark',
+                        automaticLayout: true
                     });
+                    
+                    document.getElementById('language-select').value = savedLanguage;
 
-            }
+                    document.getElementById('language-select').onchange = function() {
+                        const selectedLanguage = this.value;
+                        const template = getInitialCode(selectedLanguage);
+                        window.monacoEditor.setValue(template);
+                        monaco.editor.setModelLanguage(window.monacoEditor.getModel(), selectedLanguage);
+                        localStorage.setItem('language', selectedLanguage);
+                        localStorage.setItem('code', template);
+                    };
 
-            // Tab functionality
-            const tabs = document.querySelectorAll('.tabs button');
-            const contents = document.querySelectorAll('.tab-content > div');
+                    window.monacoEditor.onDidChangeModelContent(() => {
+                        const code = window.monacoEditor.getValue();
+                        localStorage.setItem('code', code);
+                    });
+                    
+                    // Tab functionality
+                    const tabs = document.querySelectorAll('.tabs button');
+                    const contents = document.querySelectorAll('.tab-content > div');
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(content => content.style.display = 'none');
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', () => {
+                            tabs.forEach(t => t.classList.remove('active'));
+                            contents.forEach(content => content.style.display = 'none');
 
-                    tab.classList.add('active');
-                    const selectedTab = tab.getAttribute('data-tab');
-                    document.querySelector(`.${selectedTab}-content`).style.display = 'block';
-                });
+                            tab.classList.add('active');
+                            const selectedTab = tab.getAttribute('data-tab');
+                            document.querySelector(`.${selectedTab}-content`).style.display = 'block';
+                        });
+                    });
+                } else {
+                    console.error('Editor element not found');
+                }
             });
         });
+
+        function getInitialCode(language) {
+            switch (language) {
+                case 'java':
+                    return 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass Main\n{\n    public static void main(String[] args) throws java.lang.Exception\n    {\n        // your code goes here\n    }\n}';
+                case 'cpp':
+                    return '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
+                case 'python':
+                    return '# Your Python code here';
+                case 'C':
+                    return '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}';
+            }
+        }
     </script>
     <script>
         // Add this script to the head section to detect if the problem is being solved as part of a contest
         document.addEventListener('DOMContentLoaded', () => {
+            const contestNav = document.getElementById('contest-nav');
+            const contestNameDisplay = document.getElementById('contest-name-display');
+            
             // Check for URL parameters to see if we're in a contest
             const urlParams = new URLSearchParams(window.location.search);
             const contestId = urlParams.get('contestId');
             
-            // Store contest ID if present
+            // Function to fetch contest details and update the UI
+            async function fetchContestName(id) {
+                try {
+                    const response = await fetch(`/api/contests/${id}`);
+                    if (response.ok) {
+                        const contest = await response.json();
+                        // Display contest name in the navigation
+                        if (contest && contest.name) {
+                            contestNameDisplay.textContent = `Contest: ${contest.name}`;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching contest details:', error);
+                }
+            }
+            
+            // Store contest ID if present in URL
             if (contestId) {
                 localStorage.setItem('currentContestId', contestId);
                 console.log('Working on contest problem:', contestId);
+                
+                // Show the contest navigation
+                contestNav.style.display = 'block';
+                
+                // Fetch contest name
+                fetchContestName(contestId);
+                
+                // Add event listener for back button
+                document.getElementById('back-to-contest-btn').addEventListener('click', () => {
+                    window.location.href = `/contestpage/${contestId}`;
+                });
+            } else {
+                // Check if there's a stored contest ID from a previous visit
+                const storedContestId = localStorage.getItem('currentContestId');
+                if (storedContestId) {
+                    // Show the contest navigation for returning users
+                    contestNav.style.display = 'block';
+                    
+                    // Fetch contest name
+                    fetchContestName(storedContestId);
+                    
+                    // Add event listener for back button
+                    document.getElementById('back-to-contest-btn').addEventListener('click', () => {
+                        window.location.href = `/contestpage/${storedContestId}`;
+                    });
+                }
             }
         });
     </script>
@@ -369,6 +465,14 @@
             <li><a href="/profile" id="profile-link">👤</a></li>
         </ul>
     </nav>
+
+    <!-- Contest Navigation - Only shown when part of a contest -->
+    <div id="contest-nav" style="display: none;">
+        <button id="back-to-contest-btn" class="btn">
+            Back to Contest
+        </button>
+        <span id="contest-name-display" style="margin-left: 15px; font-weight: 500;"></span>
+    </div>
 
     <div class="content">
         <div class="tabs-and-content">
@@ -462,8 +566,7 @@
                     <!-- Add more language options as needed -->
                 </select>
             </div>
-            <textarea rows="20" cols="100" id="code-editor"> 
-            </textarea>
+            <div id="code-editor" style="width:100%; height:400px; border:1px solid #ccc;"></div>
             <div class="actions-container">
                 <div>
                     <button id="run-btn">Run</button>
@@ -505,337 +608,343 @@
         });
         
         // Tab switching functionality
-        const tabButtons = document.querySelectorAll('.tabs button');
-        const tabContents = document.querySelectorAll('.tab-content > div');
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tabs button');
+            const tabContents = document.querySelectorAll('.tab-content > div');
 
-        tabButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons and contents
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.style.display = 'none');
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.style.display = 'none');
 
-                button.classList.add('active');
-                tabContents[index].style.display = 'block';
+                    button.classList.add('active');
+                    tabContents[index].style.display = 'block';
 
-                // If switching to submissions tab, load submissions
-                if (button.dataset.tab === 'submissions' && userId) {
-                    loadUserSubmissions();
-                }
+                    // If switching to submissions tab, load submissions
+                    if (button.dataset.tab === 'submissions' && userId) {
+                        loadUserSubmissions();
+                    }
+                });
             });
         });
 
         // Language selection functionality
-        const languageSelect = document.getElementById('language-select');
-        const codeEditor = document.getElementById('code-editor');
-
-        // Auto-select the first language option and display its content
-        languageSelect.value = 'java';
-        updateCodeTemplate();
-
-        languageSelect.addEventListener('change', updateCodeTemplate);
-
-        function updateCodeTemplate() {
-            const selectedLanguage = languageSelect.value;
-            switch (selectedLanguage) {
-                case 'java':
-                    codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass Main\n{\n    public static void main(String[] args) throws java.lang.Exception\n    {\n        // your code goes here\n    }\n}';
-                    break;
-                case 'cpp':
-                    codeEditor.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
-                    break;
-                case 'python':
-                    codeEditor.value = '# Your Python code here\n';
-                    break;
-                case 'c':
-                    codeEditor.value = '#include<stdio.h>\n\nint main(){\n // your code goes here \n\n}';
-                    break;
-            }
-        }
-
-        // Run code functionality
-        document.getElementById('run-btn').addEventListener('click', async () => {
-            const code = codeEditor.value;
-            const language = languageSelect.value;
-            let input = '';
+        document.addEventListener('DOMContentLoaded', () => {
+            const languageSelect = document.getElementById('language-select');
             
-            if (!code) {
-                alert('Please enter some code first');
-                return;
-            }
-            
-            // Get the first test case input
-            try {
-                const problemResponse = await fetch(`/api/problems/${problemId}`);
-                const problem = await problemResponse.json();
-                
-                if (problem.testCases && problem.testCases.length > 0) {
-                    input = problem.testCases[0].input;
-                }
-            } catch (error) {
-                console.error('Error fetching test case input:', error);
-            }
-
-            try {
-                const resultContainer = document.getElementById('result-container');
-                const resultOutput = document.getElementById('result-output');
-                resultContainer.style.display = 'block';
-                resultOutput.innerHTML = 'Running...';
-
-                const response = await fetch('/api/execute', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code, language, input })
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'error') {
-                    resultOutput.innerHTML = `<span class="error">${result.error || 'An error occurred'}</span>`;
-                } else {
-                    resultOutput.innerHTML = result.output || 'No output';
-                    if (result.error) {
-                        resultOutput.innerHTML += `\n<span class="error">${result.error}</span>`;
-                    }
-                }
-            } catch (error) {
-                console.error('Error running code:', error);
-                const resultContainer = document.getElementById('result-container');
-                const resultOutput = document.getElementById('result-output');
-                resultContainer.style.display = 'block';
-                resultOutput.innerHTML = `<span class="error">Failed to run code: ${error.message}</span>`;
-            }
+            // Auto-select the first language option
+            languageSelect.value = 'java';
         });
 
-        // Test code against test cases functionality
-        document.getElementById('test-btn').addEventListener('click', async () => {
-            const code = codeEditor.value;
-            const language = languageSelect.value;
-            
-            if (!code) {
-                alert('Please enter some code first');
-                return;
-            }
-            
-            try {
-                // Show a loading indicator
-                document.getElementById('test-results').innerHTML = '<div class="loading">Running tests...</div>';
-                
-                // Switch to the solution tab
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.style.display = 'none');
-                
-                tabButtons[2].classList.add('active');
-                tabContents[2].style.display = 'block';
-                
-                // Get user ID and contest ID if available
-                const userId = localStorage.getItem('userId');
-                const contestId = localStorage.getItem('currentContestId');
-                
-                // Fetch problem's test cases
-                const problemResponse = await fetch(`/api/problems/${problemId}`);
-                const problem = await problemResponse.json();
-                
-                if (!problem.testCases || problem.testCases.length === 0) {
-                    document.getElementById('test-results').innerHTML = 'No test cases available for this problem.';
+        // Run code functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('run-btn').addEventListener('click', async () => {
+                if (!window.monacoEditor) {
+                    console.error('Editor not initialized');
                     return;
                 }
                 
-                const problemTestCases = problem.testCases;
+                const code = window.monacoEditor.getValue();
+                const language = document.getElementById('language-select').value;
+                let input = '';
                 
-                // Test against each test case
-                const response = await fetch('/api/execute/test', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        code,
-                        language,
-                        testCases: problemTestCases,
-                        userId: userId || null,
-                        problemId: problemId,
-                        contestId: contestId || null
-                    })
-                });
+                if (!code) {
+                    alert('Please enter some code first');
+                    return;
+                }
                 
-                const result = await response.json();
+                // Get the first test case input
+                try {
+                    const problemResponse = await fetch(`/api/problems/${problemId}`);
+                    const problem = await problemResponse.json();
+                    
+                    if (problem.testCases && problem.testCases.length > 0) {
+                        input = problem.testCases[0].input;
+                    }
+                } catch (error) {
+                    console.error('Error fetching test case input:', error);
+                }
+
+                try {
+                    const resultContainer = document.getElementById('result-container');
+                    const resultOutput = document.getElementById('result-output');
+                    resultContainer.style.display = 'block';
+                    resultOutput.innerHTML = 'Running...';
+
+                    const response = await fetch('/api/execute', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code, language, input })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'error') {
+                        resultOutput.innerHTML = `<span class="error">${result.error || 'An error occurred'}</span>`;
+                    } else {
+                        resultOutput.innerHTML = result.output || 'No output';
+                        if (result.error) {
+                            resultOutput.innerHTML += `\n<span class="error">${result.error}</span>`;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error running code:', error);
+                    const resultContainer = document.getElementById('result-container');
+                    const resultOutput = document.getElementById('result-output');
+                    resultContainer.style.display = 'block';
+                    resultOutput.innerHTML = `<span class="error">Failed to run code: ${error.message}</span>`;
+                }
+            });
+        });
+
+        // Test code against test cases functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('test-btn').addEventListener('click', async () => {
+                if (!window.monacoEditor) {
+                    console.error('Editor not initialized');
+                    return;
+                }
                 
-                // Display test results
-                let resultsHtml = `
-                    <div class="test-summary">
-                        <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
-                    </div>
-                    <h4>Test Cases:</h4>
-                `;
+                const code = window.monacoEditor.getValue();
+                const language = document.getElementById('language-select').value;
                 
-                result.results.forEach((testResult, index) => {
-                    resultsHtml += `
-                        <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
-                            <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
-                            <div>
-                                <strong>Input:</strong> 
-                                <pre>${testResult.input}</pre>
-                            </div>
-                            <div>
-                                <strong>Expected Output:</strong> 
-                                <pre>${testResult.expectedOutput}</pre>
-                            </div>
-                            <div>
-                                <strong>Your Output:</strong> 
-                                <pre>${testResult.actualOutput}</pre>
-                            </div>
-                            ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
+                if (!code) {
+                    alert('Please enter some code first');
+                    return;
+                }
+                
+                try {
+                    // Show a loading indicator
+                    document.getElementById('test-results').innerHTML = '<div class="loading">Running tests...</div>';
+                    
+                    // Switch to the solution tab
+                    const tabButtons = document.querySelectorAll('.tabs button');
+                    const tabContents = document.querySelectorAll('.tab-content > div');
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.style.display = 'none');
+                    
+                    tabButtons[2].classList.add('active');
+                    tabContents[2].style.display = 'block';
+                    
+                    // Get user ID and contest ID if available
+                    const userId = localStorage.getItem('userId');
+                    const contestId = localStorage.getItem('currentContestId');
+                    
+                    // Fetch problem's test cases
+                    const problemResponse = await fetch(`/api/problems/${problemId}`);
+                    const problem = await problemResponse.json();
+                    
+                    if (!problem.testCases || problem.testCases.length === 0) {
+                        document.getElementById('test-results').innerHTML = 'No test cases available for this problem.';
+                        return;
+                    }
+                    
+                    const problemTestCases = problem.testCases;
+                    
+                    // Test against each test case
+                    const response = await fetch('/api/execute/test', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            code,
+                            language,
+                            testCases: problemTestCases,
+                            userId: userId || null,
+                            problemId: problemId,
+                            contestId: contestId || null
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    // Display test results
+                    let resultsHtml = `
+                        <div class="test-summary">
+                            <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
                         </div>
+                        <h4>Test Cases:</h4>
                     `;
-                });
-                
-                document.getElementById('test-results').innerHTML = resultsHtml;
-            } catch (error) {
-                console.error('Error testing code:', error);
-                document.getElementById('test-results').innerHTML = `<div class="error">Failed to test code: ${error.message}</div>`;
-            }
+                    
+                    result.results.forEach((testResult, index) => {
+                        resultsHtml += `
+                            <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
+                                <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
+                                <div>
+                                    <strong>Input:</strong> 
+                                    <pre>${testResult.input}</pre>
+                                </div>
+                                <div>
+                                    <strong>Expected Output:</strong> 
+                                    <pre>${testResult.expectedOutput}</pre>
+                                </div>
+                                <div>
+                                    <strong>Your Output:</strong> 
+                                    <pre>${testResult.actualOutput}</pre>
+                                </div>
+                                ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    document.getElementById('test-results').innerHTML = resultsHtml;
+                } catch (error) {
+                    console.error('Error testing code:', error);
+                    document.getElementById('test-results').innerHTML = `<div class="error">Failed to test code: ${error.message}</div>`;
+                }
+            });
         });
 
         // Submit solution functionality
-        document.getElementById('submit-btn').addEventListener('click', async () => {
-            if (!userId) {
-                alert('Please sign in to submit your solution');
-                return;
-            }
-            
-            const code = codeEditor.value;
-            const language = languageSelect.value;
-            
-            if (!code) {
-                alert('Please enter some code first');
-                return;
-            }
-            
-            try {
-                // Show a loading indicator
-                document.getElementById('result-container').style.display = 'block';
-                document.getElementById('result-output').innerHTML = 'Submitting solution...';
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submit-btn').addEventListener('click', async () => {
+                if (!window.monacoEditor) {
+                    console.error('Editor not initialized');
+                    return;
+                }
                 
-                // Check if we're in a contest
-                const contestId = localStorage.getItem('currentContestId');
+                if (!userId) {
+                    alert('Please sign in to submit your solution');
+                    return;
+                }
                 
-                const response = await fetch(`/api/problems/${problemId}/submit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        userId, 
-                        code, 
-                        language,
-                        contestId: contestId || null // Include contest ID if present
-                    })
-                });
+                const code = window.monacoEditor.getValue();
+                const language = document.getElementById('language-select').value;
                 
-                const result = await response.json();
+                if (!code) {
+                    alert('Please enter some code first');
+                    return;
+                }
                 
-                if (response.ok) {
-                    // Display submission status
-                    let submissionMessage = `<span class="${result.status === 'Accepted' ? 'success' : 'error'}">
-                        Submission result: ${result.message}
-                    </span>`;
+                try {
+                    // Show a loading indicator
+                    document.getElementById('result-container').style.display = 'block';
+                    document.getElementById('result-output').innerHTML = 'Submitting solution...';
                     
-                    // Show contest update info if present
-                    if (contestId && result.contestUpdate) {
-                        const contestUpdate = result.contestUpdate;
-                        if (contestUpdate.updated) {
-                            submissionMessage += `<div class="contest-update success">
-                                <p>Contest leaderboard updated!</p>
-                                <p>Your current score: ${contestUpdate.totalScore}</p>
-                                <p>Problems solved: ${contestUpdate.problemsCount}</p>
-                            </div>`;
-                        } else {
-                            // If problem was already solved or submission wasn't accepted
-                            submissionMessage += `<div class="contest-update">
-                                <p>${contestUpdate.message || 'No change in contest score'}</p>
-                                <p>Your current score: ${contestUpdate.totalScore}</p>
-                                <p>Problems solved: ${contestUpdate.problemsCount}</p>
-                            </div>`;
-                        }
-                    }
+                    // Check if we're in a contest
+                    const contestId = localStorage.getItem('currentContestId');
                     
-                    document.getElementById('result-output').innerHTML = submissionMessage;
+                    const response = await fetch(`/api/problems/${problemId}/submit`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            userId, 
+                            code, 
+                            language,
+                            contestId: contestId || null // Include contest ID if present
+                        })
+                    });
                     
-                    // If there are test results, show them
-                    if (result.results && result.results.length > 0) {
-                        // Switch to the solution tab to show test results
-                        tabButtons.forEach(btn => btn.classList.remove('active'));
-                        tabContents.forEach(content => content.style.display = 'none');
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        // Display submission status
+                        let submissionMessage = `<span class="${result.status === 'Accepted' ? 'success' : 'error'}">
+                            Submission result: ${result.message}
+                        </span>`;
                         
-                        tabButtons[2].classList.add('active');
-                        tabContents[2].style.display = 'block';
-                        
-                        // Format the test results similar to the test button
-                        let resultsHtml = `
-                            <div class="test-summary">
-                                <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
-                            </div>`;
-                            
-                        // Add contest info if this is a contest submission
+                        // Show contest update info if present
                         if (contestId && result.contestUpdate) {
                             const contestUpdate = result.contestUpdate;
-                            resultsHtml += `<div class="contest-results">
-                                <h4>Contest Submission:</h4>
-                                <p>${contestUpdate.message || (contestUpdate.updated ? 'Score updated' : 'No score change')}</p>
-                                <p>Your current score: ${contestUpdate.totalScore}</p>
-                            </div>`;
+                            if (contestUpdate.updated) {
+                                submissionMessage += `<div class="contest-update success">
+                                    <p>Contest leaderboard updated!</p>
+                                    <p>Your current score: ${contestUpdate.totalScore}</p>
+                                    <p>Problems solved: ${contestUpdate.problemsCount}</p>
+                                </div>`;
+                            } else {
+                                // If problem was already solved or submission wasn't accepted
+                                submissionMessage += `<div class="contest-update">
+                                    <p>${contestUpdate.message || 'No change in contest score'}</p>
+                                    <p>Your current score: ${contestUpdate.totalScore}</p>
+                                    <p>Problems solved: ${contestUpdate.problemsCount}</p>
+                                </div>`;
+                            }
                         }
                         
-                        resultsHtml += '<h4>Test Cases:</h4>';
+                        document.getElementById('result-output').innerHTML = submissionMessage;
                         
-                        result.results.forEach((testResult, index) => {
-                            resultsHtml += `
-                                <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
-                                    <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
-                                    <div>
-                                        <strong>Input:</strong> 
-                                        <pre>${testResult.input}</pre>
-                                    </div>
-                                    <div>
-                                        <strong>Expected Output:</strong> 
-                                        <pre>${testResult.expected}</pre>
-                                    </div>
-                                    <div>
-                                        <strong>Your Output:</strong> 
-                                        <pre>${testResult.actual}</pre>
-                                    </div>
-                                    ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
-                                </div>
-                            `;
-                        });
-                        
-                        document.getElementById('test-results').innerHTML = resultsHtml;
-                    }
-                    
-                    // Load submissions in the background
-                    loadUserSubmissions();
-                    
-                    // If this was a contest submission and was successful, refresh the page
-                    // after a short delay to show the updated contest info
-                    if (contestId && result.status === 'Accepted' && result.contestUpdate) {
-                        setTimeout(() => {
-                            const shouldRefresh = confirm('Solution submitted successfully! Refresh to see updated contest status?');
-                            if (shouldRefresh) {
-                                // To ensure we come back to the same problem with contest context
-                                window.location.href = window.location.pathname + '?contestId=' + contestId;
+                        // If there are test results, show them
+                        if (result.results && result.results.length > 0) {
+                            // Switch to the solution tab to show test results
+                            tabButtons.forEach(btn => btn.classList.remove('active'));
+                            tabContents.forEach(content => content.style.display = 'none');
+                            
+                            tabButtons[2].classList.add('active');
+                            tabContents[2].style.display = 'block';
+                            
+                            // Format the test results similar to the test button
+                            let resultsHtml = `
+                                <div class="test-summary">
+                                    <h3>Status: <span class="${result.status === 'Accepted' ? 'success' : 'error'}">${result.status}</span></h3>
+                                </div>`;
+                                
+                            // Add contest info if this is a contest submission
+                            if (contestId && result.contestUpdate) {
+                                const contestUpdate = result.contestUpdate;
+                                resultsHtml += `<div class="contest-results">
+                                    <h4>Contest Submission:</h4>
+                                    <p>${contestUpdate.message || (contestUpdate.updated ? 'Score updated' : 'No score change')}</p>
+                                    <p>Your current score: ${contestUpdate.totalScore}</p>
+                                </div>`;
                             }
-                        }, 2000);
+                            
+                            resultsHtml += '<h4>Test Cases:</h4>';
+                            
+                            result.results.forEach((testResult, index) => {
+                                resultsHtml += `
+                                    <div class="test-case ${testResult.passed ? 'pass' : 'fail'}">
+                                        <h4>Test Case ${index + 1} - ${testResult.passed ? 'Passed' : 'Failed'}</h4>
+                                        <div>
+                                            <strong>Input:</strong> 
+                                            <pre>${testResult.input}</pre>
+                                        </div>
+                                        <div>
+                                            <strong>Expected Output:</strong> 
+                                            <pre>${testResult.expected}</pre>
+                                        </div>
+                                        <div>
+                                            <strong>Your Output:</strong> 
+                                            <pre>${testResult.actual}</pre>
+                                        </div>
+                                        ${testResult.error ? `<div class="error"><strong>Error:</strong> ${testResult.error}</div>` : ''}
+                                    </div>
+                                `;
+                            });
+                            
+                            document.getElementById('test-results').innerHTML = resultsHtml;
+                        }
+                        
+                        // Load submissions in the background
+                        loadUserSubmissions();
+                        
+                        // If this was a contest submission and was successful, refresh the page
+                        // after a short delay to show the updated contest info
+                        if (contestId && result.status === 'Accepted' && result.contestUpdate) {
+                            setTimeout(() => {
+                                const shouldRefresh = confirm('Solution submitted successfully! Refresh to see updated contest status?');
+                                if (shouldRefresh) {
+                                    // To ensure we come back to the same problem with contest context
+                                    window.location.href = window.location.pathname + '?contestId=' + contestId;
+                                }
+                            }, 2000);
+                        }
+                    } else {
+                        document.getElementById('result-output').innerHTML = `<span class="error">Error: ${result.message || 'Failed to submit solution'}</span>`;
                     }
-                } else {
-                    document.getElementById('result-output').innerHTML = `<span class="error">Error: ${result.message || 'Failed to submit solution'}</span>`;
+                } catch (error) {
+                    console.error('Error submitting solution:', error);
+                    document.getElementById('result-container').style.display = 'block';
+                    document.getElementById('result-output').innerHTML = `<span class="error">Error submitting solution: ${error.message}</span>`;
                 }
-            } catch (error) {
-                console.error('Error submitting solution:', error);
-                document.getElementById('result-container').style.display = 'block';
-                document.getElementById('result-output').innerHTML = `<span class="error">Error submitting solution: ${error.message}</span>`;
-            }
+            });
         });
 
         // Function to load user submissions
@@ -897,15 +1006,24 @@
         // Function to load submission code
         window.loadSubmissionCode = async function(submissionId) {
             try {
+                if (!window.monacoEditor) {
+                    console.error('Editor not initialized');
+                    return;
+                }
+                
                 const response = await fetch(`/api/auth/submissions/${submissionId}`);
                 const submission = await response.json();
                 
                 if (response.ok) {
                     // Set the code editor to the submission code
-                    codeEditor.value = submission.code;
+                    window.monacoEditor.setValue(submission.code);
                     
                     // Set the language selector
-                    languageSelect.value = submission.language;
+                    const langSelect = document.getElementById('language-select');
+                    langSelect.value = submission.language;
+                    
+                    // Update the editor language model
+                    monaco.editor.setModelLanguage(window.monacoEditor.getModel(), submission.language);
                 }
             } catch (error) {
                 console.error('Error loading submission code:', error);
