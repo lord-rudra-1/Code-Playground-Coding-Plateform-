@@ -35,31 +35,40 @@ async function executeCode(code, language, input = "") {
             switch (language.toLowerCase()) {
                 case "java":
                     fileExtension = "java";
-                    filePath = path.join(tempDir, `${fileName}.java`);
                     
                     // Extract class name from Java code with better regex
-                    const classNameMatch = code.match(/public\s+class\s+(\w+)|class\s+(\w+)/);
+                    const publicClassMatch = code.match(/public\s+class\s+(\w+)/);
+                    const classNameMatch = code.match(/class\s+(\w+)/);
                     let className;
                     
-                    if (!classNameMatch) {
+                    if (publicClassMatch) {
+                        // If there's a public class, the file must be named after it
+                        className = publicClassMatch[1];
+                        filePath = path.join(tempDir, `${className}.java`);
+                    } else if (classNameMatch) {
+                        // If no public class but has a class
+                        className = classNameMatch[1];
+                        filePath = path.join(tempDir, `${fileName}.java`);
+                    } else {
                         // If no class found, use a default name
                         className = "Main";
+                        filePath = path.join(tempDir, `${fileName}.java`);
                         // Wrap the code in a Main class
-                        const wrappedCode = `
+                        code = `
 class Main {
     public static void main(String[] args) {
         ${code}
     }
 }`;
-                        fs.writeFileSync(filePath, wrappedCode);
-                    } else {
-                        // Use the class name found in the code
-                        className = classNameMatch[1] || classNameMatch[2];
-                        fs.writeFileSync(filePath, code);
                     }
                     
+                    fs.writeFileSync(filePath, code);
+                    
+                    // Get just the filename for javac (without directory path)
+                    const javaFileName = path.basename(filePath);
+                    
                     // Compile and run with quoted paths
-                    executionCmd = `cd "${tempDir}" && javac "${fileName}.java" && java "${className}"`;
+                    executionCmd = `cd "${tempDir}" && javac "${javaFileName}" && java "${className}"`;
                     break;
                     
                 case "python":
@@ -129,14 +138,16 @@ class Main {
                     
                     // For Java, remove the class file
                     if (language.toLowerCase() === "java") {
-                        const classNameMatch = code.match(/class\s+(\w+)/);
-                        if (classNameMatch) {
-                            const className = classNameMatch[1];
-                            const classPath = path.join(tempDir, `${className}.class`);
+                        // Clean up all class files that match the pattern
+                        const classFiles = fs.readdirSync(tempDir)
+                            .filter(file => file.endsWith('.class') && file.includes(className));
+                        
+                        classFiles.forEach(classFile => {
+                            const classPath = path.join(tempDir, classFile);
                             if (fs.existsSync(classPath)) {
                                 fs.unlinkSync(classPath);
                             }
-                        }
+                        });
                     }
                 } catch (cleanupError) {
                     console.error("Error during file cleanup:", cleanupError);

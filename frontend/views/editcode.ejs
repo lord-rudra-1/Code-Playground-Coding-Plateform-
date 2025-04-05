@@ -291,7 +291,7 @@
             function getInitialCode(language) {
                 switch (language) {
                     case 'java':
-                        return 'import java.util.*;\n\nclass Main {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}';
+                        return 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass Main\n{\n    public static void main(String[] args) throws java.lang.Exception\n    {\n        // your code goes here\n    }\n}';
                     case 'cpp':
                         return '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
                     case 'python':
@@ -470,9 +470,6 @@
                     <button id="test-btn">Test</button>
                     <button id="submit-btn">Submit</button>
                 </div>
-                <div>
-                    <input type="text" id="custom-input" placeholder="Custom input (optional)">
-                </div>
             </div>
             <div class="result-container" id="result-container" style="display: none;">
                 <div class="result-title">Output:</div>
@@ -541,10 +538,10 @@
             const selectedLanguage = languageSelect.value;
             switch (selectedLanguage) {
                 case 'java':
-                    codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass code\n{\npublic static void main (String[] args) throws java.lang.Exception\n{\n// your code goes here\n}\n}';
+                    codeEditor.value = 'import java.util.*;\nimport java.lang.*;\nimport java.io.*;\n\nclass Main\n{\n    public static void main(String[] args) throws java.lang.Exception\n    {\n        // your code goes here\n    }\n}';
                     break;
                 case 'cpp':
-                    codeEditor.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n// your code goes here\n\n} ';
+                    codeEditor.value = '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
                     break;
                 case 'python':
                     codeEditor.value = '# Your Python code here\n';
@@ -559,27 +556,23 @@
         document.getElementById('run-btn').addEventListener('click', async () => {
             const code = codeEditor.value;
             const language = languageSelect.value;
-            const customInputField = document.getElementById('custom-input');
-            let input = customInputField.value;
+            let input = '';
             
             if (!code) {
                 alert('Please enter some code first');
                 return;
             }
             
-            // If custom input is empty, try to get the first test case input
-            if (!input.trim()) {
-                try {
-                    const problemResponse = await fetch(`/api/problems/${problemId}`);
-                    const problem = await problemResponse.json();
-                    
-                    if (problem.testCases && problem.testCases.length > 0) {
-                        input = problem.testCases[0].input;
-                        customInputField.value = input;
-                    }
-                } catch (error) {
-                    console.error('Error fetching test case input:', error);
+            // Get the first test case input
+            try {
+                const problemResponse = await fetch(`/api/problems/${problemId}`);
+                const problem = await problemResponse.json();
+                
+                if (problem.testCases && problem.testCases.length > 0) {
+                    input = problem.testCases[0].input;
                 }
+            } catch (error) {
+                console.error('Error fetching test case input:', error);
             }
 
             try {
