@@ -594,7 +594,7 @@
                 
                 if (response.redirected) {
                     // If the server redirects, follow the redirect
-                    window.location.href = response.url;
+                    window.location.href = "/explore";
                 } else {
                     const contentType = response.headers.get("content-type");
                     if (contentType && contentType.includes("application/json")) {
@@ -608,7 +608,7 @@
                         // If not JSON and not redirect, it's likely an HTML response with an error message
                         const text = await response.text();
                         // For HTML responses, we just redirect to the signin page
-                        window.location.href = "/signin";
+                        window.location.href = "/explore";
                     }
                 }
             } catch (error) {
