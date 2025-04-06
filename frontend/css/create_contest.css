@@ -9,6 +9,7 @@
   --text-color: #2d3748;
   --border-color: #e0e6ed;
   --success-color: #32cd32;
+  --error-color: #e74c3c;
 }
 
 * {
@@ -26,14 +27,11 @@ body {
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
-  width: 100%;
-  height: 100%;
   color: #2d3748;
   overflow-x: hidden;
-  overflow-y: auto;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 /* ================= Navbar Styles ================= */
@@ -106,15 +104,11 @@ body {
 }
 
 /* ================= Main Content Styles ================= */
-.main-content {
-  flex: 1;
-  padding: 2rem 0;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
 }
 
 /* ================= Contest Form Styles ================= */
@@ -123,10 +117,11 @@ body {
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0, 84, 180, 0.15);
   padding: 2.5rem;
-  margin-bottom: 2rem;
+  margin: 30px auto;
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
 }
 
 .contest-section::before {
@@ -144,7 +139,7 @@ body {
   margin-bottom: 2.5rem;
 }
 
-.contest-header h2 {
+.contest-header h1, .contest-header h2 {
   color: var(--secondary-color);
   font-size: 2rem;
   margin-bottom: 0.5rem;
@@ -153,7 +148,7 @@ body {
   padding-bottom: 0.5rem;
 }
 
-.contest-header h2::after {
+.contest-header h1::after, .contest-header h2::after {
   content: '';
   position: absolute;
   width: 100%;
@@ -180,10 +175,6 @@ body {
 
 .form-group.full-width {
   grid-column: span 2;
-}
-
-.form-group.half-width {
-  grid-column: span 1;
 }
 
 label {
@@ -219,78 +210,32 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
-select[multiple] {
-  height: auto;
+textarea {
   min-height: 120px;
-  padding: 0.5rem;
-}
-
-html,
-body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
-}
-
-.checkbox-group input[type="checkbox"] {
-  width: auto;
-  margin: 0;
-}
-
-.checkbox-group label {
-  margin: 0;
-  font-weight: normal;
+  resize: vertical;
 }
 
 .btn {
-  padding: 14px 28px;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: 0.5s;
-}
-
-.btn:hover::before {
-  left: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary {
   background: var(--primary-color);
   color: white;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 84, 180, 0.25);
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 84, 180, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 84, 180, 0.25);
 }
 
 .btn-secondary {
@@ -307,316 +252,94 @@ body {
 .form-actions {
   grid-column: span 2;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
-/* Problem Selection Styles */
+/* ================= Problem Search Styles ================= */
+.search-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search-results {
+  position: absolute;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.search-result-item {
+  padding: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-result-item strong {
+  color: #333;
+}
+
+.text-muted {
+  color: #777;
+  font-size: 14px;
+}
+
+/* ================= Selected Problems Styles ================= */
 .problem-selection {
-  border: 2px solid var(--border-color);
-  border-radius: 6px;
-  padding: 1rem;
-  margin-top: 1rem;
+  margin-top: 15px;
 }
 
 .problem-list {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 1rem;
-  padding: 0.5rem;
+  margin-top: 15px;
   border: 1px solid #eee;
   border-radius: 4px;
+  padding: 15px;
+  min-height: 100px;
+  background: #f8f9fa;
 }
 
-/* ================= Footer Styles ================= */
-.footer {
-  text-align: center;
-  padding: 1.5rem;
-  background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
-  color: white;
-  margin-top: auto;
-  width: 100%;
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
-}
-
-.footer p {
-  margin: 0;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-}
-
-/* ================= Responsive Styles ================= */
-@media (max-width: 768px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-group.full-width,
-  .form-group.half-width,
-  .form-actions {
-    grid-column: span 1;
-  }
-
-  .navbar {
-    padding: 0 1rem;
-  }
-
-  .nav-links {
-    gap: 1rem;
-  }
-
-  .contest-section {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .nav-links {
-    display: none;
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-  }
-}
-
-/* ================= Enhanced Language Selection Styles ================= */
-.language-selection {
-  margin-top: 1rem;
-}
-
-.language-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.language-option {
-  display: flex;
-  align-items: center;
-  background: #f0f4f8;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid #e0e6ed;
-}
-
-.language-option:hover {
-  background: #e0e6ed;
-}
-
-.language-option input[type="checkbox"] {
-  margin-right: 0.5rem;
-  cursor: pointer;
-}
-
-.language-option.selected {
-  background: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-/* ================= Problem Selection Enhancements ================= */
-.problem-controls {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.problem-item {
+.selected-problem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem;
-  background: #f8f9fa;
+  padding: 10px;
+  background: white;
+  margin-bottom: 8px;
   border-radius: 4px;
-  margin-bottom: 0.25rem;
-}
-
-.problem-item:hover {
-  background: #e9ecef;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .remove-problem {
-  color: #dc3545;
   cursor: pointer;
-  background: none;
-  border: none;
+  color: var(--error-color);
   font-weight: bold;
+  padding: 0 5px;
 }
 
-/* ================= Form Section Styling ================= */
-.form-section {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #eee;
+.empty-message {
+  color: #777;
+  text-align: center;
+  margin: 20px 0;
 }
 
-.form-section h4 {
-  margin-bottom: 1rem;
-  color: var(--secondary-color);
-}
-
-/* ================= Responsive Adjustments ================= */
-@media (max-width: 768px) {
-  .language-options {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .language-option {
-    width: 100%;
-  }
-}
-
-/* ================= Problem Creation Styles ================= */
-.problem-creation {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  border: 1px solid #e0e6ed;
-}
-
-.problem-tabs {
-  display: flex;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 1.5rem;
-}
-
-.problem-tab {
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  border: 1px solid transparent;
-  border-bottom: none;
-  border-radius: 5px 5px 0 0;
-  background: #f1f1f1;
-  margin-right: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.problem-tab.active {
-  background: white;
-  border-color: #ddd;
-  border-bottom: 1px solid white;
-  margin-bottom: -1px;
-  font-weight: bold;
-}
-
-.problem-tab:hover:not(.active) {
-  background: #e9ecef;
-}
-
-.problem-content {
-  display: none;
-}
-
-.problem-content.active {
-  display: block;
-}
-
-.editor-container {
-  margin-bottom: 1.5rem;
-}
-
-.editor-toolbar {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.editor-button {
-  padding: 0.25rem 0.5rem;
-  background: #e9ecef;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.test-case {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.test-case-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.test-case-remove {
-  color: #dc3545;
-  cursor: pointer;
-}
-
-.io-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.io-pair div {
-  display: flex;
-  flex-direction: column;
-}
-
-.io-pair textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-family: monospace;
-}
-
-.add-test-case {
-  margin-top: 1rem;
-}
-
-/* Markdown preview styling */
-.markdown-preview {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 1rem;
-  min-height: 200px;
-}
-
-/* Problem meta controls */
-.problem-meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .io-pair {
-    grid-template-columns: 1fr;
-  }
-
-  .problem-meta {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* ================= Status Message Styles ================= */
 .status-message {
-  padding: 10px 15px;
-  margin-bottom: 20px;
+  padding: 15px;
   border-radius: 5px;
+  margin-bottom: 20px;
   font-weight: 500;
   display: none;
 }
@@ -633,10 +356,143 @@ body {
   color: #c0392b;
 }
 
+/* Admin badge */
 .admin-only {
-  color: var(--primary-color);
+  color: #e67e22;
+  font-weight: bold;
   font-size: 0.85rem;
-  font-style: italic;
   margin-left: 10px;
   display: none;
+}
+
+/* ================= Footer Styles ================= */
+.footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: auto;
+  width: 100%;
+}
+
+/* ================= Responsive Styles ================= */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 992px) {
+  .contest-section {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-group.full-width,
+  .form-actions {
+    grid-column: 1;
+  }
+  
+  .navbar {
+    padding: 0 1rem;
+  }
+  
+  .nav-links {
+    gap: 1rem;
+  }
+  
+  .form-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .contest-section {
+    padding: 1.5rem;
+    margin: 15px auto;
+    border-radius: 8px;
+  }
+  
+  .contest-header h1, .contest-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 0.5rem;
+  }
+  
+  .logo {
+    margin-bottom: 0.5rem;
+  }
+  
+  .nav-links {
+    width: 100%;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  input[type="text"],
+  input[type="datetime-local"],
+  select,
+  textarea {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .nav-links li {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+  
+  .search-result-item {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .remove-problem {
+    padding: 0 3px;
+  }
+  
+  .contest-header p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .contest-section {
+    padding: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    font-size: 0.9rem;
+  }
 }

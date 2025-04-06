@@ -27,6 +27,7 @@
         .contest-name {
             color: #333;
             margin-bottom: 20px;
+            text-align: center;
         }
         
         .winner-highlight {
@@ -50,6 +51,34 @@
             padding: 40px;
             color: #666;
             font-style: italic;
+        }
+        
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .winner-highlight td:first-child::before {
+                left: -15px;
+                font-size: 0.9em;
+            }
+            
+            .contest-name {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .winner-highlight td:first-child::before {
+                display: none;
+            }
+            
+            .winner-highlight td:first-child::after {
+                content: " 🏆";
+                margin-left: 5px;
+            }
+            
+            .empty-message {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -79,33 +108,34 @@
         <h2 class="contest-name"><%= contestName %> - Final Standings</h2>
 
         <!-- Leaderboard Table -->
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Username</th>
-                    <th>Score</th>
-                    <th>Problems Solved</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (leaderboard && leaderboard.length > 0) { %>
-                    <% leaderboard.forEach((entry, index) => { %>
-                        <tr class="<%= index === 0 ? 'winner-highlight' : '' %>">
-                            <td><%= entry.rank %></td>
-                            <td><%= entry.username %></td>
-                            <td><%= entry.score %></td>
-                            <td><%= entry.problemsSolved %></td>
-                        </tr>
-                    <% }); %>
-                <% } else { %>
+        <div class="table-responsive">
+            <table class="leaderboard-table">
+                <thead>
                     <tr>
-                        <td colspan="4" class="empty-message">No participants in this contest yet.</td>
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Score</th>
+                        <th>Problems Solved</th>
                     </tr>
-                <% } %>
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                    <% if (leaderboard && leaderboard.length > 0) { %>
+                        <% leaderboard.forEach((entry, index) => { %>
+                            <tr class="<%= index === 0 ? 'winner-highlight' : '' %>">
+                                <td><%= entry.rank %></td>
+                                <td><%= entry.username %></td>
+                                <td><%= entry.score %></td>
+                                <td><%= entry.problemsSolved %></td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="4" class="empty-message">No participants in this contest yet.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <!-- Footer -->
