@@ -218,19 +218,29 @@ tr:hover {
 }
 
 /* Difficulty Indicators */
+.difficulty-cell {
+  text-align: center;
+  vertical-align: middle;
+  height: 100%;
+}
+
 .easy, .medium, .hard {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-weight: 600;
   font-size: 0.75rem;
   text-align: center;
+  margin: 0 auto;
 }
 
 .easy {
   color: #38a169;
   background: rgba(56, 161, 105, 0.1);
+  padding: 0.25rem 0.5rem;
 }
 
 .medium {

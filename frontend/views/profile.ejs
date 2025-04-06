@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Code Playground</title>
     <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Additional styles */
         .logout-btn {
@@ -204,7 +205,10 @@
                 <img src="/lo.png" alt="Logo">
             </a>
         </div>
-        <ul class="nav-links">
+        <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="nav-links">
             <li><a href="/explore">Explore</a></li>
             <li><a href="/problems">Problems</a></li>
             <li><a href="/contests">Contests</a></li>
@@ -314,20 +318,22 @@
                             <p style="text-align: center; padding-top: 140px;">Rating chart will be displayed here</p>
                         </div>
                         <h4>Recent Contests</h4>
-                        <table class="contest-table" id="contest-table">
-                            <thead>
-                                <tr>
-                                    <th>Contest</th>
-                                    <th>Rank</th>
-                                    <th>Score</th>
-                                    <th>Rating</th>
-                                    <th>Change</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contest-history">
-                                <!-- Contest history will be loaded here -->
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="contest-table" id="contest-table">
+                                <thead>
+                                    <tr>
+                                        <th>Contest</th>
+                                        <th>Rank</th>
+                                        <th>Score</th>
+                                        <th>Rating</th>
+                                        <th>Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contest-history">
+                                    <!-- Contest history will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -356,6 +362,12 @@
         // Global variables
         let userId = localStorage.getItem('userId');
         let userData = null;
+
+        // Function to toggle mobile menu
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.classList.toggle('active');
+        }
 
         // Function to switch between tabs
         function switchTab(tabId) {
@@ -636,6 +648,27 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadUserProfile();
+            
+            // Add mobile menu toggle listener
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Add event listeners to close mobile menu when a link is clicked
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('nav-links').classList.remove('active');
+                });
+            });
+            
+            // Handle resize events to fix menu state
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 640) {
+                    document.getElementById('nav-links').classList.remove('active');
+                }
+            });
         });
     </script>
 

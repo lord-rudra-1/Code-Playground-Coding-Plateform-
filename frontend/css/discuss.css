@@ -90,8 +90,9 @@ body {
 .discussion-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   animation: fadeIn 0.5s ease-out;
+  width: 95%;
 }
 
 @keyframes fadeIn {
@@ -219,6 +220,9 @@ body {
   margin-bottom: 1.75rem;
   border-left: 4px solid #5b9bd5;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  overflow: hidden;
 }
 
 .discussion-thread:hover {
@@ -230,6 +234,7 @@ body {
   margin-top: 0;
   color: #2d3748;
   font-size: 1.3rem;
+  line-height: 1.4;
 }
 
 .discussion-thread h3 a {
@@ -242,11 +247,17 @@ body {
   color: #5b9bd5;
 }
 
+.discussion-thread p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
 .thread-stats {
   display: flex;
   gap: 1.5rem;
   margin-top: 1rem;
   color: #6b7280;
+  flex-wrap: wrap;
 }
 
 .thread-stats span {
@@ -278,6 +289,7 @@ body {
   background-color: #f8fafc;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  word-break: break-word;
 }
 
 .comment-input {
@@ -315,7 +327,7 @@ body {
 
 /* Enhanced Modal */
 .modal {
-  display: none;
+  display: none; /* Initial state is hidden */
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -324,17 +336,21 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-content {
   background-color: white;
-  margin: 5% auto;
-  padding: 2.5rem;
-  width: 60%;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 80%;
   max-width: 700px;
+  max-height: 80vh;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   animation: modalFadeIn 0.3s ease-out;
+  overflow: hidden;
 }
 
 @keyframes modalFadeIn {
@@ -355,6 +371,9 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: color 0.3s ease;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .close:hover {
@@ -390,7 +409,8 @@ body {
 
 /* Enhanced Form Elements */
 .form-group {
-  margin-bottom: 1.75rem;
+  flex: 0 0 auto;
+  margin-top: 1rem;
 }
 
 .form-group label {
@@ -427,11 +447,16 @@ body {
   color: #3b82f6;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
   transition: all 0.3s ease;
+  margin: 0.25rem;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag span {
@@ -486,6 +511,7 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
+  min-height: 42px;
 }
 
 #search-input:focus {
@@ -515,22 +541,40 @@ body {
 @media (max-width: 768px) {
   .discussion-header {
     flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+    align-items: flex-start;
   }
-
+  
   .discussion-actions {
-    flex-direction: column;
     width: 100%;
+    justify-content: space-between;
+    margin-top: 0.5rem;
   }
-
-  #tag-filter,
-  #create-discussion-btn,
-  #search-input,
+  
+  #tag-filter {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .search-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  #search-input, 
   #search-btn {
     width: 100%;
   }
 }
+
+/* Ensure buttons don't break layout on small screens */
+#create-discussion-btn, 
+#search-btn, 
+.pagination button, 
+.comment-submit {
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
 /* Enhanced Footer - Matching explore.css */
 .footer {
   text-align: center;
@@ -571,42 +615,273 @@ body {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .modal-content {
-    width: 85%;
-    padding: 1.5rem;
+    width: 95%;
+    padding: 1rem;
+    max-height: 85vh;
   }
-
-  .discussion-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .discussion-actions {
-    width: 100%;
-    justify-content: flex-end;
+  
+  .modal-scrollable-content {
+    max-height: 45vh;
   }
 }
 
-
 #view-discussion-modal .modal-content {
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  margin-top: 16px;
+  padding: 2rem;
+  max-height: 80vh;
+  margin: 0 auto;
 }
 
 #discussion-details {
   flex: 0 0 auto;
-  overflow-y: auto;
   padding-bottom: 1rem;
   border-bottom: 1px solid #edf2f7;
 }
 
-#comments-container {
+.modal-scrollable-content {
   flex: 1 1 auto;
   overflow-y: auto;
-  max-height: 50vh;
+  max-height: 60vh;
+  padding-right: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#comments-container {
   margin: 1rem 0;
-  padding: 0.5rem;
+}
+
+/* Small devices (phones, 576px and below) */
+@media (max-width: 576px) {
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Navbar mobile styling */
+  .navbar {
+    padding: 0 0.5rem;
+    height: 3.5rem;
+  }
+  
+  .logo a img {
+    height: 3rem;
+  }
+  
+  .nav-links {
+    gap: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Content mobile styling */
+  .discussion-container {
+    width: 100%;
+    padding: 1rem 0.75rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  
+  .discussion-thread {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .discussion-header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Discussion actions */
+  #create-discussion-btn,
+  #search-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Tags */
+  .tag {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  /* Reduce padding for vote buttons to avoid overflow */
+  .thread-stats span {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Form elements */
+  .form-control {
+    padding: 0.75rem;
+  }
+  
+  #comment-input {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+  
+  #submit-comment {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Modal */
+  .modal-content {
+    width: 92%;
+    padding: 0.75rem;
+    margin: 0 auto;
+  }
+  
+  .modal-scrollable-content {
+    max-height: 45vh;
+  }
+  
+  /* Pagination */
+  .pagination {
+    margin-top: 1.5rem;
+  }
+  
+  .pagination button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Ensure all content is properly contained */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .discussion-container {
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Hamburger menu for mobile */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile navigation styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .menu-toggle {
+    display: flex;
+    z-index: 15;
+  }
+  
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    padding: 4rem 2rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 84, 180, 0.95) 0%, rgba(0, 122, 255, 0.95) 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    transition: right 0.3s ease-in-out;
+    z-index: 10;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-links.active {
+    right: 0;
+  }
+  
+  .nav-links li {
+    margin: 1rem 0;
+  }
+  
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+  
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+  
+  /* Add overlay when menu is open */
+  .menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+  }
+  
+  .menu-overlay.active {
+    display: block;
+  }
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+/* Extra small devices (tiny phones) */
+@media (max-width: 320px) {
+  .discussion-thread {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .discussion-thread h3 {
+    font-size: 1.1rem;
+  }
+  
+  .thread-stats {
+    gap: 0.5rem;
+  }
+  
+  .thread-stats span {
+    padding: 0.1rem 0.25rem;
+    font-size: 0.8rem;
+  }
+  
+  .tag {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Content in modal */
+.content {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  max-width: 100%;
 }
 

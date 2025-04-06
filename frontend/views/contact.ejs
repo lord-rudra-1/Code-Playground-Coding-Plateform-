@@ -11,12 +11,21 @@
 </head>
 
 <body>
+    <!-- Mobile Menu Overlay -->
+    <div class="overlay"></div>
+    
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
             <a href="/explore" title="Logo">
                 <img src="lo.png" alt="Logo">
             </a>
+        </div>
+        <!-- Mobile Menu Toggle Button -->
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
@@ -35,7 +44,7 @@
 
         <div class="contact-container">
             <!-- Contact Form -->
-            <form class="contact-form">
+            <form class="contact-form" id="contactForm">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Your Name" required>
 
@@ -49,14 +58,15 @@
                 <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
 
                 <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+                <div id="formMessage" class="form-message"></div>
             </form>
 
             <!-- Contact Info -->
             <div class="contact-info">
                 <h3>Get in Touch</h3>
                 <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@codeplayground.com</p>
-                <p><i class="fas fa-phone"></i> <strong>Phone:</strong> +1 234 567 890</p>
-                <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 123 Coding Lane, Tech City, TX 78901</p>
+                <p><i class="fas fa-phone"></i> <strong>Phone:</strong> +91 6263733846</p>
+                <p><i class="fas fa-map-marker-alt"></i> <strong>Address :  </strong>IIIT Vadodara - International Campus Diu (IIITV-ICD), Education Hub, Kevdi - Diu (U.T) -362520</p>
             </div>
         </div>
     </section>
@@ -119,11 +129,97 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // FAQ Toggle
             const faqItems = document.querySelectorAll(".faq-item");
-
             faqItems.forEach(item => {
                 item.querySelector(".faq-question").addEventListener("click", function () {
                     item.classList.toggle("active");
+                });
+            });
+            
+            // Contact Form Submission
+            const contactForm = document.getElementById('contactForm');
+            const formMessage = document.getElementById('formMessage');
+            
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value
+                };
+                
+                try {
+                    formMessage.textContent = 'Sending your message...';
+                    formMessage.style.color = '#333';
+                    
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        formMessage.textContent = data.message;
+                        formMessage.style.color = '#4CAF50';
+                        contactForm.reset();
+                    } else {
+                        formMessage.textContent = data.message || 'Failed to send your message. Please try again.';
+                        formMessage.style.color = '#f44336';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    formMessage.textContent = 'Network error. Please try again later.';
+                    formMessage.style.color = '#f44336';
+                }
+            });
+            
+            // Mobile Menu Toggle
+            const menuToggle = document.querySelector(".menu-toggle");
+            const navLinks = document.querySelector(".nav-links");
+            const overlay = document.querySelector(".overlay");
+            
+            menuToggle.addEventListener("click", function() {
+                menuToggle.classList.toggle("active");
+                navLinks.classList.toggle("active");
+                overlay.classList.toggle("active");
+                document.body.style.overflow = navLinks.classList.contains("active") ? "hidden" : "";
+            });
+            
+            // Close mobile menu when clicking outside
+            overlay.addEventListener("click", function() {
+                menuToggle.classList.remove("active");
+                navLinks.classList.remove("active");
+                overlay.classList.remove("active");
+                document.body.style.overflow = "";
+            });
+            
+            // Close mobile menu when window resized above mobile breakpoint
+            window.addEventListener("resize", function() {
+                if (window.innerWidth > 768 && navLinks.classList.contains("active")) {
+                    menuToggle.classList.remove("active");
+                    navLinks.classList.remove("active");
+                    overlay.classList.remove("active");
+                    document.body.style.overflow = "";
+                }
+            });
+            
+            // Close mobile menu when clicking a nav link
+            const mobileNavLinks = document.querySelectorAll(".nav-links a");
+            mobileNavLinks.forEach(link => {
+                link.addEventListener("click", function() {
+                    if (navLinks.classList.contains("active")) {
+                        menuToggle.classList.remove("active");
+                        navLinks.classList.remove("active");
+                        overlay.classList.remove("active");
+                        document.body.style.overflow = "";
+                    }
                 });
             });
         });

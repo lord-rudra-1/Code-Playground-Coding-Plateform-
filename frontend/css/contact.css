@@ -26,6 +26,26 @@ body {
   z-index: 10;
 }
 
+/* Mobile Menu Button */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
 /* Logo Wrapper */
 .logo {
   display: flex;
@@ -108,6 +128,16 @@ body {
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form message styles */
+.form-message {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 5px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
 .contact-form label {
@@ -278,4 +308,173 @@ body {
   font-weight: 500;
   letter-spacing: 0.5px;
   font-size: 0.9rem;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 968px) {
+  .contact h2 {
+    font-size: 1.8rem;
+  }
+  
+  .faq h2 {
+    font-size: 1.8rem;
+  }
+  
+  .faq-container {
+    max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  
+  .menu-toggle {
+    display: flex;
+  }
+  
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background: rgba(0, 84, 180, 0.95);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    transition: right 0.3s ease;
+    padding: 2rem;
+    z-index: 15;
+  }
+  
+  .nav-links.active {
+    right: 0;
+  }
+  
+  .contact-container {
+    gap: 2rem;
+  }
+  
+  .contact-form, .contact-info {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .faq-question {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar {
+    padding: 0 1rem;
+    height: 3.5rem;
+  }
+  
+  .logo a img {
+    height: 3.5rem;
+  }
+  
+  .nav-links {
+    width: 80%;
+  }
+  
+  .contact {
+    padding: 3rem 1rem;
+  }
+  
+  .contact h2, .faq h2 {
+    font-size: 1.5rem;
+  }
+  
+  .contact-form {
+    padding: 1.5rem;
+  }
+  
+  .contact-form input,
+  .contact-form textarea {
+    width: 90%;
+    font-size: 0.9rem;
+  }
+  
+  .contact-form button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .faq {
+    padding: 3rem 1rem;
+  }
+  
+  .faq-item {
+    margin-bottom: 0.8rem;
+  }
+  
+  .faq-question {
+    font-size: 0.85rem;
+    padding: 0.7rem;
+  }
+  
+  .faq-answer {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .footer {
+    padding: 1rem;
+  }
+  
+  .footer p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Menu Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  display: none;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* Mobile Menu Active State */
+.menu-toggle.active span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Make input fields responsive */
+@media screen and (max-width: 350px) {
+  .contact-form input,
+  .contact-form textarea {
+    width: 85%;
+  }
+  
+  .contact-form, .contact-info {
+    padding: 1rem;
+  }
+  
+  .faq-question {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
 }

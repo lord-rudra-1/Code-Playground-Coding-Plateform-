@@ -20,6 +20,7 @@ const executeRoutes = require("./routes/executeRoutes");
 const discussRoutes = require("./routes/discussRoutes");
 const contestRoutes = require("./routes/contestRoutes"); 
 const contestjoinRoutes = require("./routes/contestjoinRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 const TEMP_DIR = path.join(__dirname, 'temp');
 
 app.set("view engine", "ejs");
@@ -50,6 +51,7 @@ app.use("/api/execute", executeRoutes);
 app.use("/api/discuss", discussRoutes);
 app.use("/api/contests", contestRoutes); // Add this line
 app.use("/api/contests/join",contestjoinRoutes);
+app.use("/api/contact", contactRoutes);
 
 
 

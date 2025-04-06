@@ -9,12 +9,21 @@
 </head>
 
 <body>
+    <!-- Mobile menu overlay -->
+    <div class="menu-overlay"></div>
+    
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
             <a href="/explore">
                 <img src="/lo.png" alt="Logo">
             </a>
+        </div>
+        <!-- Hamburger menu toggle -->
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
@@ -81,10 +90,12 @@
     <div id="view-discussion-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <div id="discussion-details">
-                <div class="loader"></div>
+            <div class="modal-scrollable-content">
+                <div id="discussion-details">
+                    <div class="loader"></div>
+                </div>
+                <div id="comments-container"></div>
             </div>
-            <div id="comments-container"></div>
             <div class="form-group">
                 <textarea id="comment-input" class="form-control" rows="3" placeholder="Add a comment..."></textarea>
                 <button id="submit-comment" class="btn">Add Comment</button>
@@ -114,6 +125,48 @@
     </style>
 
     <script>
+        // Mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            
+            // Function to toggle menu
+            function toggleMenu() {
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                
+                // Prevent body scrolling when menu is open
+                if (navLinks.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+            }
+            
+            // Event listeners
+            menuToggle.addEventListener('click', toggleMenu);
+            menuOverlay.addEventListener('click', toggleMenu);
+            
+            // Close menu when a link is clicked
+            const navItems = document.querySelectorAll('.nav-links a');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    if (navLinks.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
+            });
+            
+            // Close menu on window resize (if width becomes larger than mobile breakpoint)
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+        });
+        
         // Global variables
         let currentPage = 1;
         let totalPages = 1;
@@ -187,13 +240,14 @@
             discussions.forEach(discussion => {
                 const date = new Date(discussion.createdAt).toLocaleDateString();
                 const tags = discussion.tags && discussion.tags.length > 0 
-                    ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')
+                    ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
                     : '<span class="tag">General</span>';
                 
                 html += `
                     <div class="discussion-thread" data-id="${discussion._id}">
                         <h3><a href="#" onclick="viewDiscussion('${discussion._id}'); return false;">${discussion.title}</a></h3>
-                        <p>Posted by <strong>${discussion.authorName}</strong> • ${date} • Tags: ${tags}</p>
+                        <p>Posted by <strong>${discussion.authorName}</strong> • ${date}</p>
+                        <div class="tags-container">Tags: ${tags}</div>
                         <div class="thread-stats">
                             <span class="vote-btn ${discussion.upvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
                             <span class="vote-btn ${discussion.downvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'down')">🔽 ${discussion.downvotes}</span>
@@ -259,7 +313,7 @@
                 const commentsContainer = document.getElementById('comments-container');
                 
                 // Show modal and loading indicator
-                modal.style.display = 'block';
+                modal.style.display = 'flex';
                 discussionDetails.innerHTML = '<div class="loader"></div>';
                 commentsContainer.innerHTML = '';
                 
@@ -271,13 +325,13 @@
                     // Render discussion details
                     const date = new Date(discussion.createdAt).toLocaleDateString();
                     const tags = discussion.tags && discussion.tags.length > 0 
-                        ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join(' ')
+                        ? discussion.tags.map(tag => `<span class="tag">${tag}</span>`).join('')
                         : '<span class="tag">General</span>';
                     
                     let html = `
                         <h2>${discussion.title}</h2>
                         <p class="meta">Posted by <strong>${discussion.authorName}</strong> • ${date}</p>
-                        <p class="tags">Tags: ${tags}</p>
+                        <div class="tags-container">Tags: ${tags}</div>
                         <div class="content">${discussion.content}</div>
                         <div class="thread-stats">
                             <span class="vote-btn ${discussion.upvotedBy?.includes(userId) ? 'voted' : ''}" onclick="voteDiscussion('${discussion._id}', 'up')">🔼 ${discussion.upvotes}</span>
@@ -471,7 +525,7 @@
                 alert('Please sign in to create a discussion.');
                 return;
             }
-            document.getElementById('create-discussion-modal').style.display = 'block';
+            document.getElementById('create-discussion-modal').style.display = 'flex';
         });
         
         // Event listener for discussion form

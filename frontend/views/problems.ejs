@@ -183,7 +183,7 @@
                 problemsList.innerHTML = filteredProblems.map(problem => `
                     <tr onclick="openProblem('${problem._id}')" tabindex="0" role="button" aria-label="Open ${problem.title}, ${problem.difficulty} difficulty">
                         <td>${problem.title}</td>
-                        <td class="${problem.difficulty.toLowerCase()}">${problem.difficulty}</td>
+                        <td class="difficulty-cell"><span class="${problem.difficulty.toLowerCase()}">${problem.difficulty}</span></td>
                         <td>${calculateAcceptance(problem)}</td>
                     </tr>
                 `).join('');
