@@ -39,7 +39,7 @@
             <div class="scroll-container" id="featured-problems">
                 <!-- Problems will be loaded here -->
                 <div class="explore-card loading">
-                    <h2>Loading problems...</h2>
+                    <h3 class="problem-title">Loading problems...</h3>
                     <p>Please wait while we fetch featured problems.</p>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                 console.error('Error fetching problems:', error);
                 document.getElementById('featured-problems').innerHTML = `
                     <div class="explore-card error">
-                        <h2>Error Loading Problems</h2>
+                        <h3 class="problem-title">Error Loading Problems</h3>
                         <p>Unable to load featured problems. Please try again later.</p>
                     </div>
                 `;
@@ -146,7 +146,7 @@
             if (!problems || problems.length === 0) {
                 container.innerHTML = `
                     <div class="explore-card">
-                        <h2>No Problems Found</h2>
+                        <h3 class="problem-title">No Problems Found</h3>
                         <p>There are currently no featured problems available.</p>
                     </div>
                 `;
@@ -156,7 +156,7 @@
             // Create HTML for each problem
             const problemsHTML = problems.map((problem, index) => `
                 <div class="explore-card" style="--order: ${index + 1};">
-                    <h2>${problem.title}</h2>
+                    <h3 class="problem-title">${problem.title.length > 30 ? problem.title.substring(0, 30) + '...' : problem.title}</h3>
                     <p>${problem.difficulty} | ${problem.description.substring(0, 60)}${problem.description.length > 60 ? '...' : ''}</p>
                     <a href="/editcode/${problem._id}">Solve Now</a>
                 </div>

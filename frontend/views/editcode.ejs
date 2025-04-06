@@ -69,7 +69,7 @@
         #code-editor {
             max-width: 100%;
             box-sizing: border-box;
-            min-height: 450px;
+            min-height: 300px;
             flex-grow: 1;
             border-radius: 8px;
             border: 2px solid var(--border-color, #e0e6ed);
@@ -131,7 +131,6 @@
             border: none;
             cursor: pointer;
             flex: 1;
-            max-width: 120px;
         }
         
         pre {
@@ -142,6 +141,81 @@
             padding: 1rem;
             background-color: #f8f9fa;
             border-radius: 4px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .tab-content {
+                padding: 1.5rem;
+            }
+            
+            #run-btn, #test-btn, #submit-btn {
+                padding: 0.8rem 0.5rem;
+                width: 100%;
+                max-width: none;
+            }
+            
+            #code-editor {
+                min-height: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content {
+                padding: 1rem;
+            }
+            
+            .tab-content {
+                padding: 1rem;
+            }
+            
+            #code-editor {
+                min-height: 200px;
+            }
+            
+            .language-selector {
+                margin-bottom: 0.8rem;
+            }
+            
+            #language-select {
+                max-width: 100%;
+            }
+        }
+        
+        /* Desktop layout improvements */
+        @media (min-width: 992px) {
+            .content {
+                flex-direction: row;
+                align-items: stretch;
+                gap: 20px;
+                padding: 2.5rem;
+                min-height: calc(100vh - 9rem);
+            }
+            
+            #contest-nav {
+                padding: 12px 2.5rem;
+            }
+            
+            .tabs-and-content {
+                width: 45%;
+                min-width: 45%;
+                max-width: 45%;
+                margin-right: 0;
+            }
+            
+            .code-editor {
+                width: 55%;
+                min-width: 55%;
+                max-width: 55%;
+            }
+            
+            #code-editor {
+                height: calc(100vh - 20rem) !important;
+            }
+            
+            #contest-name-display {
+                max-width: 500px; /* Larger on desktop */
+            }
         }
         
         /* Contest-specific styles */
@@ -237,8 +311,7 @@
             padding: 12px 20px;
             background-color: #f8f9fa;
             border-bottom: 1px solid #e9ecef;
-            display: none;
-            display: flex;
+            display: none; /* Initially hidden by default */
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
@@ -275,48 +348,6 @@
         #back-to-contest-btn:before {
             content: "←";
             margin-right: 6px;
-        }
-        
-        @media (min-width: 992px) {
-            .content {
-                flex-direction: row;
-                padding: 2.5rem;
-                align-items: stretch;
-                gap: 3px;
-                min-height: calc(100vh - 9rem); /* Account for navbar and padding */
-            }
-            
-            #contest-nav {
-                padding: 12px 2.5rem;
-            }
-            
-            .tabs-and-content {
-                flex: 1;
-                margin-right: 3px;
-                height: auto;
-                display: flex;
-                flex-direction: column;
-                max-width: calc(50%);
-                min-width: calc(50%);
-            }
-            
-            .code-editor {
-                flex: 1.5;
-                display: flex;
-                flex-direction: column;
-                min-width: calc(50%);
-                max-width: calc(50%);
-            }
-            
-            #code-editor {
-                flex-grow: 1;
-                min-height: auto;
-                height: calc(100vh - 20rem) !important; /* Account for navbar, padding, and other elements */
-            }
-            
-            #contest-name-display {
-                max-width: 500px; /* Larger on desktop */
-            }
         }
     </style>
     <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
@@ -355,18 +386,37 @@
                         localStorage.setItem('code', code);
                     });
                     
-                    // Tab functionality
+                    // Enhanced Tab functionality with better touch support
                     const tabs = document.querySelectorAll('.tabs button');
                     const contents = document.querySelectorAll('.tab-content > div');
 
                     tabs.forEach(tab => {
-                        tab.addEventListener('click', () => {
-                            tabs.forEach(t => t.classList.remove('active'));
-                            contents.forEach(content => content.style.display = 'none');
+                        // Add both click and touchend events for better mobile experience
+                        ['click', 'touchend'].forEach(eventType => {
+                            tab.addEventListener(eventType, (e) => {
+                                if (eventType === 'touchend') {
+                                    e.preventDefault(); // Prevent double firing on touch devices
+                                }
+                                
+                                tabs.forEach(t => t.classList.remove('active'));
+                                contents.forEach(content => content.style.display = 'none');
 
-                            tab.classList.add('active');
-                            const selectedTab = tab.getAttribute('data-tab');
-                            document.querySelector(`.${selectedTab}-content`).style.display = 'block';
+                                tab.classList.add('active');
+                                const selectedTab = tab.getAttribute('data-tab');
+                                const tabContent = document.querySelector(`.${selectedTab}-content`);
+                                
+                                if (tabContent) {
+                                    tabContent.style.display = 'block';
+                                    
+                                    // If switching to submissions tab, load submissions
+                                    if (selectedTab === 'submissions' && localStorage.getItem('userId')) {
+                                        loadUserSubmissions();
+                                    }
+                                    
+                                    // Scroll to the top of the tab content for better UX
+                                    tabContent.scrollTop = 0;
+                                }
+                            });
                         });
                     });
                 } else {
@@ -383,7 +433,7 @@
                     return '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}';
                 case 'python':
                     return '# Your Python code here';
-                case 'C':
+                case 'c':
                     return '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}';
             }
         }
@@ -408,41 +458,89 @@
                         if (contest && contest.name) {
                             contestNameDisplay.textContent = `Contest: ${contest.name}`;
                         }
+                    } else {
+                        // If contest doesn't exist or can't be fetched, remove it from storage
+                        clearContestContext();
                     }
                 } catch (error) {
                     console.error('Error fetching contest details:', error);
+                    clearContestContext();
                 }
+            }
+            
+            // Function to clear contest context when leaving a contest
+            function clearContestContext() {
+                localStorage.removeItem('currentContestId');
+                contestNav.style.display = 'none';
+            }
+            
+            // Function to setup contest navigation
+            function setupContestNav(id) {
+                // Show the contest navigation
+                contestNav.style.display = 'flex';
+                
+                // Fetch contest name
+                fetchContestName(id);
+                
+                // Add event listener for back button
+                document.getElementById('back-to-contest-btn').addEventListener('click', () => {
+                    window.location.href = `/contestpage/${id}`;
+                });
+                
+                // Add exit contest mode button
+                addExitButton();
+            }
+            
+            // Function to add exit contest button
+            function addExitButton() {
+                // Check if button already exists
+                if (document.querySelector('.exit-contest-btn')) {
+                    return;
+                }
+                
+                const exitButton = document.createElement('button');
+                exitButton.textContent = 'Exit Contest Mode';
+                exitButton.className = 'exit-contest-btn';
+                exitButton.style.marginLeft = 'auto';
+                exitButton.style.padding = '6px 12px';
+                exitButton.style.background = '#6c757d';
+                exitButton.style.color = 'white';
+                exitButton.style.border = 'none';
+                exitButton.style.borderRadius = '4px';
+                exitButton.style.cursor = 'pointer';
+                
+                exitButton.addEventListener('click', () => {
+                    if (confirm('Exit contest mode? You can always rejoin the contest from the contests page.')) {
+                        clearContestContext();
+                    }
+                });
+                
+                contestNav.appendChild(exitButton);
             }
             
             // Store contest ID if present in URL
             if (contestId) {
+                // Save the contest ID to local storage
                 localStorage.setItem('currentContestId', contestId);
                 console.log('Working on contest problem:', contestId);
                 
-                // Show the contest navigation
-                contestNav.style.display = 'block';
-                
-                // Fetch contest name
-                fetchContestName(contestId);
-                
-                // Add event listener for back button
-                document.getElementById('back-to-contest-btn').addEventListener('click', () => {
-                    window.location.href = `/contestpage/${contestId}`;
-                });
+                // Setup contest navigation
+                setupContestNav(contestId);
             } else {
                 // Check if there's a stored contest ID from a previous visit
                 const storedContestId = localStorage.getItem('currentContestId');
+                
                 if (storedContestId) {
-                    // Show the contest navigation for returning users
-                    contestNav.style.display = 'block';
+                    // Check if user directly navigated to this problem page
+                    const referrer = document.referrer;
                     
-                    // Fetch contest name
-                    fetchContestName(storedContestId);
-                    
-                    // Add event listener for back button
-                    document.getElementById('back-to-contest-btn').addEventListener('click', () => {
-                        window.location.href = `/contestpage/${storedContestId}`;
-                    });
+                    // If user came from problems list and not from contest page, clear contest context
+                    if (referrer.includes('/problems') && !referrer.includes('/contestpage')) {
+                        clearContestContext();
+                    } else {
+                        // Setup contest navigation for returning users
+                        setupContestNav(storedContestId);
+                    }
                 }
             }
         });
@@ -455,6 +553,11 @@
             <a href="/home">
                 <img src="/lo.png" alt="Logo">
             </a>
+        </div>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
         </div>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
@@ -582,6 +685,36 @@
     </div>
 
     <script>
+        // Hamburger menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if(hamburger) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+                
+                // Close mobile menu when clicking a link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    });
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (event) => {
+                    const isClickInside = navLinks.contains(event.target) || hamburger.contains(event.target);
+                    if (!isClickInside && navLinks.classList.contains('active')) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    }
+                });
+            }
+        });
+        
         // Global variables
         const problemId = '<%= problem._id %>';
         let userId = localStorage.getItem('userId');

@@ -68,6 +68,8 @@
     list-style: none;
     display: flex;
     gap: 1.5rem;
+    margin: 0;
+    padding: 0;
   }
   
   .nav-links a {
@@ -77,6 +79,7 @@
     transition: all 0.3s ease;
     padding: 0.5rem 0;
     position: relative;
+    display: block;
   }
   
   .nav-links a::after {
@@ -98,6 +101,112 @@
     color: #dbeafe;
   }
   
+  /* Hamburger Menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+    z-index: 20;
+  }
+  
+  .hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Mobile Navigation */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 0 1.5rem;
+    }
+    
+    .logo a img {
+      height: 3.5rem;
+    }
+    
+    .hamburger {
+      display: flex;
+    }
+    
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 250px;
+      height: 100vh;
+      background: var(--primary-dark);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding-top: 5rem;
+      padding-left: 2rem;
+      transition: 0.3s ease-in-out;
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      gap: 2rem;
+    }
+    
+    .nav-links.active {
+      right: 0;
+    }
+    
+    .nav-links li {
+      width: 100%;
+    }
+    
+    .nav-links a {
+      font-size: 1.1rem;
+      width: 100%;
+      display: block;
+      padding: 0.7rem 0;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+  }
+  
+  /* Tablet Navigation Adjustments */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .navbar {
+      padding: 0 1.75rem;
+    }
+    
+    .nav-links {
+      gap: 1.25rem;
+    }
+    
+    .nav-links a {
+      font-size: 0.95rem;
+    }
+  }
+  
+  /* Small screens */
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 0 1rem;
+    }
+    
+    .logo a img {
+      height: 3rem;
+    }
+  }
+  
   /* ================= Enhanced Content Layout ================= */
   .content {
     display: flex;
@@ -115,11 +224,41 @@
     margin-right: 2rem;
   }
   
+  /* ================= Responsive Design ================= */
+  @media (max-width: 1024px) {
+    .content {
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+  
+    .tabs-and-content {
+      margin-right: 0;
+      margin-bottom: 2rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tabs button {
+      padding: 0.8rem 1.2rem;
+      font-size: 0.9rem;
+    }
+  
+    .actions-container > div:first-child {
+      flex-direction: column;
+    }
+  
+    #run-btn, #test-btn, #submit-btn {
+      width: 100%;
+    }
+  }
+  
   /* ================= Enhanced Tabs ================= */
   .tabs {
     display: flex;
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    width: 100%;
   }
   
   .tabs button {
@@ -133,6 +272,11 @@
     color: var(--primary-color);
     transition: var(--transition);
     position: relative;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .tabs button.active {
@@ -153,6 +297,31 @@
     background-color: rgba(0, 122, 255, 0.1);
   }
   
+  /* Responsive tabs */
+  @media (max-width: 768px) {
+    .tabs {
+      margin-bottom: 1.5rem;
+    }
+    
+    .tabs button {
+      padding: 0.8rem 1rem;
+      font-size: 0.9rem;
+      min-width: 90px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tabs {
+      margin-bottom: 1rem;
+    }
+    
+    .tabs button {
+      padding: 0.7rem 0.5rem;
+      font-size: 0.85rem;
+      min-width: 80px;
+    }
+  }
+  
   /* ================= Enhanced Tab Content ================= */
   .tab-content {
     background-color: var(--white);
@@ -161,6 +330,42 @@
     flex-grow: 1;
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow-x: hidden;
+  }
+  
+  @media (max-width: 768px) {
+    .tab-content {
+      padding: 1.5rem;
+    }
+    
+    .statement-content h2,
+    .submissions-content h2,
+    .solution-content h2 {
+      font-size: 1.5rem;
+      margin-top: 0;
+    }
+    
+    .statement-content h3 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tab-content {
+      padding: 1rem;
+    }
+    
+    .statement-content h2,
+    .submissions-content h2,
+    .solution-content h2 {
+      font-size: 1.3rem;
+    }
+  }
+  
+  .statement-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
   
   /* ================= Enhanced Code Editor ================= */
@@ -400,42 +605,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  
-  /* ================= Responsive Design ================= */
-  @media (max-width: 1024px) {
-    .content {
-      flex-direction: column;
-      padding: 1.5rem;
-    }
-  
-    .tabs-and-content {
-      margin-right: 0;
-      margin-bottom: 2rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .navbar {
-      padding: 0 1.5rem;
-    }
-  
-    .nav-links {
-      gap: 1rem;
-    }
-  
-    .tabs button {
-      padding: 0.8rem 1.2rem;
-      font-size: 0.9rem;
-    }
-  
-    .actions-container > div:first-child {
-      flex-direction: column;
-    }
-  
-    #run-btn, #test-btn, #submit-btn {
-      width: 100%;
-    }
   }
   
   /* ================= Animations ================= */
