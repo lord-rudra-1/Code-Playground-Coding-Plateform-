@@ -1008,6 +1008,10 @@
                         
                         // If there are test results, show them
                         if (result.results && result.results.length > 0) {
+                            // Get tab elements
+                            const tabButtons = document.querySelectorAll('.tabs button');
+                            const tabContents = document.querySelectorAll('.tab-content > div');
+                            
                             // Switch to the solution tab to show test results
                             tabButtons.forEach(btn => btn.classList.remove('active'));
                             tabContents.forEach(content => content.style.display = 'none');
