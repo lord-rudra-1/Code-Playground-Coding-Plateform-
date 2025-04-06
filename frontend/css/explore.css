@@ -1,6 +1,6 @@
 /* Enhanced General Styles */
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
@@ -20,28 +20,32 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0.75rem 1rem;
   background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
-  height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .menu-toggle {
-  display: none;
+  display: block;
   cursor: pointer;
   color: white;
   font-size: 1.5rem;
-  background: none;
+  background: transparent;
   border: none;
+  padding: 0.5rem;
+  z-index: 100;
 }
 
 /* Enhanced Logo */
 .logo {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 3rem;
   transition: transform 0.3s ease;
 }
 
@@ -50,7 +54,7 @@ body {
 }
 
 .logo a img {
-  height: 4rem;
+  height: 3rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -63,14 +67,26 @@ body {
 /* Enhanced Nav Links */
 .nav-links {
   list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  padding: 0;
+  display: none; /* Hidden by default on mobile */
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.95) 0%, rgba(0, 122, 255, 0.95) 100%);
+  padding: 1rem 0;
   margin: 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 99;
 }
 
 .nav-links.active {
   display: flex;
+}
+
+.nav-links li {
+  text-align: center;
+  margin: 0.5rem 0;
 }
 
 .nav-links a {
@@ -78,7 +94,8 @@ body {
   color: white;
   font-weight: 600;
   transition: all 0.3s ease;
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  display: block;
   position: relative;
 }
 
@@ -88,13 +105,14 @@ body {
   width: 0;
   height: 2px;
   bottom: 0;
-  left: 0;
+  left: 50%;
   background-color: rgba(255, 255, 255, 0.8);
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
 .nav-links a:hover::after {
-  width: 100%;
+  width: 50%;
 }
 
 .nav-links a:hover {
@@ -104,12 +122,14 @@ body {
 /* Enhanced Explore Section */
 .explore {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 1.5rem 0.75rem;
   background: transparent;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .explore h1 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   margin-bottom: 1.5rem;
   color: #2d3748;
   position: relative;
@@ -127,15 +147,25 @@ body {
   border-radius: 3px;
 }
 
+.explore h2 {
+  font-size: 1.3rem;
+  margin: 1.5rem 0 0.5rem;
+  color: #2d3748;
+  text-align: left;
+  padding-left: 0.75rem;
+}
+
 /* Enhanced Scroll Container */
 .scroll-container {
   display: flex;
   overflow-x: auto;
-  gap: 1rem;
-  padding: 1rem 0.5rem;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem 1.25rem;
   scroll-snap-type: x mandatory;
   scrollbar-width: none; /* Hide scrollbar for mobile */
   -ms-overflow-style: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .scroll-container::-webkit-scrollbar {
@@ -145,9 +175,9 @@ body {
 /* Enhanced Explore Cards */
 .explore-card {
   flex: 0 0 auto;
-  width: 260px;
+  width: 220px;
   background: white;
-  padding: 1.2rem;
+  padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 84, 180, 0.15);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -155,12 +185,13 @@ body {
   text-align: left;
   border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative;
+  opacity: 0;
 }
 
 .explore-card h2 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: rgba(0, 122, 255, 0.9);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.6rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -181,41 +212,46 @@ body {
 
 .explore-card p {
   color: #4a5568;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  height: 60px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  height: 54px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  margin: 0.8rem 0;
+  margin: 0.6rem 0;
 }
 
-/* Enhanced Button */
-.btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
-  color: #2d3748;
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+/* Loading and Error States */
+.explore-card.loading,
+.explore-card.error {
+  width: 100%;
+  text-align: center;
+  opacity: 1;
+  animation: none;
+}
+
+.explore-card.loading h2,
+.explore-card.error h2 {
+  color: #4a5568;
+  display: block;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.explore-card.loading p,
+.explore-card.error p {
+  height: auto;
+  text-align: center;
 }
 
 /* Card Links */
 .explore-card a {
   display: inline-block;
-  margin-top: 0.8rem;
-  padding: 8px 12px;
-  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   background: linear-gradient(90deg, #ffd166 0%, #ffb347 100%);
   color: #2d3748;
   font-weight: bold;
@@ -225,15 +261,23 @@ body {
   box-shadow: 0 2px 6px rgba(255, 179, 71, 0.3);
 }
 
+.explore-card a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 179, 71, 0.4);
+}
+
 /* Enhanced Footer */
 .footer {
   text-align: center;
-  padding: 1.2rem;
+  padding: 1.2rem 1rem;
   background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;
+  box-sizing: border-box;
   box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .footer p {
@@ -284,12 +328,44 @@ body {
   animation-delay: calc(var(--order) * 0.1s);
 }
 
+/* Small Tablet Breakpoint (576px and up) */
+@media (min-width: 576px) {
+  .explore {
+    padding: 1.5rem 1rem;
+  }
+  
+  .explore h1 {
+    font-size: 1.8rem;
+  }
+  
+  .explore h2 {
+    font-size: 1.4rem;
+    padding-left: 1rem;
+  }
+  
+  .scroll-container {
+    gap: 1rem;
+    padding: 0.75rem 1rem 1.25rem;
+  }
+  
+  .explore-card {
+    width: 240px;
+    padding: 1.1rem;
+  }
+  
+  .explore-card h2 {
+    font-size: 1.1rem;
+  }
+  
+  .explore-card p {
+    font-size: 0.9rem;
+    height: 60px;
+  }
+}
+
 /* Tablet Breakpoint (768px and up) */
 @media (min-width: 768px) {
   .navbar {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     padding: 0 2rem;
     height: 4rem;
   }
@@ -299,18 +375,29 @@ body {
   }
   
   .logo {
-    margin-bottom: 0;
+    height: 4rem;
+  }
+  
+  .logo a img {
+    height: 4rem;
   }
   
   .nav-links {
-    display: flex;
+    display: flex !important;
     flex-direction: row;
-    gap: 1.5rem;
+    position: static;
     width: auto;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    margin: 0;
   }
   
   .nav-links a {
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
   }
   
   .nav-links a::after {
@@ -323,23 +410,30 @@ body {
   }
   
   .explore {
-    padding: 3rem 2rem;
+    padding: 2rem;
   }
   
   .explore h1 {
-    font-size: 2.2rem;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .explore h2 {
+    font-size: 1.5rem;
+    margin: 1.8rem 0 0.8rem;
+    padding-left: 1.2rem;
   }
   
   .scroll-container {
     gap: 1.5rem;
-    padding: 1rem;
+    padding: 1rem 1.2rem 1.5rem;
     scrollbar-width: thin;
     scrollbar-color: #5b9bd5 #f0f4f8;
   }
   
   .scroll-container::-webkit-scrollbar {
     display: block;
-    height: 8px;
+    height: 6px;
   }
   
   .scroll-container::-webkit-scrollbar-track {
@@ -353,43 +447,56 @@ body {
   }
   
   .explore-card {
-    width: 280px;
-    padding: 1.5rem;
+    width: 260px;
+    padding: 1.3rem;
   }
   
   .explore-card h2 {
     font-size: 1.2rem;
+    margin-bottom: 0.8rem;
   }
   
-  .btn {
-    padding: 12px 24px;
-    font-size: 1.1rem;
+  .explore-card p {
+    font-size: 0.95rem;
+    height: 65px;
+    margin: 0.8rem 0;
+    line-height: 1.5;
   }
   
   .explore-card a {
-    padding: 10px 15px;
-    font-size: 1rem;
+    padding: 8px 14px;
+    font-size: 0.95rem;
+    margin-top: 0.8rem;
   }
 }
 
-/* Desktop Breakpoint (1024px and up) */
-@media (min-width: 1024px) {
+/* Desktop Breakpoint (992px and up) */
+@media (min-width: 992px) {
   .explore {
-    padding: 4rem 2rem;
+    padding: 3rem;
   }
   
   .explore h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+  }
+  
+  .explore h2 {
+    font-size: 1.6rem;
+    padding-left: 1.5rem;
   }
   
   .scroll-container {
-    gap: 2rem;
-    padding: 1.5rem;
+    gap: 1.8rem;
+    padding: 1.2rem 1.5rem 1.8rem;
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    height: 8px;
   }
   
   .explore-card {
-    width: 300px;
-    padding: 2rem;
+    width: 280px;
+    padding: 1.5rem;
   }
   
   .explore-card h2 {
@@ -398,24 +505,63 @@ body {
   
   .explore-card p {
     font-size: 1rem;
+    height: 72px;
+  }
+  
+  .explore-card a {
+    padding: 10px 16px;
+    font-size: 1rem;
   }
 }
 
-/* Mobile Menu Toggle for small screens */
-@media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-  }
-  
+/* Large Desktop Breakpoint (1200px and up) */
+@media (min-width: 1200px) {
   .navbar {
-    padding: 1rem;
+    padding: 0 4rem;
   }
   
-  .logo a img {
-    height: 2.5rem;
+  .explore {
+    padding: 4rem;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+  
+  .explore h1 {
+    font-size: 2.5rem;
+  }
+  
+  .explore h2 {
+    font-size: 1.8rem;
+    padding-left: 2rem;
   }
   
   .scroll-container {
-    padding-bottom: 1.5rem; /* Add space for scrollbar */
+    gap: 2rem;
+    padding: 1.5rem 2rem 2rem;
+  }
+  
+  .explore-card {
+    width: 300px;
+    padding: 1.8rem;
+  }
+  
+  .explore-card h2 {
+    font-size: 1.4rem;
+  }
+  
+  .explore-card p {
+    height: 75px;
+  }
+}
+
+/* Extra Large Desktop Breakpoint (1400px and up) */
+@media (min-width: 1400px) {
+  .explore {
+    max-width: 1400px;
+  }
+  
+  .scroll-container {
+    max-width: 1320px;
+    margin: 0 auto;
   }
 }

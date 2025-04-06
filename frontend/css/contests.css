@@ -1,38 +1,49 @@
-/* Enhanced General Styles - Matching explore.css */
+/* Enhanced General Styles */
 body {
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
   width: 100%;
-  height: 100%;
   color: #2d3748;
   overflow-x: hidden;
-  overflow-y: scroll;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   line-height: 1.6;
 }
 
-/* Enhanced Navbar - Matching explore.css */
+/* Enhanced Navbar - Mobile First */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0.75rem 1rem;
   background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
-  height: 4rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 10;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
-/* Enhanced Logo - Matching explore.css */
+.menu-toggle {
+  display: block;
+  cursor: pointer;
+  color: white;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  z-index: 100;
+}
+
+/* Enhanced Logo */
 .logo {
   display: flex;
   align-items: center;
-  height: 100%;
+  height: 3rem;
   transition: transform 0.3s ease;
 }
 
@@ -41,19 +52,39 @@ body {
 }
 
 .logo a img {
-  height: 4rem; /* Fits within navbar height */
+  height: 3rem;
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  background: transparent; /* Ensures no extra background */
+  background: transparent;
   border-radius: 2%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
-/* Enhanced Nav Links - Matching explore.css */
+/* Enhanced Nav Links - Mobile First */
 .nav-links {
   list-style: none;
+  display: none; /* Hidden by default on mobile */
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(0, 84, 180, 0.95) 0%, rgba(0, 122, 255, 0.95) 100%);
+  padding: 1rem 0;
+  margin: 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 99;
+}
+
+.nav-links.active {
   display: flex;
-  gap: 1.5rem;
+}
+
+.nav-links li {
+  text-align: center;
+  margin: 0.5rem 0;
 }
 
 .nav-links a {
@@ -61,7 +92,8 @@ body {
   color: white;
   font-weight: 600;
   transition: all 0.3s ease;
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  display: block;
   position: relative;
 }
 
@@ -71,55 +103,62 @@ body {
   width: 0;
   height: 2px;
   bottom: 0;
-  left: 0;
+  left: 50%;
   background-color: rgba(255, 255, 255, 0.8);
-  transition: width 0.3s ease;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
 .nav-links a:hover::after {
-  width: 100%;
+  width: 50%;
 }
 
 .nav-links a:hover {
   color: #dbeafe;
 }
 
-/* Enhanced Contest Container - Same Layout */
+/* Enhanced Contest Container - Mobile First */
 .contest-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 50px;
-  margin-top: 30px;
-  padding: 30px;
+  gap: 1.5rem;
+  margin: 1.5rem 1rem;
+  padding: 1.5rem 1rem;
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
+  border-radius: 12px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 25px rgba(0, 84, 180, 0.2);
-  width: fit-content;
+  box-shadow: 0 8px 20px rgba(0, 84, 180, 0.15);
+  width: calc(100% - 2rem);
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .contest-container:hover {
-  box-shadow: 0 15px 35px rgba(0, 84, 180, 0.3);
+  box-shadow: 0 12px 30px rgba(0, 84, 180, 0.2);
 }
 
-/* Enhanced Buttons - Matching explore.css */
+/* Enhanced Buttons - Mobile First */
 .btn {
-  padding: 14px 28px;
-  font-size: 18px;
+  padding: 10px 20px;
+  font-size: 1rem;
   font-weight: bold;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  max-width: 250px;
+  text-align: center;
 }
 
 .btn::before {
@@ -150,7 +189,7 @@ body {
 .create-contest-btn:hover {
   background: rgba(0, 84, 180, 0.9);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.5);
+  box-shadow: 0 6px 15px rgba(0, 122, 255, 0.4);
 }
 
 .join-contest-btn {
@@ -161,33 +200,39 @@ body {
 .join-contest-btn:hover {
   background: rgba(0, 122, 255, 0.9);
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(64, 156, 255, 0.5);
+  box-shadow: 0 6px 15px rgba(64, 156, 255, 0.4);
 }
 
-/* Enhanced Join Contest Section */
+/* Enhanced Join Contest Section - Mobile First */
 .join-contest {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  width: 100%;
 }
 
 #join-contest-form {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
+  width: 100%;
 }
 
 #contest-code {
-  padding: 14px;
-  width: 250px;
+  padding: 12px;
+  width: 100%;
+  max-width: 300px;
   border: 2px solid rgba(0, 122, 255, 0.4);
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
   transition: 0.3s ease;
   background: rgba(255, 255, 255, 0.9);
   color: #2d3748;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  font-family: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 #contest-code:focus {
@@ -196,14 +241,17 @@ body {
   outline: none;
 }
 
-/* Enhanced Contest Section */
+/* Enhanced Contest Section - Mobile First */
 .contest-section {
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
 }
 
 .contest-section h2 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
   color: #2d3748;
   position: relative;
@@ -215,34 +263,44 @@ body {
   position: absolute;
   width: 100%;
   height: 3px;
-  bottom: -10px;
+  bottom: -8px;
   left: 0%;
   background: linear-gradient(90deg, #5b9bd5 0%, #ffd166 100%);
   border-radius: 3px;
 }
 
-/* Enhanced Contest Table - Same Layout */
+/* Enhanced Contest Table - Mobile First with Horizontal Scroll */
+.contest-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .contest-table {
-  width: 90%;
-  margin: auto;
+  width: 100%;
+  min-width: 800px; /* Ensures table doesn't get too compressed */
+  margin: 0 auto;
   border-collapse: separate;
   border-spacing: 0;
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 6px 15px rgba(91, 155, 213, 0.15);
+  box-shadow: 0 4px 12px rgba(91, 155, 213, 0.15);
   transition: all 0.3s ease;
 }
 
 .contest-table:hover {
-  box-shadow: 0 8px 25px rgba(91, 155, 213, 0.25);
+  box-shadow: 0 6px 20px rgba(91, 155, 213, 0.2);
 }
 
 th,
 td {
-  padding: 1.25rem;
+  padding: 0.8rem 0.5rem;
   text-align: center;
   border-bottom: 1px solid #edf2f7;
+  font-size: 0.85rem;
 }
 
 th {
@@ -253,6 +311,8 @@ th {
   position: sticky;
   top: 0;
   transform: none !important;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 tr {
@@ -263,150 +323,368 @@ tr:hover {
   background: #f7fafc;
 }
 
-/* Enhanced Register Button */
+/* Enhanced Register Button - Mobile First */
 .register-btn {
   background: linear-gradient(135deg, #ffd166 0%, #ffb347 100%);
   color: #2d3748;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(255, 179, 71, 0.3);
+  box-shadow: 0 2px 6px rgba(255, 179, 71, 0.25);
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .register-btn:hover {
   background: linear-gradient(135deg, #ffb347 0%, #ff9a3f 100%);
   transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(255, 179, 71, 0.4);
+  box-shadow: 0 4px 10px rgba(255, 179, 71, 0.35);
 }
 
-/* Enhanced Footer - Matching explore.css */
+/* Enhanced Footer */
 .footer {
   text-align: center;
-  padding: 1.5rem;
+  padding: 1.2rem 1rem;
   background: linear-gradient(90deg, rgba(0, 84, 180, 0.9) 0%, rgba(0, 122, 255, 0.9) 100%);
   color: white;
   margin-top: auto;
   width: 100%;
+  box-sizing: border-box;
   box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
 }
 
 .footer p {
   margin: 0;
   font-weight: 500;
   letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .contest-container {
-    flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-  }
-
-  #join-contest-form {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  #contest-code {
-    width: 100%;
-  }
-}
-
+/* Enhanced Leaderboard Button - Mobile First */
 .leaderboard-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 150px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  font-size: 0.8rem;
+  white-space: nowrap;
 }
 
 .leaderboard-btn:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .leaderboard-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .leaderboard-btn.disabled {
-    background-color: #cccccc;
-    color: #888888;
-    cursor: not-allowed;
-    box-shadow: none;
+  background-color: #cccccc;
+  color: #888888;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .leaderboard-btn.disabled:hover {
-    transform: none;
-    box-shadow: none;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Add leaderboard icon */
 .leaderboard-btn::before {
-    content: "🏆";
-    margin-right: 8px;
-    font-size: 14px;
+  content: "🏆";
+  margin-right: 5px;
+  font-size: 12px;
 }
 
 /* Modal styles for leaderboard not available message */
 .leaderboard-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
 }
 
 .leaderboard-modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  max-width: 85%;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .leaderboard-modal-content h3 {
-    margin-top: 0;
-    color: #333;
+  margin-top: 0;
+  color: #333;
+  font-size: 1.2rem;
 }
 
 .leaderboard-modal-content p {
-    margin: 10px 0 20px;
-    color: #666;
+  margin: 10px 0 20px;
+  color: #666;
+  font-size: 0.95rem;
 }
 
 .close-modal-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .close-modal-btn:hover {
-    background-color: #45a049;
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+/* Small Tablet Breakpoint (576px and up) */
+@media (min-width: 576px) {
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  
+  .contest-container {
+    margin: 2rem auto;
+    padding: 1.8rem 1.5rem;
+    max-width: 550px;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+  }
+  
+  #join-contest-form {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  #contest-code {
+    padding: 12px 16px;
+    width: 60%;
+    font-size: 1rem;
+  }
+  
+  .join-contest-btn {
+    width: 40%;
+  }
+  
+  .contest-section {
+    padding: 2rem 1rem;
+  }
+  
+  .contest-section h2 {
+    font-size: 1.7rem;
+  }
+  
+  th, td {
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  th {
+    font-size: 0.9rem;
+  }
+  
+  .register-btn, .leaderboard-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet Breakpoint (768px and up) */
+@media (min-width: 768px) {
+  .navbar {
+    padding: 0 2rem;
+    height: 4rem;
+  }
+  
+  .menu-toggle {
+    display: none;
+  }
+  
+  .logo {
+    height: 4rem;
+  }
+  
+  .logo a img {
+    height: 4rem;
+  }
+  
+  .nav-links {
+    display: flex !important; /* Always display on tablet+ */
+    flex-direction: row;
+    position: static;
+    width: auto;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    gap: 1.5rem;
+  }
+  
+  .nav-links li {
+    margin: 0;
+  }
+  
+  .nav-links a {
+    padding: 0.5rem 0;
+  }
+  
+  .nav-links a::after {
+    left: 0;
+    transform: none;
+  }
+  
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  .contest-container {
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 720px;
+    padding: 2rem;
+    gap: 2rem;
+  }
+  
+  .create-contest, .join-contest {
+    width: 50%;
+  }
+  
+  .btn {
+    width: auto;
+    min-width: 180px;
+  }
+  
+  #contest-code {
+    width: 100%;
+    max-width: 220px;
+  }
+  
+  #join-contest-form {
+    justify-content: center;
+  }
+  
+  .contest-section {
+    padding: 2.5rem 2rem;
+  }
+  
+  .contest-section h2 {
+    font-size: 1.9rem;
+    margin-bottom: 2rem;
+  }
+  
+  .leaderboard-modal-content {
+    padding: 2rem;
+    width: 400px;
+  }
+  
+  .leaderboard-modal-content h3 {
+    font-size: 1.4rem;
+  }
+  
+  .leaderboard-modal-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Desktop Breakpoint (992px and up) */
+@media (min-width: 992px) {
+  .contest-container {
+    max-width: 900px;
+    gap: 3rem;
+    padding: 2.5rem;
+  }
+  
+  .btn {
+    padding: 14px 28px;
+    font-size: 1.2rem;
+  }
+  
+  #contest-code {
+    padding: 14px;
+    font-size: 1.1rem;
+    max-width: 250px;
+  }
+  
+  .contest-section {
+    padding: 3rem;
+  }
+  
+  .contest-section h2 {
+    font-size: 2rem;
+  }
+  
+  .contest-table {
+    max-width: 1200px;
+  }
+  
+  th,
+  td {
+    padding: 1.25rem 1rem;
+    font-size: 1rem;
+  }
+  
+  th {
+    font-size: 1rem;
+  }
+  
+  .register-btn, .leaderboard-btn {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    min-width: 140px;
+  }
+  
+  .leaderboard-btn::before {
+    font-size: 14px;
+  }
+}
+
+/* Large Desktop Breakpoint (1200px and up) */
+@media (min-width: 1200px) {
+  .navbar {
+    padding: 0 4rem;
+  }
+  
+  .contest-container {
+    max-width: 1100px;
+    padding: 3rem;
+  }
+  
+  .contest-section {
+    padding: 4rem;
+  }
+  
+  .contest-section h2 {
+    font-size: 2.2rem;
+  }
 }

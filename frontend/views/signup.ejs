@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sign Up - Code Playground</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Use Font Awesome from cdnjs instead of the kit URL that has CORS issues -->
@@ -32,10 +32,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
-            background: url("/auth.gif") center/90% no-repeat fixed;  /* Zoomed out to 90% */
+            background: url("/auth.gif") center/cover no-repeat fixed;
             animation: none !important;
+            padding: 15px;
         }
         
         body::before {
@@ -45,30 +46,30 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);  /* Darker overlay */
+            background: rgba(0, 0, 0, 0.4);  /* Brightened overlay */
             z-index: -1;
         }
         
         .CP_form {
-            width: 90%;
-            max-width: 450px;
+            width: 100%;
+            max-width: 420px; /* More compact form */
             margin: 0 auto;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.6);  /* Dark background */
+            padding: 25px 20px; /* Reduced padding */
+            background: rgba(0, 0, 0, 0.5);  /* Brighter form background */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .CP_logo {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px; /* Reduced margin */
         }
         
         .logo {
-            width: 100px;
+            width: 75px; /* Smaller logo */
             transition: all 0.3s ease;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
@@ -78,66 +79,67 @@
         }
         
         h2 {
-            font-size: 24px;
+            font-size: 20px; /* Smaller heading */
             color: var(--light);  /* White text */
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             font-weight: 600;
             text-align: center;
         }
         
         .text-field {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 14px; /* Reduced spacing */
         }
         
         .text-field label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 5px;
+            font-size: 13px;
             color: var(--light);
+            font-weight: 500;
         }
         
         .text-field input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);  /* Semi-transparent white */
+            background: rgba(255, 255, 255, 0.15);  /* Brighter input background */
             color: var(--light);  /* White text */
         }
         
         .text-field input:focus {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
         
         .CP_button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: none;
             border-radius: 8px;
             background: var(--primary);
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 8px;
         }
         
         .CP_button:hover {
             background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.4);
+            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.3);
         }
         
         .CP_actions {
-            margin-top: 25px;
+            margin-top: 16px;
             text-align: center;
         }
         
@@ -145,12 +147,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            flex-wrap: wrap;
         }
         
         .CP_row span {
             color: var(--light);
-            font-size: 14px;
+            font-size: 13px;
         }
         
         .CP_row a {
@@ -165,7 +168,88 @@
         }
         
         ::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 576px) {
+            .CP_form {
+                padding: 30px 25px;
+            }
+            
+            .logo {
+                width: 80px;
+            }
+            
+            h2 {
+                font-size: 22px;
+            }
+            
+            .text-field {
+                margin-bottom: 16px;
+            }
+            
+            .text-field input {
+                padding: 11px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .CP_form {
+                padding: 35px;
+                max-width: 450px;
+            }
+            
+            .logo {
+                width: 85px;
+            }
+            
+            .text-field {
+                margin-bottom: 18px;
+            }
+            
+            .text-field label {
+                margin-bottom: 6px;
+                font-size: 14px;
+            }
+            
+            .CP_actions {
+                margin-top: 20px;
+            }
+            
+            .CP_row {
+                gap: 8px;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            body {
+                padding: 10px 0;
+                align-items: flex-start;
+            }
+            
+            .CP_form {
+                padding: 20px;
+                margin: 10px auto;
+            }
+            
+            .logo {
+                width: 65px;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .text-field {
+                margin-bottom: 10px;
+            }
+            
+            .CP_button {
+                padding: 8px;
+            }
         }
     </style>
 </head>
@@ -174,7 +258,7 @@
     <form class="CP_form" id="signup-form">
         <div class="CP_logo">
             <a href="/" title="Logo">
-                <img src="code playground logo.png" alt="Logo" class="logo">
+                <img src="code playground logo.png" alt="Code Playground Logo" class="logo">
             </a>
         </div>
 

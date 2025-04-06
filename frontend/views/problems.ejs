@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Problems - Code Playground</title>
     <link rel="stylesheet" href="/css/problems.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -13,10 +15,10 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/explore">
-                <img src="/lo.png" alt="Logo">
+                <img src="/lo.png" alt="Code Playground Logo">
             </a>
         </div>
-        <button class="menu-toggle">☰</button>
+        <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
             <li><a href="/problems">Problems</a></li>
@@ -27,62 +29,65 @@
         </ul>
     </nav>
 
-    <!-- Problem Filters -->
-    <div class="filter-container">
-        <input type="text" id="search-bar" placeholder="Search problems...">
-        <select id="difficulty">
-            <option value="all">All Difficulties</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-        </select>
-        <!-- Topic filter commented out
-        <select id="topic">
-            <option value="all">All Topics</option>
-            <option value="arrays">Arrays</option>
-            <option value="strings">Strings</option>
-            <option value="graphs">Graphs</option>
-            <option value="dp">Dynamic Programming</option>
-        </select>
-        -->
-        <select id="sort">
-            <option value="newest">Newest</option>
-            <option value="most-solved">Most Solved</option>
-            <option value="difficulty">Difficulty</option>
-        </select>
-    </div>
+    <main>
+        <!-- Problem Filters -->
+        <div class="filter-container">
+            <input type="text" id="search-bar" placeholder="Search problems..." aria-label="Search problems">
+            <select id="difficulty" aria-label="Filter by difficulty">
+                <option value="all">All Difficulties</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+            <select id="sort" aria-label="Sort problems">
+                <option value="newest">Newest</option>
+                <option value="most-solved">Most Solved</option>
+                <option value="difficulty">Difficulty</option>
+            </select>
+        </div>
 
-    <!-- Problems Table -->
-    <div class="problems-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Difficulty</th>
-                    <th>Topic</th>
-                    <th>Acceptance</th>
-                </tr>
-            </thead>
-            <tbody id="problems-list">
-                <!-- Problems will be loaded here dynamically -->
-                <tr>
-                    <td colspan="4" class="loading-text">Loading problems...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- Problems Table -->
+        <div class="problems-container">
+            <table aria-label="Coding problems">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Difficulty</th>
+                        <th scope="col">Acceptance</th>
+                    </tr>
+                </thead>
+                <tbody id="problems-list">
+                    <!-- Problems will be loaded here dynamically -->
+                    <tr>
+                        <td colspan="3" class="loading-text">Loading problems...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
 
+    <!-- Scripts -->
     <script>
-        document.querySelector('.menu-toggle').addEventListener('click', function () {
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
             document.querySelector('.nav-links').classList.toggle('active');
         });
-    </script>
-    <script>
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.querySelector('.nav-links');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (navLinks.classList.contains('active') && 
+                !event.target.closest('.nav-links') && 
+                event.target !== menuToggle) {
+                navLinks.classList.remove('active');
+            }
+        });
         
         // Function to open a problem - defined in global scope
         function openProblem(problemId) {
@@ -140,7 +145,7 @@
                     console.error('Error fetching problems:', error);
                     document.getElementById('problems-list').innerHTML = `
                         <tr>
-                            <td colspan="4" class="error-text">Error loading problems. Please try again later.</td>
+                            <td colspan="3" class="error-text">Error loading problems. Please try again later.</td>
                         </tr>
                     `;
                 }
@@ -153,7 +158,7 @@
                 if (!problems || problems.length === 0) {
                     problemsList.innerHTML = `
                         <tr>
-                            <td colspan="4" class="empty-text">No problems found.</td>
+                            <td colspan="3" class="empty-text">No problems found.</td>
                         </tr>
                     `;
                     return;
@@ -168,7 +173,7 @@
                 if (filteredProblems.length === 0) {
                     problemsList.innerHTML = `
                         <tr>
-                            <td colspan="4" class="empty-text">No problems match your search.</td>
+                            <td colspan="3" class="empty-text">No problems match your search.</td>
                         </tr>
                     `;
                     return;
@@ -176,10 +181,9 @@
 
                 // Generate HTML for each problem
                 problemsList.innerHTML = filteredProblems.map(problem => `
-                    <tr onclick="openProblem('${problem._id}')">
+                    <tr onclick="openProblem('${problem._id}')" tabindex="0" role="button" aria-label="Open ${problem.title}, ${problem.difficulty} difficulty">
                         <td>${problem.title}</td>
                         <td class="${problem.difficulty.toLowerCase()}">${problem.difficulty}</td>
-                        <td>${problem.topic || 'General'}</td>
                         <td>${calculateAcceptance(problem)}</td>
                     </tr>
                 `).join('');
@@ -187,8 +191,6 @@
 
             // Event listeners for filters
             document.getElementById('difficulty').addEventListener('change', applyFilters);
-            // Topic filter listener commented out
-            // document.getElementById('topic').addEventListener('change', applyFilters);
             document.getElementById('sort').addEventListener('change', applyFilters);
 
             // Debounce function for search
@@ -201,11 +203,9 @@
             // Function to apply filters
             function applyFilters() {
                 const difficulty = document.getElementById('difficulty').value;
-                // Topic filter commented out
-                // const topic = document.getElementById('topic').value;
                 const sort = document.getElementById('sort').value;
 
-                fetchProblems({ difficulty, /* topic, */ sort });
+                fetchProblems({ difficulty, sort });
             }
 
             // Fetch problems on page load

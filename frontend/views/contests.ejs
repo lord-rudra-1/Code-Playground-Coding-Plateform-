@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Contests - Code Playground</title>
     <link rel="stylesheet" href="/css/contests.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -13,9 +15,10 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/explore">
-                <img src="lo.png" alt="Logo">
+                <img src="lo.png" alt="Code Playground Logo">
             </a>
         </div>
+        <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
             <li><a href="/problems">Problems</a></li>
@@ -26,64 +29,71 @@
         </ul>
     </nav>
 
-    <div class="contest-container">
-        <!-- Create Contest Section -->
-        <div class="create-contest">
-            <a href="create_contest" class="btn create-contest-btn">Create Contest</a>
+    <main>
+        <!-- Create & Join Contest Section -->
+        <div class="contest-container">
+            <!-- Create Contest Section -->
+            <div class="create-contest">
+                <a href="create_contest" class="btn create-contest-btn">Create Contest</a>
+            </div>
+
+            <!-- Join Contest Section -->
+            <div class="join-contest">
+                <form id="join-contest-form">
+                    <input type="text" id="contest-code" placeholder="Enter Contest Code" aria-label="Contest code" required>
+                    <button type="submit" class="btn join-contest-btn">Join Contest</button>
+                </form>
+            </div>
         </div>
 
-        <!-- Join Contest Section -->
-        <div class="join-contest">
-            <form id="join-contest-form">
-                <input type="text" id="contest-code" placeholder="Enter Contest Code" required>
-                <button type="submit" class="btn join-contest-btn">Join Contest</button>
-            </form>
-        </div>
-    </div>
+        <!-- Upcoming & Ongoing Contests -->
+        <section class="contest-section">
+            <h2>Upcoming & Ongoing Contests</h2>
+            <div class="contest-table-wrapper">
+                <table class="contest-table" aria-label="Upcoming and ongoing contests">
+                    <thead>
+                        <tr>
+                            <th scope="col">Contest Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">End Time</th>
+                            <th scope="col">Difficulty</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Participants</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="upcoming-contests-body">
+                        <!-- Dynamically populated from database -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <!-- Upcoming & Ongoing Contests -->
-    <section class="contest-section">
-        <h2>Upcoming & Ongoing Contests</h2>
-        <table class="contest-table">
-            <thead>
-                <tr>
-                    <th>Contest Name</th>
-                    <th>Description</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Difficulty</th>
-                    <th>Status</th>
-                    <th>Participants</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="upcoming-contests-body">
-                <!-- Dynamically populated from database -->
-            </tbody>
-        </table>
-    </section>
-
-    <!-- Past Contests & Leaderboards -->
-    <section class="contest-section">
-        <h2>Past Contests & Leaderboards</h2>
-        <table class="contest-table">
-            <thead>
-                <tr>
-                    <th>Contest Name</th>
-                    <th>Description</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Difficulty</th>
-                    <th>Status</th>
-                    <th>Winner</th>
-                    <th>Leaderboard</th>
-                </tr>
-            </thead>
-            <tbody id="past-contests-body">
-                <!-- Dynamically populated from database -->
-            </tbody>
-        </table>
-    </section>
+        <!-- Past Contests & Leaderboards -->
+        <section class="contest-section">
+            <h2>Past Contests & Leaderboards</h2>
+            <div class="contest-table-wrapper">
+                <table class="contest-table" aria-label="Past contests and leaderboards">
+                    <thead>
+                        <tr>
+                            <th scope="col">Contest Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">End Time</th>
+                            <th scope="col">Difficulty</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Winner</th>
+                            <th scope="col">Leaderboard</th>
+                        </tr>
+                    </thead>
+                    <tbody id="past-contests-body">
+                        <!-- Dynamically populated from database -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -91,15 +101,32 @@
     </footer>
 
     <!-- Leaderboard Modal -->
-    <div id="leaderboard-modal" class="leaderboard-modal">
+    <div id="leaderboard-modal" class="leaderboard-modal" aria-modal="true" role="dialog" aria-labelledby="modal-title">
         <div class="leaderboard-modal-content">
-            <h3>Leaderboard Not Available</h3>
+            <h3 id="modal-title">Leaderboard Not Available</h3>
             <p>The leaderboard will be available after the contest has ended.</p>
             <button id="close-modal-btn" class="close-modal-btn">Close</button>
         </div>
     </div>
 
     <script>
+        // Mobile menu toggle
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.querySelector('.nav-links');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (navLinks.classList.contains('active') && 
+                !event.target.closest('.nav-links') && 
+                event.target !== menuToggle) {
+                navLinks.classList.remove('active');
+            }
+        });
+
         // Fetch and populate only public contests
         async function fetchContests() {
             try {
@@ -118,7 +145,8 @@
 
             } catch (error) {
                 console.error('Failed to fetch contests:', error);
-                alert('Failed to load contests. Please try again later.');
+                document.getElementById('upcoming-contests-body').innerHTML = `<tr><td colspan="8" class="error-text">Failed to load contests. Please try again later.</td></tr>`;
+                document.getElementById('past-contests-body').innerHTML = `<tr><td colspan="8" class="error-text">Failed to load contests. Please try again later.</td></tr>`;
             }
         }
 
@@ -129,6 +157,15 @@
             // Clear existing rows
             upcomingBody.innerHTML = '';
             pastBody.innerHTML = '';
+
+            // Show message if no contests available
+            if (currentContests.length === 0) {
+                upcomingBody.innerHTML = '<tr><td colspan="8" class="empty-text">No upcoming or ongoing contests available at the moment.</td></tr>';
+            }
+
+            if (pastContests.length === 0) {
+                pastBody.innerHTML = '<tr><td colspan="8" class="empty-text">No past contests available.</td></tr>';
+            }
 
             // Render current contests (upcoming and ongoing)
             currentContests.forEach(contest => {
@@ -145,7 +182,7 @@
                     <td>${contest.status || 'Scheduled'}</td>
                     <td>${contest.participants ? contest.participants.length : 0}</td>
                     <td>
-                        <button onclick="handleContestRegistration('${contest._id}')" class="register-btn" data-contest-id="${contest._id}">
+                        <button onclick="handleContestRegistration('${contest._id}')" class="register-btn" data-contest-id="${contest._id}" aria-label="${contest.status === 'Ongoing' ? 'Join ' : 'Register for '} ${contest.name}">
                             ${contest.status === 'Ongoing' ? 'Join Now' : 'Register'}
                         </button>
                     </td>
@@ -176,7 +213,7 @@
                     <td>${contest.status || 'Completed'}</td>
                     <td>${topPerformer}</td>
                     <td>
-                        <button onclick="viewLeaderboard('${contest._id}')" class="${leaderboardBtnClass}" data-contest-id="${contest._id}">
+                        <button onclick="viewLeaderboard('${contest._id}')" class="${leaderboardBtnClass}" data-contest-id="${contest._id}" aria-label="View leaderboard for ${contest.name}" ${!isCompleted ? 'aria-disabled="true"' : ''}>
                             ${leaderboardBtnText}
                         </button>
                     </td>
@@ -189,45 +226,45 @@
 
         // Handle contest registration/joining
         async function handleContestRegistration(contestId) {
-    try {
-        // Get user data from localStorage
-        const userId = localStorage.getItem('userId');
-        console.log(userId)
-        
-        if (!userId) {
-            alert('Please login first');
-            window.location.href = '/signin';
-            return;
+            try {
+                // Get user data from localStorage
+                const userId = localStorage.getItem('userId');
+                console.log(userId)
+                
+                if (!userId) {
+                    alert('Please login first');
+                    window.location.href = '/signin';
+                    return;
+                }
+
+                const response = await fetch(`/api/contests/join/${contestId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: userId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to register for contest');
+                }
+
+                if (result.success) {
+                    alert('Successfully registered for the contest!');
+                    window.location.href = `/contestpage/${contestId}`;
+                } else {
+                    alert(result.message || 'Failed to register for contest');
+                }
+            } catch (error) {
+                console.error('Registration failed:', error);
+                alert('Failed to register for contest. Please try again.');
+            }
         }
 
-        const response = await fetch(`/api/contests/join/${contestId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                userId: userId
-            })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.message || 'Failed to register for contest');
-        }
-
-        if (result.success) {
-            alert('Successfully registered for the contest!');
-            window.location.href = `/contestpage/${contestId}`;
-        } else {
-            alert(result.message || 'Failed to register for contest');
-        }
-    } catch (error) {
-        console.error('Registration failed:', error);
-        alert('Failed to register for contest. Please try again.');
-    }
-}
         async function viewLeaderboard(contestId) {
             console.log(`Checking leaderboard availability for contest ${contestId}`);
             try {
@@ -266,6 +303,7 @@
             }
         });
 
+        // Handle countdown timers
         function setupCountdownTimers() {
             const countdownElements = document.querySelectorAll('.countdown');
             countdownElements.forEach(el => {
@@ -304,13 +342,20 @@
             }
 
             try {
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    alert('Please login first');
+                    window.location.href = '/signin';
+                    return;
+                }
+
                 const response = await fetch('/api/contests/join-by-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ contestCode })
+                    body: JSON.stringify({ contestCode, userId })
                 });
 
                 const result = await response.json();

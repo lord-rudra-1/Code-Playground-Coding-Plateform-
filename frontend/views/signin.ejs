@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Code Playground - Authentication</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         :root {
             --primary: rgba(0, 122, 255, 0.9);  /* Deeper blue */
@@ -29,10 +30,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
-            background: url("/auth.gif") center/100% no-repeat fixed;
+            background: url("/auth.gif") center/cover no-repeat fixed;
             animation: none !important;
+            padding: 15px;
         }
         
         body::before {
@@ -42,34 +44,35 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.2);  /* Darker overlay */
+            background: rgba(0, 0, 0, 0.4);  /* Brightened overlay */
             z-index: -1;
         }
         
         .container {
             position: relative;
-            width: 90%;
-            max-width: 800px;
-            min-height: 500px;
-            background: rgba(0, 0, 0, 0.6);  /* Dark background */
+            width: 95%;
+            max-width: 750px; /* Smaller max-width */
+            min-height: 450px; /* Smaller min-height */
+            background: rgba(0, 0, 0, 0.5);  /* Brighter background */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
             overflow: hidden;
             display: flex;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin: 20px auto;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 15px auto;
         }
         
         .form-container {
-            width: 50%;
-            padding: 30px;
+            width: 100%;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             transition: all 0.6s ease-in-out;
-            background: rgba(0, 0, 0, 0.5);  /* Dark background */
+            background: rgba(0, 0, 0, 0.4);  /* Brighter background */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -78,12 +81,18 @@
             transform: translateX(0);
             opacity: 1;
             z-index: 2;
+            height: 100%;
         }
         
         .form-container.sign-up {
             transform: translateX(100%);
             opacity: 0;
             z-index: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
         }
         
         .container.active .form-container.sign-in {
@@ -98,8 +107,9 @@
         }
         
         .logo {
-            width: 100px;
-            margin-bottom: 20px;
+            width: 80px;
+            margin: 0 auto 15px;
+            display: block;
             transition: all 0.3s ease;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
@@ -109,32 +119,33 @@
         }
         
         h2 {
-            font-size: 24px;
+            font-size: 22px;
             color: var(--light);  /* White text */
             margin-bottom: 20px;
             font-weight: 600;
+            text-align: center;
         }
         
         .input-group {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .input-group input {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 8px;
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);  /* Semi-transparent white */
+            background: rgba(255, 255, 255, 0.15);  /* Brighter input background */
             color: var(--light);  /* White text */
         }
         
         .input-group input:focus {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
         }
         
@@ -142,7 +153,7 @@
             position: absolute;
             top: 12px;
             left: 15px;
-            color: rgba(255, 255, 255, 0.7);  /* Light white color */
+            color: rgba(255, 255, 255, 0.85);  /* Brighter label color */
             font-size: 14px;
             pointer-events: none;
             transition: all 0.3s ease;
@@ -153,7 +164,7 @@
             top: -8px;
             left: 10px;
             font-size: 11px;
-            background: rgba(0, 0, 0, 0.8);  /* Dark background */
+            background: rgba(0, 0, 0, 0.7);  /* Brighter label background */
             padding: 0 5px;
             color: var(--primary);  /* Blue color */
         }
@@ -169,28 +180,28 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         
         .btn:hover {
             background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.4);
+            box-shadow: 0 6px 15px rgba(0, 84, 180, 0.3);
         }
         
         .toggle-container {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
+            position: relative;
+            width: 100%;
+            height: 150px; /* Smaller toggle height */
             overflow: hidden;
             transition: all 0.6s ease-in-out;
             z-index: 10;
         }
         
         .container.active .toggle-container {
-            transform: translateX(-100%);
+            transform: translateY(-100%);
+            top: 100%;
+            position: absolute;
         }
         
         .toggle {
@@ -198,69 +209,65 @@
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             position: relative;
-            left: -100%;
-            width: 200%;
-            transform: translateX(0);
+            width: 100%;
             transition: all 0.6s ease-in-out;
-        }
-        
-        .container.active .toggle {
-            transform: translateX(50%);
         }
         
         .toggle-panel {
             position: absolute;
-            width: 50%;
+            width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0 30px;
+            padding: 15px; /* Reduced padding */
             text-align: center;
             top: 0;
-            transform: translateX(0);
             transition: all 0.6s ease-in-out;
         }
         
         .toggle-left {
-            transform: translateX(-200%);
+            transform: translateY(-100%);
+            opacity: 0;
         }
         
         .container.active .toggle-left {
-            transform: translateX(0);
+            transform: translateY(0);
+            opacity: 1;
         }
         
         .toggle-right {
-            right: 0;
-            transform: translateX(0);
+            transform: translateY(0);
+            opacity: 1;
         }
         
         .container.active .toggle-right {
-            transform: translateX(200%);
+            transform: translateY(100%);
+            opacity: 0;
         }
         
         .toggle-panel h1 {
-            font-size: 26px;
-            margin-bottom: 15px;
+            font-size: 20px; /* Smaller text */
+            margin-bottom: 8px;
             font-weight: 600;
             color: white;
         }
         
         .toggle-panel p {
-            font-size: 14px;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px; /* Smaller text */
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.95);
         }
         
         .toggle-btn {
-            padding: 10px 25px;
+            padding: 8px 18px;
             background: transparent;
             border: 1px solid white;
             color: white;
             border-radius: 25px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -274,48 +281,6 @@
             color: var(--primary);
         }
         
-        .social-icons {
-            display: flex;
-            margin-top: 25px;
-        }
-        
-        .social-icons a {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(3px);
-        }
-        
-        .social-icons a:hover {
-            background: white;
-            color: var(--primary);
-            transform: translateY(-3px);
-        }
-        
-        .forgot-password {
-            text-align: right;
-            margin-bottom: 15px;
-        }
-        
-        .forgot-password a {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .forgot-password a:hover {
-            color: var(--accent);
-        }
-        
         .divider {
             display: flex;
             align-items: center;
@@ -327,18 +292,20 @@
             content: "";
             flex: 1;
             height: 1px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
         }
         
         .divider span {
             padding: 0 10px;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 13px;
         }
         
         p {
             color: var(--light);
             font-size: 14px;
+            text-align: center;
+            margin-top: 15px;
         }
         
         a {
@@ -352,55 +319,158 @@
             text-decoration: underline;
         }
         
-        @media (max-width: 768px) {
+        /* Tablet and Desktop Styles */
+        @media (min-width: 768px) {
             .container {
-                flex-direction: column;
-                height: auto;
-                max-width: 90%;
-                min-height: auto;
-                margin: 15px auto;
+                flex-direction: row;
+                min-height: 420px; /* Smaller height */
             }
             
             .form-container {
-                width: 100%;
+                width: 60%; /* Larger form area */
                 padding: 25px;
-                background: rgba(0, 0, 0, 0.6);
+            }
+            
+            .form-container.sign-up {
+                position: relative;
+                transform: translateX(100%);
+                width: 60%;
             }
             
             .toggle-container {
-                position: relative;
-                left: 0;
-                width: 100%;
-                height: 180px;
-            }
-            
-            .toggle {
-                left: 0;
-                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 60%; /* Adjusted for new form width */
+                width: 40%; /* Smaller toggle width */
                 height: 100%;
             }
             
             .container.active .toggle-container {
-                transform: translateY(-100%);
+                transform: translateX(-150%);
+                top: 0;
+                position: absolute;
             }
             
-            .container.active .form-container.sign-up {
-                transform: translateY(180px);
+            .toggle {
+                position: relative;
+                left: -100%;
+                width: 200%;
+                transform: translateX(0);
+            }
+            
+            .container.active .toggle {
+                transform: translateX(50%);
             }
             
             .toggle-panel {
-                width: 100%;
-                padding: 15px;
+                width: 50%;
+                padding: 0 20px; /* Smaller padding */
+            }
+            
+            .toggle-left {
+                transform: translateX(-200%);
+                opacity: 1;
+            }
+            
+            .toggle-right {
+                right: 0;
+                transform: translateX(0);
+                opacity: 1;
+            }
+            
+            .container.active .toggle-left {
+                transform: translateX(0);
+            }
+            
+            .container.active .toggle-right {
+                transform: translateX(200%);
+            }
+            
+            .logo {
+                width: 85px;
+                margin-bottom: 18px;
             }
             
             h2 {
                 font-size: 22px;
-                margin-bottom: 15px;
+                margin-bottom: 22px;
+            }
+            
+            .toggle-panel h1 {
+                font-size: 22px;
+                margin-bottom: 12px;
+            }
+            
+            .toggle-btn {
+                padding: 8px 20px;
+            }
+        }
+        
+        /* Large Desktop Styles */
+        @media (min-width: 992px) {
+            .container {
+                max-width: 800px;
+            }
+            
+            .form-container {
+                padding: 30px;
             }
             
             .logo {
                 width: 90px;
+            }
+            
+            .toggle-panel h1 {
+                font-size: 24px;
+            }
+            
+            .toggle-panel p {
+                font-size: 14px;
+            }
+        }
+        
+        /* Small Height Screens */
+        @media (max-height: 650px) {
+            body {
+                padding: 10px 0;
+                align-items: flex-start;
+            }
+            
+            .container {
+                min-height: 400px;
+                margin: 5px auto;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .logo {
+                width: 70px;
+                margin-bottom: 10px;
+            }
+            
+            h2 {
+                font-size: 20px;
                 margin-bottom: 15px;
+            }
+            
+            .input-group {
+                margin-bottom: 15px;
+            }
+            
+            .btn {
+                padding: 10px;
+            }
+            
+            .toggle-panel h1 {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .toggle-panel p {
+                font-size: 12px;
+                margin-bottom: 12px;
             }
         }
     </style>
@@ -410,7 +480,7 @@
         <!-- Sign In Form -->
         <div class="form-container sign-in">
             <form id="signin-form">
-                <img src="code playground logo.png" class="logo">
+                <img src="code playground logo.png" alt="Code Playground Logo" class="logo">
                 <h2>Sign In</h2>
                 
                 <div class="input-group">
@@ -423,21 +493,11 @@
                     <label for="password">Password</label>
                 </div>
                 
-                <!-- <div class="forgot-password">
-                    <a href="/forgot-password">Forgot Password?</a>
-                </div>
-                 -->
                 <button type="submit" class="btn">Sign In</button>
                 
                 <div class="divider">
                     <span>or</span>
                 </div>
-                
-                <!-- <div class="social-icons">
-                    <a href="#" title="Sign in with Google"><i class="fab fa-google"></i></a>
-                    <a href="#" title="Sign in with GitHub"><i class="fab fa-github"></i></a>
-                    <a href="#" title="Sign in with Twitter"><i class="fab fa-twitter"></i></a>
-                </div> -->
                 
                 <p>Don't have an account? <a href="#" id="signUp">Sign Up</a></p>
             </form>
@@ -446,7 +506,7 @@
         <!-- Sign Up Form -->
         <div class="form-container sign-up">
             <form id="signup-form">
-                <img src="code playground logo.png" class="logo">
+                <img src="code playground logo.png" alt="Code Playground Logo" class="logo">
                 <h2>Create Account</h2>
                 
                 <div class="input-group">
@@ -475,12 +535,6 @@
                     <span>or</span>
                 </div>
                 
-                <!-- <div class="social-icons">
-                    <a href="#" title="Sign up with Google"><i class="fab fa-google"></i></a>
-                    <a href="#" title="Sign up with GitHub"><i class="fab fa-github"></i></a>
-                    <a href="#" title="Sign up with Twitter"><i class="fab fa-twitter"></i></a>
-                </div> -->
-                
                 <p>Already have an account? <a href="#" id="signIn">Sign In</a></p>
             </form>
         </div>
@@ -491,22 +545,19 @@
                 <!-- Toggle Left -->
                 <div class="toggle-panel toggle-left">
                     <h1>Welcome Back!</h1>
-                    <p>Enter your personal details to use all of site features</p>
+                    <p>Enter your details to access your account</p>
                     <button class="toggle-btn" id="signInBtn">Sign In</button>
                 </div>
                 
                 <!-- Toggle Right -->
                 <div class="toggle-panel toggle-right">
                     <h1>Hello, Friend!</h1>
-                    <p>Register with your personal details to use all of site features</p>
+                    <p>Register to start your coding journey</p>
                     <button class="toggle-btn" id="signUpBtn">Sign Up</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <script>
         // Toggle between sign in and sign up

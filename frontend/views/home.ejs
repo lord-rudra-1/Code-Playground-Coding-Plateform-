@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Home - Code Playground</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="../css/home.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -15,10 +15,10 @@
     <nav class="navbar">
         <div class="logo">
             <a href="/" title="Logo">
-                <img src="lo.png" alt="Logo">
+                <img src="lo.png" alt="Code Playground Logo">
             </a>
         </div>
-        <button class="menu-toggle">☰</button>
+        <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         <ul class="nav-links">
             <li><a href="/explore">Explore</a></li>
             <li><a href="/problems">Problems</a></li>
@@ -29,102 +29,115 @@
         </ul>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <h1>Practice, Compete, and Prepare for Interviews</h1>
-        <p>Your ultimate coding playground to enhance your problem-solving skills.</p>
-        <a href="/signin" class="btn">Get Started</a>
-    </header>
+    <main>
+        <!-- Hero Section -->
+        <header class="hero">
+            <h1>Practice, Compete, and Prepare for Interviews</h1>
+            <p>Your ultimate coding playground to enhance your problem-solving skills.</p>
+            <a href="/signin" class="btn">Get Started</a>
+        </header>
 
-    <!-- New Showcase Section -->
-    <section class="showcase">
-        <h2>Explore Our Platform</h2>
-        <div class="showcase-cards">
-            <div class="showcase-card">
-                <div class="showcase-icon">
-                    <i class="fas fa-code"></i>
+        <!-- New Showcase Section -->
+        <section class="showcase">
+            <h2>Explore Our Platform</h2>
+            <div class="showcase-cards">
+                <div class="showcase-card">
+                    <div class="showcase-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Intuitive Coding Environment</h3>
+                    <p>Solve problems in a clean, feature-rich coding environment with support for multiple languages.</p>
+                    <a href="/problems" class="showcase-link">Try Coding Now</a>
                 </div>
-                <h3>Intuitive Coding Environment</h3>
-                <p>Solve problems in a clean, feature-rich coding environment with support for multiple languages.</p>
-                <a href="/problems" class="showcase-link">Try Coding Now</a>
-            </div>
-            
-            <div class="showcase-card">
-                <div class="showcase-icon">
-                    <i class="fas fa-trophy"></i>
+                
+                <div class="showcase-card">
+                    <div class="showcase-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Weekly Coding Contests</h3>
+                    <p>Participate in challenges to test your skills against other programmers in real-time.</p>
+                    <a href="/contests" class="showcase-link">Join Contests</a>
                 </div>
-                <h3>Weekly Coding Contests</h3>
-                <p>Participate in challenges to test your skills against other programmers in real-time.</p>
-                <a href="/contests" class="showcase-link">Join Contests</a>
-            </div>
-            
-            <div class="showcase-card">
-                <div class="showcase-icon">
-                    <i class="fas fa-users"></i>
+                
+                <div class="showcase-card">
+                    <div class="showcase-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Discussions</h3>
+                    <p>Connect with fellow programmers to discuss problems, solutions, and coding techniques.</p>
+                    <a href="/discuss" class="showcase-link">Start Discussing</a>
                 </div>
-                <h3>Community Discussions</h3>
-                <p>Connect with fellow programmers to discuss problems, solutions, and coding techniques.</p>
-                <a href="/discuss" class="showcase-link">Start Discussing</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="features">
-        <div class="feature-card">
-            <h3>Problem Solving</h3>
-            <p>Enhance your coding skills with hands-on practice.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Contests</h3>
-            <p>Compete with others and sharpen your skills.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Interview Prep</h3>
-            <p>Prepare for technical interviews with top questions.</p>
-        </div>
-    </section>
-
-
-    <!-- Features Section -->
-    <section class="features">
-        <h2>Why Choose Code Playground?</h2>
-        <div class="feature-items">
-            <div class="feature">
-                <h3>Interactive Coding Problems</h3>
-                <p>Practice with a vast collection of problems and improve your coding skills.</p>
+        <section class="features">
+            <div class="feature-card">
+                <h3>Problem Solving</h3>
+                <p>Enhance your coding skills with hands-on practice.</p>
             </div>
-            <div class="feature">
-                <h3>Contests & Leaderboard</h3>
-                <p>Compete with other coders in challenges and climb up the rankings.</p>
+            <div class="feature-card">
+                <h3>Contests</h3>
+                <p>Compete with others and sharpen your skills.</p>
             </div>
-            <div class="feature">
-                <h3>Mock Interviews</h3>
-                <p>Prepare for technical interviews with our real-world coding problems.</p>
+            <div class="feature-card">
+                <h3>Interview Prep</h3>
+                <p>Prepare for technical interviews with top questions.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <!-- Features Section -->
+        <section class="features">
+            <h2>Why Choose Code Playground?</h2>
+            <div class="feature-items">
+                <div class="feature" style="--order: 0">
+                    <h3>Interactive Coding Problems</h3>
+                    <p>Practice with a vast collection of problems and improve your coding skills.</p>
+                </div>
+                <div class="feature" style="--order: 1">
+                    <h3>Contests & Leaderboard</h3>
+                    <p>Compete with other coders in challenges and climb up the rankings.</p>
+                </div>
+                <div class="feature" style="--order: 2">
+                    <h3>Mock Interviews</h3>
+                    <p>Prepare for technical interviews with our real-world coding problems.</p>
+                </div>
+            </div>
+        </section>
 
-    <!-- Testimonials -->
-    <section class="testimonials">
-        <h2>What Our Users Say</h2>
-        <div class="testimonial">
-            <p>"Code Playground has helped me improve my coding skills tremendously. The platform is engaging and easy
-                to use."</p>
-            <span>- Bhumit , Software Engineer</span>
-        </div>
-    </section>
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial">
+                <p>"Code Playground has helped me improve my coding skills tremendously. The platform is engaging and easy
+                    to use."</p>
+                <span>- Bhumit, Software Engineer</span>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <p>&copy; 2025 Code Playground. All rights reserved.</p>
     </footer>
-</body>
 
-<script>
-    document.querySelector('.menu-toggle').addEventListener('click', function () {
-        document.querySelector('.nav-links').classList.toggle('active');
-    });
-</script>
+    <!-- Scripts -->
+    <script>
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.querySelector('.nav-links');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (navLinks.classList.contains('active') && 
+                !event.target.closest('.nav-links') && 
+                event.target !== menuToggle) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
 
 </html>
